@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-primary: #112D4E;
+  --color-secondery: #3F72AF;
+  --color-light-blue: #DBE2EF;
+  --color-cream: #F9F7F7;
+  --font-dana: var(--font-dana);
+  --font-kalameh: var(--font-kalameh);
+}
+
+@theme {
+  --color-primary: #112D4E;
+  --color-secondery: #3F72AF;
+  --color-light-blue: #DBE2EF;
+  --color-cream: #F9F7F7;
+  --font-dana: var(--font-dana);
+  --font-kalameh: var(--font-kalameh);
+  
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+
+  font-family:dana, kalameh;
+  direction: rtl;
+}
+@font-face {
+font-family: 'kalameh';
+src: url('/fonts/kalameh/KalamehWeb-Bold.woff2') format('woff2');
+font-weight: 700;
+font-style: normal;
+}
+@font-face {
+font-family: 'kalameh';
+src: url('/fonts/kalameh/KalamehWeb-Medium.woff2') format('woff2');
+font-weight: 500;
+font-style: normal;
+}
+@font-face {
+font-family: 'kalameh';
+src: url('/fonts/kalameh/KalamehWeb-Light.woff2') format('woff2');
+font-weight: 300;
+font-style: normal;
+}
+@font-face {
+	font-family: 'dana';
+	src: url('/fonts/dana/DanaFaNum-Bold.woff2')format('woff2');
+	font-weight: 700;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'dana';
+	src: url('/fonts/dana/DanaFaNum-Medium.woff2')format('woff2');
+	font-weight: 500;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'dana';
+	src: url('/fonts/dana/DanaFaNum-Light.woff2')format('woff2');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@layer utilities {
+.container {
+  @apply mx-auto px-4 md:px-8 
+}
+.swal-modal {
+  @apply bg-cream! rounded-2xl! shadow-md!
+}
+.swal-title{
+  @apply text-primary! font-dana! font-medium! 
+}
+.swal-button{
+  @apply bg-primary! text-cream! font-medium! 
+}
+.text-align-last-center {
+  text-align-last: center;
+}
+  .font-dana {
+    font-family: dana, sans-serif;
+  }
+
+  .font-kalameh {
+    font-family: kalameh, sans-serif;
+  }
+.rhap_container {
+  background-color: #F9F7F7 !important; /* cream */
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.rhap_main-controls-button svg {
+  color: #112D4E !important; /* primary */
+}
+
+.rhap_play-pause-button svg {
+  color: #112D4E !important;
+}
+
+.rhap_progress-bar {
+  background-color: #DBE2EF !important; /* light-blue */
+  height: 6px;
+  border-radius: 4px;
+}
+
+.rhap_progress-filled {
+  background-color: #112D4E !important; /* secondery */
+}
+
+.rhap_time {
+  color: #112D4E !important;
+  font-size: 0.75rem;
+  font-family: dana;
+}
+
+.rhap_volume-bar {
+  background: #DBE2EF !important;
+}
+
+.rhap_volume-indicator {
+  background: #3F72AF !important;
+}
+
+.rhap_download-progress {
+  background-color: transparent !important;
+}
+.swiper-wrapper{
+  @apply py-14
+}
+.input {
+  @apply border border-gray-300 rounded-xl p-2 w-full focus:outline-none focus:ring-2 focus:ring-secondery text-sm;
+}
+.ck-content h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0.67em 0;
+}
+
+.ck-content h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.75em 0;
+}
+.ck-content h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0.75em 0;
+}
+.rich-text h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.rich-text h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.rich-text h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.rich-text p {
+font-size: 16px;
+text-align: justify;
+}
+
+
+}
+
