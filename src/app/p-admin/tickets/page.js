@@ -9,6 +9,8 @@ const page = async () => {
   const tickets = await TicketModel.find({ isAnswer: false })
     .sort({ _id: -1 })
     .populate("user")
+    .populate("department")
+
     .lean();
 
   return (

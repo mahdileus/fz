@@ -1,17 +1,66 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal } from "@/utils/helpers";
 import swal from "sweetalert";
 import { FaCheck, FaTimes } from "react-icons/fa";
 
 export default function DataTable({ comments, title }) {
-
-
-  
-
-  
+  const [bannedUsers, setBannedUsers] = useState([]);
   const router = useRouter();
+  // گرفتن لیست کاربران بن شده از سرور
+  useEffect(() => {
+    fetch("/api/user/ban")
+      .then((res) => res.json())
+      .then((data) => setBannedUsers(data.bannedPhones || []));
+  }, []);
+
+
+  const isUserBanned = (phone) => {
+    return bannedUsers.includes(phone);
+  };
+
+
+  const banUser = async (email, phone) => {
+  if (!phone) return swal("خطا", "شماره موبایل کاربر موجود نیست", "error");
+
+  const isBanned = isUserBanned(phone);
+
+  const confirm = await swal({
+    title: isBanned ? "آزاد کردن کاربر" : "بن کردن کاربر",
+    text: `آیا مطمئنید که می‌خواهید این کاربر را ${isBanned ? "آزاد" : "بن"} کنید؟`,
+    icon: "warning",
+    buttons: ["لغو", isBanned ? "آزاد کن" : "بن کن"],
+    dangerMode: true,
+  });
+
+  if (!confirm) return;
+
+  const res = await fetch("/api/user/ban", {
+    method: isBanned ? "DELETE" : "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, phone }),
+  });
+
+  if (res.ok) {
+    swal(
+      isBanned ? "کاربر آزاد شد" : "کاربر بن شد",
+      `کاربر با موفقیت ${isBanned ? "از بن خارج" : "بن"} شد`,
+      "success"
+    );
+
+    // 👇 به‌روزرسانی state بدون نیاز به refresh
+    setBannedUsers((prev) => {
+      if (isBanned) {
+        return prev.filter((p) => p !== phone); // حذف از لیست
+      } else {
+        return [...prev, phone]; // اضافه کردن به لیست
+      }
+    });
+  }
+};
+
+
 
   const showCommentBody = (body) => {
     showSwal(body, undefined, "خوندم");
@@ -51,6 +100,37 @@ export default function DataTable({ comments, title }) {
       }
     }
   };
+    const answerToComment = async (comment) => {
+    swal({
+      title: "لطفا پاسخ مورد نظر را وارد کنید:",
+      content: "input",
+      buttons: "ثبت پاسخ",
+    }).then(async (answerText) => {
+      if (answerText) {
+        const answer = {
+          ...comment,
+          body: answerText,
+          commentID: comment._id,
+        };
+
+        const res = await fetch("/api/comments/answer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(answer),
+        });
+
+        if (res.status === 201) {
+          swal({
+            title: "پاسخ مورد نظر ثبت شد",
+            icon: "success",
+            buttons: "فهمیدم",
+          });
+        }
+      }
+    });
+  };
 
 
   const rejectComment = async (commentID) => {
@@ -65,6 +145,8 @@ export default function DataTable({ comments, title }) {
         router.refresh()
       );
     }
+
+
   };
 
   return (
@@ -81,7 +163,6 @@ export default function DataTable({ comments, title }) {
               <th className="px-3 py-2">دوره</th>
               <th className="px-3 py-2">تاریخ</th>
               <th className="px-3 py-2">مشاهده</th>
-              <th className="px-3 py-2">ویرایش</th>
               <th className="px-3 py-2">حذف</th>
               <th className="px-3 py-2">تایید / رد</th>
               <th className="px-3 py-2">پاسخ</th>
@@ -89,7 +170,9 @@ export default function DataTable({ comments, title }) {
             </tr>
           </thead>
           <tbody className="bg-white text-primary text-sm md:text-base">
-            {comments.map((comment, index) => (
+            {comments.map((comment, index) => {
+              const banned = isUserBanned(comment.userID?.phone);              
+              return(
               <tr key={comment._id} className="border-b hover:bg-cream transition">
                 <td className="px-3 py-2">
                   {comment.isAccept ? (
@@ -111,11 +194,7 @@ export default function DataTable({ comments, title }) {
                     مشاهده
                   </button>
                 </td>
-                <td className="px-3 py-2">
-                  <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-lg">
-                    ویرایش
-                  </button>
-                </td>
+
                 <td className="px-3 py-2">
                   <button
                     onClick={() => deleteComment(comment._id)}
@@ -143,17 +222,23 @@ export default function DataTable({ comments, title }) {
                   )}
                 </td>
                 <td className="px-3 py-2">
-                  <button className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-lg">
+                  <button className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-lg"
+                  onClick={() => answerToComment(comment)}
+                  >
                     پاسخ
                   </button>
                 </td>
                 <td className="px-3 py-2">
-                  <button className="bg-black hover:bg-gray-800 text-white px-3 py-1 rounded-lg">
-                    بن
+                  <button
+                    onClick={() => banUser(comment.userID?.email, comment.userID?.phone)}
+                    className="bg-primary hover:bg-primary/90 cursor-pointer text-cream px-3 py-1 rounded-lg"
+                  >
+                    {banned ? "آزاد کردن" : "بن"}
                   </button>
                 </td>
-              </tr>
-            ))}
+              </tr>                
+              )
+})}
           </tbody>
         </table>
       </div>

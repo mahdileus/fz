@@ -35,7 +35,20 @@ const schema = new mongoose.Schema({
   userID:{
     type: mongoose.Types.ObjectId,
     ref: "User",
-  }
+  },
+  hasAnswer: {
+  type: Boolean,
+  default: false,
+  },
+  isAnswer: {
+    type: Boolean,
+    default: false,
+  },
+  mainComment: {
+    type: mongoose.Types.ObjectId,
+    ref: "Comment",
+    required: false,
+  },
 
 });
 

@@ -1,5 +1,5 @@
 "use client"
-import { CiHome, CiVideoOn, CiMicrophoneOn, CiFileOn, CiHeadphones, CiChat2, CiUser, CiLogout } from "react-icons/ci";
+import { CiHome, CiVideoOn, CiMicrophoneOn,CiDiscount1, CiFileOn, CiHeadphones, CiChat2, CiUser, CiLogout } from "react-icons/ci";
 import Image from "next/image";
 import SidebarItem from "./SidebarItem";
 import Link from "next/link";
@@ -49,6 +49,7 @@ export default function Sidebar() {
           <SidebarItem icon={<CiFileOn className="w-8 h-8" />} label="مقالات" href="/p-admin/posts" />
           <SidebarItem icon={<CiHeadphones className="w-8 h-8" />} label="پشتیبانی" href="/p-admin/tickets" />
           <SidebarItem icon={<CiChat2 className="w-8 h-8" />} label="نظرات" href="/p-admin/comments" />
+          <SidebarItem icon={<CiDiscount1 className="w-8 h-8" />} label="کد تخفیف" href="/p-admin/discount" />
         </div>
         <div className="flex flex-col gap-4">
           <SidebarItem icon={<CiUser className="w-8 h-8" />} label=" کاربران" href="/p-admin/users" />

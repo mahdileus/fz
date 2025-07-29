@@ -5,7 +5,6 @@ import { showSwal } from "@/utils/helpers";
 import swal from "sweetalert";
 
 export default function DataTable({ tickets, title }) {
-  console.log("ticket",tickets);
   
   const router = useRouter();
 

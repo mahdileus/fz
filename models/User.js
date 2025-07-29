@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require("./Comment");
 
 
 const schema = new mongoose.Schema({
@@ -21,7 +22,15 @@ const schema = new mongoose.Schema({
     role: {
     type: String,
     default: "USER",
-  }
+  },
+    comments: {
+      type: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: "Comment",
+        },
+      ],
+    },
 },
   {
     timestamps: true,

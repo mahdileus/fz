@@ -8,24 +8,25 @@ import DataTable from "@/app/components/template/p-user/comments/DataTable";
 const page = async () => {
   connectToDB();
   const user = await authUser();
+
   const comments = await Commentmodel.find(
-    { user: String(user._id) },
+    { userID: String(user._id) },
     "-__v"
-  ).populate("CourseID", "name");
-  console.log("comments",comments);
-  
-  
+  ).populate("CourseID", "title");
+
+
+
 
 
   return (
     <section className=" mt-14">
 
-          <DataTable
-            comments={JSON.parse(JSON.stringify(comments))}
-            title="لیست کامنت‌ها"
-          />
-        
-      </section>
+      <DataTable
+        comments={JSON.parse(JSON.stringify(comments))}
+        title="لیست کامنت‌ها"
+      />
+
+    </section>
   );
 };
 

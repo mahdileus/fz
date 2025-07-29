@@ -8,6 +8,7 @@ const page = async () => {
   connectToDB();
 const comments = await CommentModel.find({})
   .sort({ _id: -1 })
+      .populate("userID")
   .populate("CourseID") // فقط فیلدهای لازم
   .lean();
    

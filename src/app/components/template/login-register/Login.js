@@ -5,7 +5,7 @@ import { showSwal } from "@/utils/helpers";
 import { validateEmail, validatePassword, validatePhone } from "@/utils/auth-client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
+import Swal from "sweetalert";
 
 export default function Login({ showRegisterForm }) {
   const router = useRouter()

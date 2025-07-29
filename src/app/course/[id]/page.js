@@ -9,13 +9,17 @@ import connectToDB from "@/configs/db";
 import { authUser } from "@/utils/auth-server";
 import Comments from "@/app/components/modules/comments/Comments";
 
+import CommentModel from "@/models/Comment";
 
 const Course = async ({ params }) => {
   await connectToDB();
   const { id: CourseID } = await params; // Await params and destructure id
-  const course = await CourseModel.findOne({ _id: CourseID }).populate("comments");
   const user = await authUser();
+  const comments = await CommentModel.find({ CourseID })
+    .populate("userID", "name email role phone") // اطلاعات لازم
+    .lean();
 
+  const course = await CourseModel.findOne({ _id: CourseID }).lean();
 
   return (
     <>
@@ -28,7 +32,7 @@ const Course = async ({ params }) => {
       <CourseChapters course={JSON.parse(JSON.stringify(course))} />
       <Comments
         CourseID={CourseID}
-        comments={JSON.parse(JSON.stringify(course.comments))}
+        comments={JSON.parse(JSON.stringify(comments))}
       />
       <Footer />
     </>
