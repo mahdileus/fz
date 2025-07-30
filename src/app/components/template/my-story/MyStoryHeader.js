@@ -26,7 +26,7 @@ const MyStoryHeader = () => {
                     <video
                         controls
                         className="w-[320px] sm:w-[300px] h-[480px] sm:h-[530px] rounded-2xl shadow-lg "
-                        src="/video/my-story.mp4"
+                        src="/video/my-story.MP4"
                         title="درباره ما"
                     />
 

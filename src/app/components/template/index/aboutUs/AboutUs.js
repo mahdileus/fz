@@ -70,7 +70,7 @@ const AboutUs = () => {
                     <video
                         controls
                         className="w-[320px] sm:w-[300px] h-[480px] sm:h-[530px] rounded-2xl shadow-lg "
-                        src="/video/meeting-2.mov"
+                        src="/video/meeting-2.MOV"
                         title="درباره ما"
                         poster="/image/about-us-thumbnail.jpg"
                     />

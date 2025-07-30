@@ -22,7 +22,7 @@ const AboutUsHeader = () => {
                     <video
                         controls
                         className="w-[320px] sm:w-[300px] h-[480px] sm:h-[530px] rounded-2xl shadow-lg "
-                        src="/video/meeting-1.mov"
+                        src="/video/meeting-1.MOV"
                         title="درباره ما"
                         poster="/image/about-us-poster.jpg"
                     />
