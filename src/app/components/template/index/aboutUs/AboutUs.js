@@ -71,7 +71,7 @@ const AboutUs = () => {
                         controls
                         className="w-[320px] sm:w-[300px] h-[480px] sm:h-[530px] rounded-2xl shadow-lg "
                         src="/video/meeting-2.MOV"
-                        title="درباره ما"
+                        title="د یرباره ما"
                         poster="/image/about-us-thumbnail.jpg"
                     />
 
