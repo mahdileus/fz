@@ -1,7 +1,13 @@
 const nextConfig = {
-  images: {
-    domains: ['firouzehjavaherian.com'],
-  },
-};
+images: {
+  remotePatterns: [
+    {
+      protocol: 'https',
+      hostname: 'firouzehjavaherian.com',
+      pathname: '/uploads/**',
+    },
+  ],
+},
+}
 
 export default nextConfig;
