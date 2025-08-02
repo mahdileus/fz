@@ -1,16 +1,16 @@
 const nextConfig = {
   images: {
-    domains: ['firouzehjavaherian.com'],
+    domains: ['firouzehjavaherian.com', 'localhost'],
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3000',
+        protocol: 'https',
+        hostname: 'firouzehjavaherian.com',
         pathname: '/uploads/**',
       },
       {
         protocol: 'http',
-        hostname: 'firouzehjavaherian.com',
+        hostname: 'localhost',
+        port: '3000',
         pathname: '/uploads/**',
       },
     ],
