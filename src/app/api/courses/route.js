@@ -33,6 +33,7 @@ export async function POST(req) {
     const introName = `${Date.now()}-${introVideo.name}`;
     const introPath = path.join(process.cwd(), "public/uploads", introName);
     await writeFile(introPath, introBuffer);
+    const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
 
     // جلسات را بخوان
     const lessonCount = +formData.get("lessonCount") || 0;
@@ -65,9 +66,10 @@ export async function POST(req) {
       lessons.push({
         title: lessonTitle,
         description: lessonDescription,
-        video: `/uploads/${lessonVideoName}`,
-        thumbnail: `/uploads/${lessonThumbName}`,
-        audio: `/uploads/${lessonAudioName}`,
+        video: `${DOMAIN}/uploads/${lessonVideoName}`,
+        thumbnail: `${DOMAIN}/uploads/${lessonThumbName}`,
+        audio: `${DOMAIN}/uploads/${lessonAudioName}`,
+        
       });
     }
 

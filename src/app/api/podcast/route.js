@@ -16,6 +16,10 @@ export async function POST(req) {
     const duration = +formData.get("duration");
     const tags = JSON.parse(formData.get("tags"));
 
+
+    const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
+
+
     // پردازش فایل تامنیل
     const thumbnail = formData.get("img");
     const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
@@ -38,8 +42,8 @@ export async function POST(req) {
       duration,
       longDescription,
       tags,
-      thumbnail: `http://localhost:3000/uploads/${thumbnailFilename}`,
-      podcast: `http://localhost:3000/uploads/${podcastFilename}`,
+      thumbnail: `${DOMAIN}/uploads/${thumbnailFilename}`,
+      podcast: `${DOMAIN}/uploads/${podcastFilename}`,
     });
 
     return Response.json(
@@ -54,7 +58,7 @@ export async function POST(req) {
 
 
 export async function GET() {
-    const podcastes = await PodcastModel.find({}, '-__v').populate("comments");
-    return Response.json(podcastes)
-    
+  const podcastes = await PodcastModel.find({}, '-__v').populate("comments");
+  return Response.json(podcastes)
+
 }

@@ -19,6 +19,9 @@ export async function POST(req) {
     const tags = JSON.parse(formData.get("tags"));
     const img = formData.get("img");
 
+    
+    const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
+
     const buffer = Buffer.from(await img.arrayBuffer());
     const filename = `${Date.now()}-${img.name}`;
     const filePath = path.join(process.cwd(), "public/uploads", filename);
@@ -35,7 +38,7 @@ export async function POST(req) {
       longDescription,
       timeToRead,
       tags,
-      thumbnail: `http://localhost:3000/uploads/${filename}`,
+      thumbnail: `${DOMAIN}/uploads/${filename}`,
     });
 
     return Response.json({ message: "مقاله با موفقیت ایجاد شد", article }, { status: 201 });
