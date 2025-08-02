@@ -19,8 +19,9 @@ export async function POST(req) {
     const tags = JSON.parse(formData.get("tags"));
 
 
-    const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
-    console.log(Domain);
+    const DOMAIN = process.env.DOMAIN;
+    console.log(DOMAIN);
+    
     
 
 
