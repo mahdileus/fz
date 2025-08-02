@@ -49,18 +49,18 @@ export async function POST(req) {
       // ذخیره ویدیو جلسه
       const lessonVideoBuffer = Buffer.from(await lessonVideo.arrayBuffer());
       const lessonVideoName = `${Date.now()}-${lessonVideo.name}`;
-      const lessonVideoPath = path.join(process.cwd(), "public/uploads", lessonVideoName);
+      const lessonVideoPath = path.join(process.cwd(), "public","uploads", lessonVideoName);
       await writeFile(lessonVideoPath, lessonVideoBuffer);
 
       // ذخیره تامنیل جلسه
       const lessonThumbBuffer = Buffer.from(await lessonThumbnail.arrayBuffer());
       const lessonThumbName = `${Date.now()}-${lessonThumbnail.name}`;
-      const lessonThumbPath = path.join(process.cwd(), "public/uploads", lessonThumbName);
+      const lessonThumbPath = path.join(process.cwd(), "public","uploads", lessonThumbName);
       await writeFile(lessonThumbPath, lessonThumbBuffer);
       //audio
       const lessonAudioBuffer = Buffer.from(await lessonAudio.arrayBuffer());
       const lessonAudioName = `${Date.now()}-${lessonAudio.name}`;
-      const lessonAudioPath = path.join(process.cwd(), "public/uploads", lessonAudioName);
+      const lessonAudioPath = path.join(process.cwd(), "public","uploads", lessonAudioName);
       await writeFile(lessonAudioPath, lessonAudioBuffer);
 
       lessons.push({

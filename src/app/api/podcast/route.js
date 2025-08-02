@@ -24,14 +24,14 @@ export async function POST(req) {
     const thumbnail = formData.get("img");
     const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
     const thumbnailFilename = `${Date.now()}-${thumbnail.name}`;
-    const thumbnailPath = path.join(process.cwd(), "public/uploads/", thumbnailFilename);
+    const thumbnailPath = path.join(process.cwd(), "public","uploads", thumbnailFilename);
     await writeFile(thumbnailPath, thumbnailBuffer);
 
     // پردازش فایل پادکست
     const podcast = formData.get("podcast");
     const podcastBuffer = Buffer.from(await podcast.arrayBuffer());
     const podcastFilename = `${Date.now()}-${podcast.name}`;
-    const podcastPath = path.join(process.cwd(), "public/uploads/", podcastFilename);
+    const podcastPath = path.join(process.cwd(), "public","uploads", podcastFilename);
     await writeFile(podcastPath, podcastBuffer);
 
 

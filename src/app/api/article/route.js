@@ -19,12 +19,12 @@ export async function POST(req) {
     const tags = JSON.parse(formData.get("tags"));
     const img = formData.get("img");
 
-    
+
     const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
 
     const buffer = Buffer.from(await img.arrayBuffer());
     const filename = `${Date.now()}-${img.name}`;
-    const filePath = path.join(process.cwd(), "public/uploads", filename);
+    const filePath = path.join(process.cwd(), "public","uploads", filename);
     await writeFile(filePath, buffer);
 
 
