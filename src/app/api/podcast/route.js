@@ -1,5 +1,7 @@
 import connectToDB from "@/configs/db";
 import PodcastModel from "@/models/Podcast";
+import { log } from "console";
+import { Domain } from "domain";
 import { writeFile } from "fs/promises";
 import path from "path";
 
@@ -18,6 +20,8 @@ export async function POST(req) {
 
 
     const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
+    console.log(Domain);
+    
 
 
     // پردازش فایل تامنیل
