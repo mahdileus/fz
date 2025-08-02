@@ -4,7 +4,7 @@ import './globals.css';
 
 export const metadata = {
   title: 'فیروزه جواهریان',
-  description: 'آکادمی توسعه فردی',
+  description: "آکادمی توسعه فردی فیروزه جواهریان",
 };
 
 export default function RootLayout({ children }) {
