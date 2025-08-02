@@ -3,7 +3,7 @@ import './globals.css';
 
 
 export const metadata = {
-  title: '6504878',
+  title: 'فیروزه جواهریان',
   description: 'آکادمی توسعه فردی',
 };
 
