@@ -11,30 +11,28 @@ export async function GET(req) {
     const authority = searchParams.get("Authority");
     const status = searchParams.get("Status");
 
+    // 1️⃣ بررسی پارامترهای ضروری
     if (!orderId || !authority || !status) {
-      return new Response(
-        JSON.stringify({ error: "پارامترهای لازم موجود نیست" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return Response.json({ error: "پارامترهای لازم موجود نیست" }, { status: 400 });
     }
 
-    const order = await OrderModel.findById(orderId).populate("courses user");
+    // 2️⃣ پیدا کردن سفارش
+    const order = await OrderModel.findById(orderId)
+      .populate("courses")
+      .populate("user");
+
     if (!order) {
-      return new Response(
-        JSON.stringify({ error: "سفارش پیدا نشد" }),
-        { status: 404, headers: { "Content-Type": "application/json" } }
-      );
+      return Response.json({ error: "سفارش پیدا نشد" }, { status: 404 });
     }
 
+    // 3️⃣ اگر پرداخت لغو شده باشد
     if (status !== "OK") {
       order.status = "failed";
       await order.save();
-      return new Response(null, {
-        status: 302,
-        headers: { Location: "/payment-failed" },
-      });
+      return Response.redirect(`${process.env.PAYMENT_FAILED_URL || "/payment-failed"}`);
     }
 
+    // 4️⃣ ارسال درخواست تایید به زرین‌پال
     const verifyRes = await fetch(
       "https://api.zarinpal.com/pg/v4/payment/verify.json",
       {
@@ -42,46 +40,46 @@ export async function GET(req) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           merchant_id: process.env.ZARINPAL_MERCHANT_ID,
-          amount: order.amount * 10,
-          authority: authority,
+          amount: order.amount * 10, // تبدیل به ریال
+          authority,
         }),
       }
     );
 
     const data = await verifyRes.json();
 
-    if (data.data?.code === 100) {
+    // 5️⃣ تایید موفق
+    if (data?.data?.code === 100) {
       order.status = "paid";
       order.refId = data.data.ref_id;
       await order.save();
 
-      // ثبت دوره‌های خریداری شده توسط کاربر
-      for (const courseId of order.courses) {
-        await UserCourse.create({
+      // 6️⃣ ثبت دوره‌ها برای کاربر (جلوگیری از ثبت تکراری)
+      for (const course of order.courses) {
+        const alreadyExists = await UserCourse.findOne({
           user: order.user._id,
-          course: courseId,
+          course: course._id,
         });
+
+        if (!alreadyExists) {
+          await UserCourse.create({
+            user: order.user._id,
+            course: course._id,
+          });
+        }
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: `/payment-success?courseId=${order.courses[0]}`, 
-        },
-      });
+      return Response.redirect(
+        `${process.env.PAYMENT_SUCCESS_URL || "/payment-success"}?orderId=${order._id}`
+      );
     }
 
+    // 7️⃣ تایید ناموفق
     order.status = "failed";
     await order.save();
-    return new Response(null, {
-      status: 302,
-      headers: { Location: "/payment-failed" },
-    });
+    return Response.redirect(`${process.env.PAYMENT_FAILED_URL || "/payment-failed"}`);
   } catch (error) {
-    console.error(error);
-    return new Response(
-      JSON.stringify({ error: "خطا در تایید تراکنش" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    console.error("خطا در تایید تراکنش:", error);
+    return Response.json({ error: "خطا در تایید تراکنش" }, { status: 500 });
   }
 }

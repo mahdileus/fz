@@ -10,7 +10,7 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  courses: [ // به صورت آرایه
+  courses: [ 
     {
       type: mongoose.Types.ObjectId,
       ref: "Course",
