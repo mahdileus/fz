@@ -1,11 +1,45 @@
 "use client";
 
+import { useContext } from "react";
+import { useRouter } from "next/navigation";
+import swal from "sweetalert";
+import { CartContext } from "@/app/context/CartContext";
+
 export default function CourseHeader({ course }) {
   const discount = course.discountPercent || 0;
   const price = course.price || 0;
   const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
 
+  const { addToCart, cartItems } = useContext(CartContext);
+  const router = useRouter();
 
+  const handleAddToCart = () => {
+    const exists = cartItems.find((item) => item._id === course._id);
+
+    if (exists) {
+      swal({
+        title: "این دوره قبلاً به سبد خرید اضافه شده است",
+        icon: "info",
+        timer: 2000,
+        buttons: false,
+      });
+      return;
+    }
+
+    addToCart({
+      ...course,
+      price: discountedPrice,
+    });
+
+    swal({
+      title: "دوره به سبد خرید اضافه شد",
+      icon: "success",
+      timer: 1500,
+      buttons: false,
+    }).then(() => {
+      router.push("/cart");
+    });
+  };
 
   return (
     <section className="container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -55,7 +89,10 @@ export default function CourseHeader({ course }) {
             )}
           </div>
 
-          <button className="w-full bg-primary text-white py-3 rounded-xl text-lg hover:bg-secondery transition">
+          <button
+            onClick={handleAddToCart}
+            className="w-full bg-primary text-white py-3 rounded-xl text-lg hover:bg-secondery transition"
+          >
             ثبت‌نام و شروع دوره
           </button>
         </div>

@@ -76,7 +76,7 @@ export default function Navbar({ isLogin }) {
 
               {/* سبد خرید */}
               <div className="bg-light-blue text-xl lg:text-2xl text-primary p-2.5 lg:p-3 cursor-pointer rounded-xl">
-                <CiShoppingCart />
+                <Link href={"/cart"}><CiShoppingCart  /></Link>
               </div>
 
               {/* آیکون سرچ با input */}

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 require("./Comment");
+require("./Course");
 
 
 const schema = new mongoose.Schema({
@@ -23,6 +24,10 @@ const schema = new mongoose.Schema({
     type: String,
     default: "USER",
   },
+    purchasedCourses: [{ // 🆕 لیست دوره‌های خریداری‌شده
+    type: mongoose.Types.ObjectId,
+    ref: "Course"
+  }],
     comments: {
       type: [
         {

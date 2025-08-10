@@ -52,7 +52,7 @@ export default function MobileHeader({isLogin}) {
               </Link>
             </div>
             <div className="bg-light-blue text-xl text-primary  p-1.5 cursor-pointer rounded-xl">
-              <CiShoppingCart />
+              <Link href={"/cart"}><CiShoppingCart  /></Link>
             </div>
             <div className="bg-light-blue text-xl text-primary  p-1.5 cursor-pointer rounded-xl">
               <CiSearch />
