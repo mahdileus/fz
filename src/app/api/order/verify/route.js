@@ -2,6 +2,7 @@ import connectToDB from "@/configs/db";
 import OrderModel from "@/models/Order";
 import UserCourse from "@/models/UserCourse";
 
+
 export async function GET(req) {
   try {
     await connectToDB();
@@ -29,7 +30,8 @@ export async function GET(req) {
     if (status !== "OK") {
       order.status = "failed";
       await order.save();
-      return Response.redirect(`${process.env.PAYMENT_FAILED_URL || "/payment-failed"}`);
+      return Response.redirect("@/app/payment-failed");
+      
     }
 
     // 4️⃣ ارسال درخواست تایید به زرین‌پال
@@ -70,7 +72,7 @@ export async function GET(req) {
       }
 
       return Response.redirect(
-        `${process.env.PAYMENT_SUCCESS_URL || "/payment-success"}?orderId=${order._id}`
+        `${"@/app/payment-failed"}?orderId=${order._id}`
       );
     }
 
