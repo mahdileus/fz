@@ -5,22 +5,26 @@ import UserModel from "@/models/User";
 import connectToDB from "@/configs/db";
 
 const hashPassword = async (password) => {
-  return await hash(password, 12);
+  const hashedPassword = await hash(password, 12);
+  return hashedPassword;
 };
 
 const verifyPassword = async (password, hashedPassword) => {
-  return await compare(password, hashedPassword);
+  const isValid = await compare(password, hashedPassword);
+  return isValid;
 };
 
 const generateAccessToken = (data) => {
-  return sign({ ...data }, process.env.AccessTokenSecretKey, {
+  const token = sign({ ...data }, process.env.AccessTokenSecretKey, {
     expiresIn: "60d",
   });
+  return token;
 };
 
 const verifyAccessToken = (token) => {
   try {
-    return verify(token, process.env.AccessTokenSecretKey);
+    const tokenPayload = verify(token, process.env.AccessTokenSecretKey);
+    return tokenPayload;
   } catch (err) {
     console.log("Verify Access Token Error ->", err);
     return false;
@@ -28,44 +32,53 @@ const verifyAccessToken = (token) => {
 };
 
 const generateRefreshToken = (data) => {
-  return sign({ ...data }, process.env.RefreshTokenSecretKey, {
+  const token = sign({ ...data }, process.env.RefreshTokenSecretKey, {
     expiresIn: "15d",
   });
+  return token;
 };
+
+
+
 
 const authUser = async () => {
-  try {
-    await connectToDB();
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token");
-    if (!token) return null;
-    const tokenPayload = verifyAccessToken(token.value);
-    if (!tokenPayload) return null;
-    const user = await UserModel.findOne({ phone: tokenPayload.phone });
-    return user;
-  } catch (error) {
-    console.error("authUser error:", error);
-    return null;
-  }
-};
+  connectToDB();
+  const cookieStore = await cookies(); // ✅ باید await بزنی
+  const token = cookieStore.get("token");
+  let user = null;
 
-const authAdmin = async () => {
-  try {
-    await connectToDB();
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token");
-    if (!token) return null;
+  if (token) {
     const tokenPayload = verifyAccessToken(token.value);
-    if (!tokenPayload) return null;
-    const user = await UserModel.findOne({ phone: tokenPayload.phone });
-    if (user?.role === "ADMIN") {
-      return user;
+    if (tokenPayload) {
+      user = await UserModel.findOne({ phone: tokenPayload.phone });
     }
-    return null;
-  } catch (error) {
-    console.error("authAdmin error:", error);
+  }
+
+  return user;
+};
+const authAdmin = async () => {
+  connectToDB();
+  const cookieStore = await cookies(); // ✅ باید await بزنی
+  const token = cookieStore.get("token");
+  let user = null;
+
+  if (token) {
+    const tokenPayload = verifyAccessToken(token.value);
+    if (tokenPayload) {
+      user = await UserModel.findOne({ phone: tokenPayload.phone });
+      if (user.role === "ADMIN") {
+        return user;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  } else {
     return null;
   }
+
+  return user;
 };
 
 export {
@@ -75,5 +88,5 @@ export {
   verifyAccessToken,
   generateRefreshToken,
   authUser,
-  authAdmin,
+  authAdmin
 };
