@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 
-export default function CourseCard({ course }) {
+export default function CourseCard({ course, isRegistered }) {
   const discount = course.discountPercent || 0; // درصد تخفیف یا صفر
   const price = course.price || 0;
   // محاسبه قیمت نهایی با تخفیف
@@ -45,30 +45,38 @@ export default function CourseCard({ course }) {
         {/* خط جداکننده */}
         <hr className="border-t border-gray-200 my-2" />
 
-        {/* قیمت + امتیاز */}
-        <div className="flex justify-between items-end">
-          {/* قیمت سمت چپ */}
-          <div className="flex flex-col items-start gap-1 text-sm text-primary">
-            {discount > 0 ? (
-              <>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-white bg-secondery px-2 py-0.5 rounded-full">
-                    {discount}٪
+        {/* قیمت یا دکمه */}
+        <div className="flex justify-between items-center">
+          {isRegistered ? (
+            <Link
+              href={`/course/${course._id}`} // یا هر لینک مناسب برای مشاهده دوره
+              className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-4 py-2 rounded-lg transition"
+            >
+              مشاهده دوره
+            </Link>
+          ) : (
+            <div className="flex flex-col items-start gap-1 text-sm text-primary">
+              {discount > 0 ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-white bg-secondery px-2 py-0.5 rounded-full">
+                      {discount}٪
+                    </span>
+                    <span className="line-through text-gray-400 text-sm">
+                      {price.toLocaleString()} تومان
+                    </span>
+                  </div>
+                  <span className="text-base font-bold">
+                    {discountedPrice.toLocaleString()} تومان
                   </span>
-                  <span className="line-through text-gray-400 text-sm">
-                    {price.toLocaleString()} تومان
-                  </span>
-                </div>
+                </>
+              ) : (
                 <span className="text-base font-bold">
-                  {discountedPrice.toLocaleString()} تومان
+                  {price.toLocaleString()} تومان
                 </span>
-              </>
-            ) : (
-              <span className="text-base font-bold">
-                {price.toLocaleString()} تومان
-              </span>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           {/* امتیاز سمت راست */}
           <div className="flex items-center gap-1 text-sm text-yellow-500">

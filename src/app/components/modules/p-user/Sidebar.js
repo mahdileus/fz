@@ -43,7 +43,6 @@ export default function Sidebar() {
         <div className="flex flex-col gap-4">
           <SidebarItem icon={<CiHome className="w-8 h-8" />} label="پیشخوان" href="/p-user/dashboard" />
           <SidebarItem icon={<CiVideoOn className="w-8 h-8" />} label="دوره‌های من" href="/p-user/courses" />
-          <SidebarItem icon={<CiMicrophoneOn className="w-8 h-8" />} label="پادکست‌ها" href="/p-user/podcasts" />
           <SidebarItem icon={<CiHeart className="w-8 h-8" />} label="علاقه‌مندی‌ها" href="/p-user/wishlist" />
           <SidebarItem icon={<CiHeadphones className="w-8 h-8" />} label="پشتیبانی" href="/p-user/tickets" />
           <SidebarItem icon={<CiChat2 className="w-8 h-8" />} label="نظرات" href="/p-user/comments" />

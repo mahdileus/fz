@@ -12,6 +12,9 @@ import { authUser } from "@/utils/auth-server";
 import LatestArticle from "./components/modules/index/LatestBlogs/LatestArticle";
 import AboutUs from "./components/template/index/aboutUs/AboutUs";
 import CommentBox from "./components/template/index/commentBox/CommentBox";
+import UserCourseModel from "@/models/UserCourse";
+
+
 
 
 export default async function Home() {
@@ -21,6 +24,7 @@ export default async function Home() {
    const podcasts = await PodcastModel.find({}).sort({createdAt: -1}).limit(8);
    const user = await authUser();
    const posts = await ArticleModel.find({}).sort({createdAt: -1}).limit(8);
+const userCourseRegs = await UserCourseModel.find({ user: user.id }).lean().populate('course');
 
   return (
     
@@ -28,7 +32,7 @@ export default async function Home() {
     <Navbar isLogin={user ? true : false} />
     <HeroSection/>
     <SectionHeader title="جدیدترین دوره‌ها" href="/courses" type="course" />
-    <LatestCourse courses={JSON.parse(JSON.stringify(courses))}/>
+    <LatestCourse courses={JSON.parse(JSON.stringify(courses))} userCourseRegs={JSON.parse(JSON.stringify(userCourseRegs))}/>
     <AboutUs/>
     <SectionHeader title="جدیدترین پادکست ها" href="/podcasts" type="podcast" />
     <LatestPodcast podcasts={JSON.parse(JSON.stringify(podcasts))}/>

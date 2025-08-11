@@ -3,12 +3,26 @@
 import { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import Link from "next/link";
+import swal from "sweetalert";
 
-const CourseChapters = ({ course }) => {
-  const [open, setOpen] = useState(true); // فقط یه آکاردئون داریم پس باز/بسته بودن کل لیست کافی است.
+const CourseChapters = ({ course, isRegistered }) => {
+  const [open, setOpen] = useState(true);
 
   const toggleAccordion = () => {
     setOpen(!open);
+  };
+
+  // تابعی که وقتی روی لینک جلسه کلیک شد اجرا میشه
+  const handleLessonClick = (e) => {
+    if (!isRegistered) {
+      e.preventDefault(); // جلوگیری از رفتن به لینک
+      swal({
+        title: "شما هنوز در این دوره ثبت‌نام نکرده‌اید!",
+        text: "برای مشاهده جلسات ابتدا باید در دوره ثبت‌نام کنید.",
+        icon: "warning",
+        button: "باشه",
+      });
+    }
   };
 
   return (
@@ -37,12 +51,14 @@ const CourseChapters = ({ course }) => {
                     <li key={index}>
                       <Link
                         href={`/course/${course._id}/lesson/${lesson._id}`}
-                        className="flex items-center gap-2 hover:underline text-primary"
+                        className={`flex items-center gap-2 ${
+                          isRegistered ? "text-primary hover:underline cursor-pointer" : "text-gray-400 cursor-not-allowed"
+                        }`}
+                        onClick={handleLessonClick}
                       >
                         <span className="w-1 h-1 bg-primary rounded-full"></span>
                         <span>{lesson.title}</span>
                       </Link>
-
                     </li>
                   ))
                 ) : (

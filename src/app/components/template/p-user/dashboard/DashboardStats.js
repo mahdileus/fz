@@ -4,6 +4,7 @@ import {
   CiChat2,
   CiVideoOn,
   CiCircleQuestion,
+  CiChat1,
 } from "react-icons/ci";
 
 const stats = [
@@ -26,10 +27,10 @@ const stats = [
     title: "پرسش‌های من",
   },
   {
-    icon: <CiBellOn className="w-8 h-8 text-primary" />,
-    label: "اعلان",
+    icon: <CiChat1 className="w-8 h-8 text-primary" />,
+    label: "نظرات",
     value: 2,
-    title: "اعلانات من",
+    title: "نظرات من",
   },
 ];
 
