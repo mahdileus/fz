@@ -79,7 +79,7 @@ export default function CourseForm() {
           introVideo: null,
           
         });
-        router.replace("/p-admin-courses");
+        router.replace("/p-admin/courses");
       });
     } else {
       Swal({

@@ -5,7 +5,7 @@ import FilterBar from "./FilterBar";
 import CoursesSidebar from "./CoursesSidebar";
 import CourseCard from "../../modules/courses/CourseCard";
 
-export default function Courses({ courses }) {
+export default function Courses({ courses, registeredCourseIds = [] }) {
   const [sortFilter, setSortFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
@@ -58,7 +58,11 @@ export default function Courses({ courses }) {
             <FilterBar selected={sortFilter} onChange={setSortFilter} />
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-9 px-6">
               {sortCourses(filterCourses()).map((course) => (
-                <CourseCard key={course._id} course={course} />
+                <CourseCard
+                  key={course._id}
+                  course={course}
+                  isRegistered={registeredCourseIds.includes(course._id.toString())}
+                />
               ))}
             </div>
           </div>
