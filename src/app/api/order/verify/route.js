@@ -2,7 +2,6 @@ import connectToDB from "@/configs/db";
 import OrderModel from "@/models/Order";
 import UserCourse from "@/models/UserCourse";
 
-
 export async function GET(req) {
   try {
     await connectToDB();
@@ -30,8 +29,7 @@ export async function GET(req) {
     if (status !== "OK") {
       order.status = "failed";
       await order.save();
-      return Response.redirect("/payment-failed");
-      
+      return Response.redirect(process.env.PAYMENT_FAILED_URL || "/payment-failed");
     }
 
     // 4️⃣ ارسال درخواست تایید به زرین‌پال
@@ -49,6 +47,9 @@ export async function GET(req) {
     );
 
     const data = await verifyRes.json();
+
+    // 📜 لاگ برای دیباگ
+    console.log("Verify response from Zarinpal:", JSON.stringify(data, null, 2));
 
     // 5️⃣ تایید موفق
     if (data?.data?.code === 100) {
@@ -72,14 +73,19 @@ export async function GET(req) {
       }
 
       return Response.redirect(
-        `${"/payment-failed"}?orderId=${order._id}`
+        `${process.env.PAYMENT_SUCCESS_URL || "/payment-success"}?orderId=${order._id}`
       );
     }
 
     // 7️⃣ تایید ناموفق
     order.status = "failed";
     await order.save();
-    return Response.redirect(`${process.env.PAYMENT_FAILED_URL || "/payment-failed"}`);
+
+    // ارسال دلیل شکست به کاربر
+    return Response.redirect(
+      `${process.env.PAYMENT_FAILED_URL || "/payment-failed"}?reason=${data?.errors?.message || "پرداخت تایید نشد"}`
+    );
+
   } catch (error) {
     console.error("خطا در تایید تراکنش:", error);
     return Response.json({ error: "خطا در تایید تراکنش" }, { status: 500 });
