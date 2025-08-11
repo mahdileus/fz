@@ -30,6 +30,7 @@ export default async function Dashboard() {
       <LatestComments />
       <SectionHeader title="دوره های خریداری شده" href="/p-user/courses" type="course" />
       <LatestCourse />
+      
 
 
     </section>

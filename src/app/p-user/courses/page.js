@@ -14,11 +14,13 @@ export default async function page() {
 
     return (
         <section className="mt-14 container">
+            <SectionHeader title="دوره های خریداری شده" type="course" />
             {usercourses.length === 0 ? (
                 <p>هیچ دوره‌ای خریداری نشده است.</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {usercourses.map(usercourse => (
+                        
                         <CourseCard key={usercourse._id} usercourse={JSON.parse(JSON.stringify(usercourse))} />
                     ))}
                 </div>
