@@ -1,6 +1,7 @@
 import connectToDB from "@/configs/db";
 import OrderModel from "@/models/Order";
 import UserCourse from "@/models/UserCourse";
+import { NextResponse } from 'next/server'; // مطمئن شو که NextResponse ایمپورت شده (اگر Response مستقیماً کار نمی‌کنه)
 
 export async function GET(req) {
   try {
@@ -11,25 +12,56 @@ export async function GET(req) {
     const authority = searchParams.get("Authority");
     const status = searchParams.get("Status");
 
+    // 📜 لاگ ورودی‌ها برای دیباگ
+    console.log("📥 Params from Zarinpal callback:", {
+      orderId,
+      authority,
+      status,
+    });
+
     // 1️⃣ بررسی پارامترهای ضروری
     if (!orderId || !authority || !status) {
-      return Response.json({ error: "پارامترهای لازم موجود نیست" }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: "پارامترهای لازم موجود نیست",
+          received: { orderId, authority, status },
+        },
+        { status: 400 }
+      );
     }
 
     // 2️⃣ پیدا کردن سفارش
-    const order = await OrderModel.findById(orderId)
-      .populate("courses")
-      .populate("user");
+    let order;
+    try {
+      order = await OrderModel.findById(orderId)
+        .populate("courses")
+        .populate("user");
+    } catch (dbErr) {
+      return NextResponse.json(
+        {
+          error: "شناسه سفارش نامعتبر است",
+          details: dbErr.message,
+        },
+        { status: 400 }
+      );
+    }
 
     if (!order) {
-      return Response.json({ error: "سفارش پیدا نشد" }, { status: 404 });
+      return NextResponse.json(
+        {
+          error: "سفارش پیدا نشد",
+          receivedOrderId: orderId,
+        },
+        { status: 404 }
+      );
     }
 
     // 3️⃣ اگر پرداخت لغو شده باشد
     if (status !== "OK") {
       order.status = "failed";
       await order.save();
-      return Response.redirect(process.env.PAYMENT_FAILED_URL || "/payment-failed");
+      const failedUrl = `${process.env.SITE_URL}${process.env.PAYMENT_FAILED_URL || "/payment-failed"}`;
+      return NextResponse.redirect(failedUrl);
     }
 
     // 4️⃣ ارسال درخواست تایید به زرین‌پال
@@ -40,16 +72,14 @@ export async function GET(req) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           merchant_id: process.env.ZARINPAL_MERCHANT_ID,
-          amount: order.amount * 10, // تبدیل به ریال
+          amount: order.amount * 10, // تبدیل تومان به ریال (با PRICE_UNIT=toman)
           authority,
         }),
       }
     );
 
     const data = await verifyRes.json();
-
-    // 📜 لاگ برای دیباگ
-    console.log("Verify response from Zarinpal:", JSON.stringify(data, null, 2));
+    console.log("✅ Verify response from Zarinpal:", JSON.stringify(data, null, 2));
 
     // 5️⃣ تایید موفق
     if (data?.data?.code === 100) {
@@ -57,14 +87,14 @@ export async function GET(req) {
       order.refId = data.data.ref_id;
       await order.save();
 
-      // 6️⃣ ثبت دوره‌ها برای کاربر (جلوگیری از ثبت تکراری)
+      // ثبت دوره‌ها برای کاربر (بدون تکرار)
       for (const course of order.courses) {
-        const alreadyExists = await UserCourse.findOne({
+        const exists = await UserCourse.findOne({
           user: order.user._id,
           course: course._id,
         });
 
-        if (!alreadyExists) {
+        if (!exists) {
           await UserCourse.create({
             user: order.user._id,
             course: course._id,
@@ -72,22 +102,25 @@ export async function GET(req) {
         }
       }
 
-      return Response.redirect(
-        `${process.env.PAYMENT_SUCCESS_URL || "/payment-success"}?orderId=${order._id}`
-      );
+      // ساخت URL کامل برای ریدایرکت موفق
+      const successUrl = `${process.env.SITE_URL}${process.env.PAYMENT_SUCCESS_URL || "/payment-success"}?orderId=${order._id}`;
+      return NextResponse.redirect(successUrl);
     }
 
-    // 7️⃣ تایید ناموفق
+    // 6️⃣ تایید ناموفق
     order.status = "failed";
     await order.save();
-
-    // ارسال دلیل شکست به کاربر
-    return Response.redirect(
-      `${process.env.PAYMENT_FAILED_URL || "/payment-failed"}?reason=${data?.errors?.message || "پرداخت تایید نشد"}`
-    );
-
+    
+    // ساخت URL کامل برای ریدایرکت ناموفق
+    const failedUrl = `${process.env.SITE_URL}${process.env.PAYMENT_FAILED_URL || "/payment-failed"}?reason=${
+      data?.errors?.message || "پرداخت تایید نشد"
+    }`;
+    return NextResponse.redirect(failedUrl);
   } catch (error) {
-    console.error("خطا در تایید تراکنش:", error);
-    return Response.json({ error: "خطا در تایید تراکنش" }, { status: 500 });
+    console.error("❌ خطا در تایید تراکنش:", error);
+    return NextResponse.json(
+      { error: "خطا در تایید تراکنش", details: error.message },
+      { status: 500 }
+    );
   }
 }
