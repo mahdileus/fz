@@ -55,7 +55,7 @@ export async function POST(req) {
         body: JSON.stringify({
           merchant_id: process.env.ZARINPAL_MERCHANT_ID,
           amount: totalAmount * 10, // تبدیل به ریال
-          callback_url: `${process.env.ZARINPAL_CALLBACK_URL}?orderId=${order._id}`,
+          callback_url: `${process.env.ZARINPAL_CALLBACK}?orderId=${order._id}`,
           description: `خرید ${courseIds.length} دوره توسط ${user.name}`,
         }),
       }

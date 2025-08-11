@@ -30,7 +30,7 @@ export async function GET(req) {
     if (status !== "OK") {
       order.status = "failed";
       await order.save();
-      return Response.redirect("@/app/payment-failed");
+      return Response.redirect("/payment-failed");
       
     }
 
@@ -72,7 +72,7 @@ export async function GET(req) {
       }
 
       return Response.redirect(
-        `${"@/app/payment-failed"}?orderId=${order._id}`
+        `${"/payment-failed"}?orderId=${order._id}`
       );
     }
 
