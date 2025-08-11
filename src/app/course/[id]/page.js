@@ -14,32 +14,44 @@ import CommentModel from "@/models/Comment";
 
 const Course = async ({ params }) => {
   await connectToDB();
-  const { id: CourseID } = await params; // Await params and destructure id
+  const { id: CourseID } = await params;
   const user = await authUser();
+
   const comments = await CommentModel.find({ CourseID })
-    .populate("userID", "name email role phone") // اطلاعات لازم
+    .populate("userID", "name email role phone")
     .lean();
-  const userCourseRegs = await UserCourseModel.find({ user: user.id }).lean().populate('course');
-  const registeredCourseIds = userCourseRegs.map(item => item.course._id.toString());
+
+  let registeredCourseIds = [];
+  if (user && user.id) {
+    const userCourseRegs = await UserCourseModel.find({ user: user.id })
+      .lean()
+      .populate("course");
+    registeredCourseIds = userCourseRegs.map((item) =>
+      item.course._id.toString()
+    );
+  }
 
   const course = await CourseModel.findOne({ _id: CourseID }).lean();
 
-  const isRegistered = registeredCourseIds.includes(CourseID);
-
+  const isRegistered = user && user.id ? registeredCourseIds.includes(CourseID) : false;
 
   return (
     <>
-      <Navbar isLogin={user ? true : false} />
-      <CourseHeader course={JSON.parse(JSON.stringify(course))} isRegistered={JSON.parse(JSON.stringify(isRegistered))} />
+      <Navbar isLogin={!!user} />
+      <CourseHeader
+        course={JSON.parse(JSON.stringify(course))}
+        isRegistered={isRegistered}
+      />
       <CourseInfoBoxes category={course.category} />
-      <CourseFullDescription longDescription={course.longDescription}
-        title={course.title} // Pass title as a prop
+      <CourseFullDescription
+        longDescription={course.longDescription}
+        title={course.title}
       />
-      <CourseChapters course={JSON.parse(JSON.stringify(course))} isRegistered={JSON.parse(JSON.stringify(isRegistered))} />
-      <Comments
-        CourseID={CourseID}
-        comments={JSON.parse(JSON.stringify(comments))}
+      <CourseChapters
+        course={JSON.parse(JSON.stringify(course))}
+        isRegistered={isRegistered}
       />
+      <Comments CourseID={CourseID} comments={JSON.parse(JSON.stringify(comments))} />
       <Footer />
     </>
   );

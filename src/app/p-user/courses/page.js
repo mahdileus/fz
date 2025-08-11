@@ -13,6 +13,13 @@ export default async function page() {
         .lean()
         .populate('course');
 
+          let userCourseRegs = [];
+          if (user) {
+            userCourseRegs = await UserCourseModel.find({ user: user.id })
+              .lean()
+              .populate('course');
+          }
+
     return (
         <section className="mt-14 container">
             <SectionHeader title="دوره های خریداری شده" type="course" />

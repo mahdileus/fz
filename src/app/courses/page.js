@@ -12,10 +12,17 @@ const CoursesArchive = async () => {
   const courses = await CourseModel.find({}).sort({ createdAt: -1 }).lean();
   const allTags = Array.from(new Set(courses.flatMap(p => p.tags || [])));
   const allCategories = Array.from(new Set(courses.map(p => p.category)));
+
   const user = await authUser();
 
-  const userCourseRegs = await UserCourseModel.find({ user: user.id }).lean().populate('course');
-  const registeredCourseIds = userCourseRegs.map(item => item.course._id.toString());
+  // فقط اگر کاربر لاگین بود، دوره‌های ثبت‌نام‌شده رو بگیر
+  let registeredCourseIds = [];
+  if (user && user.id) {
+    const userCourseRegs = await UserCourseModel.find({ user: user.id })
+      .lean()
+      .populate('course');
+    registeredCourseIds = userCourseRegs.map(item => item.course._id.toString());
+  }
 
   return (
     <>
