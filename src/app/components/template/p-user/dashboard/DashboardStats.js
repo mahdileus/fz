@@ -7,34 +7,39 @@ import {
   CiChat1,
 } from "react-icons/ci";
 
-const stats = [
-  {
-    icon: <CiVideoOn className="w-8 h-8 text-primary" />,
-    label: "دوره",
-    value: 8,
-    title: "درحال یادگیری",
-  },
-  {
-    icon: <CiChat2 className="w-8 h-8 text-primary" />,
-    label: "نظر",
-    value: 15,
-    title: "نظرات من",
-  },
-  {
-    icon: <CiCircleQuestion className="w-8 h-8 text-primary" />,
-    label: "پرسش",
-    value: 4,
-    title: "پرسش‌های من",
-  },
-  {
-    icon: <CiChat1 className="w-8 h-8 text-primary" />,
-    label: "نظرات",
-    value: 2,
-    title: "نظرات من",
-  },
-];
+export default function DashboardStats({
+  userCommentsCount,
+  userCoursesCount,
+  userWishlistCount,
+  userTicketsCount,
+}) {
+  const stats = [
+    {
+      icon: <CiVideoOn className="w-8 h-8 text-primary" />,
+      label: "دوره",
+      value: userCoursesCount ?? 0,
+      title: "درحال یادگیری",
+    },
+    {
+      icon: <CiChat2 className="w-8 h-8 text-primary" />,
+      label: "نظر",
+      value: userCommentsCount ?? 0,
+      title: "نظرات من",
+    },
+    {
+      icon: <CiCircleQuestion className="w-8 h-8 text-primary" />,
+      label: "پرسش",
+      value: userTicketsCount ?? 0,
+      title: "پرسش‌های من",
+    },
+    {
+      icon: <CiChat1 className="w-8 h-8 text-primary" />,
+      label: "علاقه مندی",
+      value: userWishlistCount ?? 0,
+      title: "علاقه مندی ها ",
+    },
+  ];
 
-export default function DashboardStats() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {stats.map((stat, index) => (

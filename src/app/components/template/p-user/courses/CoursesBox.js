@@ -6,7 +6,7 @@ import Link from "next/link";
 
 
 export default function CourseCard({ usercourse }) {
-    console.log("usercourse",usercourse.course);
+
     
 
 
