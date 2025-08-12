@@ -1,10 +1,17 @@
 import connectToDB from "@/configs/db";
 import CourseModel from "@/models/Course";
+import { authAdmin } from "@/utils/auth-server";
 import { writeFile } from "fs/promises";
+import {  redirect } from "next/navigation";
 import path from "path";
 
 export async function POST(req) {
   try {
+    const isAdmin = await authAdmin();
+
+      if (!isAdmin) {
+        redirect("/404")
+      }
     await connectToDB();
 
     const formData = await req.formData();
@@ -49,18 +56,18 @@ export async function POST(req) {
       // ذخیره ویدیو جلسه
       const lessonVideoBuffer = Buffer.from(await lessonVideo.arrayBuffer());
       const lessonVideoName = `${Date.now()}-${lessonVideo.name}`;
-      const lessonVideoPath = path.join(process.cwd(), "public","uploads", lessonVideoName);
+      const lessonVideoPath = path.join(process.cwd(), "public", "uploads", lessonVideoName);
       await writeFile(lessonVideoPath, lessonVideoBuffer);
 
       // ذخیره تامنیل جلسه
       const lessonThumbBuffer = Buffer.from(await lessonThumbnail.arrayBuffer());
       const lessonThumbName = `${Date.now()}-${lessonThumbnail.name}`;
-      const lessonThumbPath = path.join(process.cwd(), "public","uploads", lessonThumbName);
+      const lessonThumbPath = path.join(process.cwd(), "public", "uploads", lessonThumbName);
       await writeFile(lessonThumbPath, lessonThumbBuffer);
       //audio
       const lessonAudioBuffer = Buffer.from(await lessonAudio.arrayBuffer());
       const lessonAudioName = `${Date.now()}-${lessonAudio.name}`;
-      const lessonAudioPath = path.join(process.cwd(), "public","uploads", lessonAudioName);
+      const lessonAudioPath = path.join(process.cwd(), "public", "uploads", lessonAudioName);
       await writeFile(lessonAudioPath, lessonAudioBuffer);
 
       lessons.push({
@@ -69,7 +76,7 @@ export async function POST(req) {
         video: `${DOMAIN}/uploads/${lessonVideoName}`,
         thumbnail: `${DOMAIN}/uploads/${lessonThumbName}`,
         audio: `${DOMAIN}/uploads/${lessonAudioName}`,
-        
+
       });
     }
 
@@ -89,7 +96,7 @@ export async function POST(req) {
       lessons,
     });
 
-    return Response.json({ message: "دوره با موفقیت ایجاد شد", data: newCourse },{status:201});
+    return Response.json({ message: "دوره با موفقیت ایجاد شد", data: newCourse }, { status: 201 });
   } catch (err) {
     console.error(err);
     return Response.json({ error: "خطا در ایجاد دوره", message: err.message }, { status: 500 });
@@ -98,6 +105,11 @@ export async function POST(req) {
 
 
 export async function GET() {
+      const isAdmin = await authAdmin();
+  
+      if (!isAdmin) {
+        redirect("/404")
+      }
   const courses = await CourseModel.find({}, "-__v").populate("comments");
   return Response.json(courses);
 }

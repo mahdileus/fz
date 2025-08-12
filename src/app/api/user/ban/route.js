@@ -1,8 +1,14 @@
 import connectToDB from "@/configs/db";
 import BanModel from "@/models/Ban";
+import { authAdmin } from "@/utils/auth-server";
 
 export async function POST(req) {
   try {
+    const isAdmin = await authAdmin();
+
+    if (!isAdmin) {
+      throw new Error("This api protected and you can't access it !!");
+    }
     await connectToDB();
     const { email, phone } = await req.json();
 

@@ -4,9 +4,17 @@ import { isValidObjectId } from "mongoose";
 import { NextResponse } from "next/server";
 import path from "path";
 import { writeFile } from "fs/promises";
+import { authAdmin } from "@/utils/auth-server";
+import { redirect } from "next/navigation";
 
 export async function PUT(req, { params }) {
   await connectToDB();
+
+  const isAdmin = await authAdmin();
+
+  if (!isAdmin) {
+    redirect("/404")
+  }
 
   const { id } = await params;
 
@@ -33,17 +41,17 @@ export async function PUT(req, { params }) {
   const thumbnail = formData.get("thumbnail");
   const audio = formData.get("audio")
 
-const uploadsPath = path.join(process.cwd(), "public", "uploads");
+  const uploadsPath = path.join(process.cwd(), "public", "uploads");
 
-const saveFile = async (file) => {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const fileName = `${Date.now()}-${file.name}`;
-  const filePath = path.join(uploadsPath, fileName);
-  await writeFile(filePath, buffer);
+  const saveFile = async (file) => {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const fileName = `${Date.now()}-${file.name}`;
+    const filePath = path.join(uploadsPath, fileName);
+    await writeFile(filePath, buffer);
 
-  const relativePath = path.relative(path.join(process.cwd(), "public"), filePath);
-  return `/${relativePath.replace(/\\/g, "/")}`;  // برای ویندوز: \ → /
-};
+    const relativePath = path.relative(path.join(process.cwd(), "public"), filePath);
+    return `/${relativePath.replace(/\\/g, "/")}`;  // برای ویندوز: \ → /
+  };
 
 
   if (introVideo && introVideo.size > 0) {
@@ -68,7 +76,7 @@ const saveFile = async (file) => {
     const description = formData.get(`lessonDescription-${i}`);
     const audio = formData.get(`lessonAudio-${i}`);
 
-    const lesson = { title, description  };
+    const lesson = { title, description };
 
     if (video && video.size > 0) {
       lesson.video = await saveFile(video);
@@ -91,7 +99,13 @@ const saveFile = async (file) => {
   return NextResponse.json({ message: "دوره با موفقیت بروزرسانی شد" }, { status: 200 });
 }
 export async function DELETE(req, { params }) {
+
   await connectToDB();
+  const isAdmin = await authAdmin();
+
+  if (!isAdmin) {
+    redirect("/404")
+  }
 
   const { id } = await params;
 

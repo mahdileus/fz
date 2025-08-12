@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link";
 import { FaMapPin } from "react-icons/fa";
 import { IoMdCall, IoMdMail } from "react-icons/io";
 import { PiTelegramLogo, PiInstagramLogo, PiYoutubeLogo } from "react-icons/pi"
@@ -43,9 +44,17 @@ const MapBox = () => {
               </button>
             </form>
             <div className="flex gap-4 mt-5 text-2xl justify-center text-[#112D4E]">
+           <Link href="https://instagram.com/firouzeh.javaherian" target="_blank">
               <PiInstagramLogo className="hover:text-[#3F72AF] cursor-pointer" />
+            </Link>
+
+            <Link href="https://t.me/Poshtibani_javaherian" target="_blank">
               <PiTelegramLogo className="hover:text-[#3F72AF] cursor-pointer" />
+            </Link>
+
+            <Link href="https://www.youtube.com/@FirouzehJavaherian-gn3" target="_blank">
               <PiYoutubeLogo className="hover:text-[#3F72AF] cursor-pointer" />
+            </Link>
             </div>
           </div>
 
@@ -75,7 +84,10 @@ const MapBox = () => {
                 <IoMdCall className="text-secondery w-6 h-6 mt-1" />
                 <div>
                   <p className="font-bold text-primary text-lg">شماره تماس :</p>
+                  <Link href="tel:09925349731">
                   <p className="text-gray-700 text-base">09925349731</p>
+                  
+                  </Link>
                 </div>
               </div>
 

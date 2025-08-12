@@ -1,11 +1,17 @@
 import connectToDB from "@/configs/db";
 import UserModel from "@/models/User";
-import { authUser } from "@/utils/auth-server";
+import { authAdmin, authUser } from "@/utils/auth-server";
 import { validateEmail, validatePhone } from "@/utils/auth-client";
+import { redirect } from "next/navigation";
 
 export async function POST(req) {
   try {
     await connectToDB();
+    const isAdmin = await authAdmin();
+
+    if (!isAdmin) {
+      redirect("/404")
+    }
     const user = await authUser();
     const body = await req.json();
     const { name, email, phone } = body;
@@ -45,7 +51,13 @@ export async function POST(req) {
 
 export async function DELETE(req) {
   try {
+
     await connectToDB();
+    const isAdmin = await authAdmin();
+
+    if (!isAdmin) {
+      redirect("/404")
+    }
     const body = await req.json();
     const { id } = body;
 

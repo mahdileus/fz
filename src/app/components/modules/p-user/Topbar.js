@@ -9,7 +9,7 @@ export default async function Topbar() {
   const username = user.name
   return (
     <header className="flex justify-between items-center p-4 border-b border-primary bg-white">
-      <h2 className="text-primary">{username} عزیز به وبسایت خودت خوش اومدی.</h2>
+      <h2 className="text-primary text-sm md:text-base">{username} عزیز به وبسایت خودت خوش اومدی.</h2>
       <div className="flex items-center gap-4">
         <CiBellOn className="w-8 h-8" />
         <img

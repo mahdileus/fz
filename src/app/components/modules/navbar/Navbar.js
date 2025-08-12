@@ -38,10 +38,11 @@ export default function Navbar({ isLogin }) {
             {/* شماره تماس + ورود */}
             <div className="flex justify-between items-center gap-5">
               <span className="flex justify-between items-center gap-2.5">
-                <p className="text-secondery font-dana lg:text-lg text-base">
-                  09925349731
-                </p>
-                <PiPhone className="text-xl lg:text-2xl text-primary" />
+            <Link href="tel:09925349731">
+              <p className="text-lg text-primary cursor-pointer hover:text-[#3F72AF]">09925349731
+                <PiPhone size={24} className="text-secondery inline ml-2 text-xl" /> 
+              </p>
+            </Link>
               </span>
               {!isLogin ? (
                 <Link
