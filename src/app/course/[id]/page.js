@@ -6,52 +6,52 @@ import CourseInfoBoxes from "../../components/template/course/CourseInfoBoxes";
 import CourseChapters from "@/app/components/template/course/CourseChapters";
 import CourseModel from "@/models/Course";
 import UserCourseModel from "@/models/UserCourse";
+import CommentModel from "@/models/Comment";
 import connectToDB from "@/configs/db";
 import { authUser } from "@/utils/auth-server";
+import { notFound } from "next/navigation";
 import Comments from "@/app/components/modules/comments/Comments";
 
-import CommentModel from "@/models/Comment";
+function serializeDoc(doc) {
+  return JSON.parse(JSON.stringify(doc));
+}
 
 const Course = async ({ params }) => {
   await connectToDB();
-  const { id: CourseID } = await params;
+
+  const { id: CourseID } = await params; // ✅ حل مشکل await
   const user = await authUser();
 
-  const comments = await CommentModel.find({ CourseID })
-    .populate("userID", "name email role phone")
-    .lean();
+  const [course, comments, userCourses] = await Promise.all([
+    CourseModel.findOne({ _id: CourseID }).lean(),
+    CommentModel.find({ CourseID })
+      .populate("userID", "name email role phone")
+      .lean(),
+    user
+      ? UserCourseModel.find({ user: user.id }).populate("course").lean()
+      : Promise.resolve([]),
+  ]);
 
-  let registeredCourseIds = [];
-  if (user && user.id) {
-    const userCourseRegs = await UserCourseModel.find({ user: user.id })
-      .lean()
-      .populate("course");
-    registeredCourseIds = userCourseRegs.map((item) =>
-      item.course._id.toString()
-    );
-  }
+  if (!course) return notFound();
 
-  const course = await CourseModel.findOne({ _id: CourseID }).lean();
-
-  const isRegistered = user && user.id ? registeredCourseIds.includes(CourseID) : false;
+  const registeredCourseIds = userCourses.map((item) =>
+    item.course._id.toString()
+  );
+  const isRegistered = user
+    ? registeredCourseIds.includes(CourseID)
+    : false;
 
   return (
     <>
       <Navbar isLogin={!!user} />
-      <CourseHeader
-        course={JSON.parse(JSON.stringify(course))}
-        isRegistered={isRegistered}
-      />
+      <CourseHeader course={serializeDoc(course)} isRegistered={isRegistered} />
       <CourseInfoBoxes category={course.category} />
       <CourseFullDescription
         longDescription={course.longDescription}
         title={course.title}
       />
-      <CourseChapters
-        course={JSON.parse(JSON.stringify(course))}
-        isRegistered={isRegistered}
-      />
-      <Comments CourseID={CourseID} comments={JSON.parse(JSON.stringify(comments))} />
+      <CourseChapters course={serializeDoc(course)} isRegistered={isRegistered} />
+      <Comments CourseID={CourseID} comments={serializeDoc(comments)} />
       <Footer />
     </>
   );

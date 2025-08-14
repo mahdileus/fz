@@ -5,17 +5,17 @@ import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import { CartContext } from "@/app/context/CartContext";
 
-export default function CourseHeader({ course, isRegistered }) {
-  
-  const discount = course.discountPercent || 0;
-  const price = course.price || 0;
-  const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
+export default function CourseHeader({ course = {}, isRegistered = false }) {
+  const discount = course?.discountPercent || 0;
+  const price = course?.price || 0;
+  const discountedPrice =
+    discount > 0 ? price - (price * discount) / 100 : price;
 
-  const { addToCart, cartItems } = useContext(CartContext);
+  const { addToCart, cartItems = [] } = useContext(CartContext);
   const router = useRouter();
 
   const handleAddToCart = () => {
-    if (isRegistered) return; // اگه ثبت نام کرده، نباید کاری انجام بده
+    if (isRegistered) return;
 
     const exists = cartItems.find((item) => item._id === course._id);
 
@@ -44,6 +44,14 @@ export default function CourseHeader({ course, isRegistered }) {
     });
   };
 
+  if (!course?._id) {
+    return (
+      <div className="text-center py-20 text-red-500 font-bold">
+        اطلاعات دوره پیدا نشد.
+      </div>
+    );
+  }
+
   return (
     <section className="container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
       {/* ویدیو معرفی */}
@@ -62,10 +70,10 @@ export default function CourseHeader({ course, isRegistered }) {
       <div className="flex flex-col justify-between bg-white rounded-xl shadow-lg p-6 space-y-6 border border-[#DBE2EF]">
         <div>
           <h1 className="text-2xl text-center font-bold text-primary leading-9 py-5">
-            {course.title}
+            {course.title || "عنوان دوره"}
           </h1>
           <p className="text-base text-gray-700 text-justify text-align-last-center">
-            {course.shortDescription}
+            {course.shortDescription || "توضیحاتی برای این دوره موجود نیست."}
           </p>
         </div>
 
@@ -83,7 +91,7 @@ export default function CourseHeader({ course, isRegistered }) {
                         {price.toLocaleString()} تومان
                       </span>
                     </div>
-                    <span className=" font-bold text-2xl">
+                    <span className="font-bold text-2xl">
                       {discountedPrice.toLocaleString()} تومان
                     </span>
                   </>
