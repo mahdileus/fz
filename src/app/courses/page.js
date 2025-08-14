@@ -15,14 +15,21 @@ const CoursesArchive = async () => {
 
   const user = await authUser();
 
-  // فقط اگر کاربر لاگین بود، دوره‌های ثبت‌نام‌شده رو بگیر
   let registeredCourseIds = [];
   if (user && user.id) {
     const userCourseRegs = await UserCourseModel.find({ user: user.id })
       .lean()
       .populate('course');
-    registeredCourseIds = userCourseRegs.map(item => item.course._id.toString());
+
+    // فقط دوره‌هایی که موجود هستند
+    registeredCourseIds = userCourseRegs
+      .filter(item => item.course && item.course._id)
+      .map(item => item.course._id.toString());
   }
+
+  // برای ارسال به کامپوننت‌ها هم امن کن
+  const safeCourses = (courses || []).filter(course => course && course._id);
+
 
   return (
     <>
@@ -33,11 +40,12 @@ const CoursesArchive = async () => {
       </div>
 
       <Courses
-        courses={JSON.parse(JSON.stringify(courses))}
+        courses={JSON.parse(JSON.stringify(safeCourses))}
         tags={allTags}
         categories={allCategories}
         registeredCourseIds={JSON.parse(JSON.stringify(registeredCourseIds))}
       />
+
       <Footer />
     </>
   );
