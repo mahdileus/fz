@@ -10,11 +10,6 @@ export default async function Topbar() {
       <h2 className="text-primary text-sm md:text-base">{username} عزیز به وبسایت خودت خوش اومدی.</h2>
       <div className="flex items-center gap-4">
         <CiBellOn className="w-8 h-8" />
-        <img
-          src="/avatar.jpg"
-          alt="User"
-          className="w-8 h-8 rounded-full border border-white"
-        />
       </div>
     </header>
   );

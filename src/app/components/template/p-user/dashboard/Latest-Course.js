@@ -12,6 +12,7 @@ export default async function LatestCourse() {
         .lean()
         .limit(4)
         .populate('course');
+       
 
     return (
         <section className="mt-14 container">
@@ -19,9 +20,9 @@ export default async function LatestCourse() {
                 <p>هیچ دوره‌ای خریداری نشده است.</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {usercourses.map(usercourse => (
+                    {usercourses.map((usercourse , index)=> (
 
-                        <CourseCard key={usercourse._id} usercourse={JSON.parse(JSON.stringify(usercourse))} />
+                        <CourseCard key={index} usercourse={JSON.parse(JSON.stringify(usercourse))} />
                     ))}
                 </div>
             )}
