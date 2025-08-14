@@ -29,34 +29,40 @@ export default async function Home() {
 
   let userCourseRegs = [];
   if (user) {
-    userCourseRegs = await UserCourseModel.find({ user: user.id })
+    userCourseRegs = (await UserCourseModel.find({ user: user.id })
       .lean()
-      .populate('course');
+      .populate('course')
+    ).filter(item => item.course); // فقط مواردی که course دارند
   }
+
+  const safeCourses = (courses || []).filter(course => course);
+  const safePodcasts = (podcasts || []).filter(p => p);
+  const safePosts = (posts || []).filter(p => p);
+
 
   return (
     <div>
       <Navbar isLogin={!!user} />
-      <HeroSection/>
+      <HeroSection />
 
       <SectionHeader title="جدیدترین دوره‌ها" href="/courses" type="course" />
       <LatestCourse
-        courses={JSON.parse(JSON.stringify(courses))}
+        courses={JSON.parse(JSON.stringify(safeCourses))}
         userCourseRegs={JSON.parse(JSON.stringify(userCourseRegs))}
       />
 
-      <AboutUs/>
+      <AboutUs />
 
       <SectionHeader title="جدیدترین پادکست ها" href="/podcasts" type="podcast" />
-      <LatestPodcast podcasts={JSON.parse(JSON.stringify(podcasts))}/>
+      <LatestPodcast podcasts={JSON.parse(JSON.stringify(podcasts))} />
 
       <SectionHeader title="جدیدترین نظرات" type="comment" />
-      <CommentBox/>
+      <CommentBox />
 
       <SectionHeader title="جدیدترین مقالات" href="/posts" type="article" />
-      <LatestArticle posts={JSON.parse(JSON.stringify(posts))}/>
+      <LatestArticle posts={JSON.parse(JSON.stringify(posts))} />
 
-      <Footer/>
+      <Footer />
     </div>
   );
 }
