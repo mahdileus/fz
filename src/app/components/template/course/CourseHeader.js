@@ -1,11 +1,14 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import { CartContext } from "@/app/context/CartContext";
 
 export default function CourseHeader({ course = {}, isRegistered = false }) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
   const discount = course?.discountPercent || 0;
   const price = course?.price || 0;
   const discountedPrice =
@@ -13,6 +16,13 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
 
   const { addToCart, cartItems = [] } = useContext(CartContext);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!course || !course._id) {
+      setError(true);
+    }
+    setLoading(false);
+  }, [course]);
 
   const handleAddToCart = () => {
     if (isRegistered) return;
@@ -44,7 +54,19 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
     });
   };
 
-  if (!course?._id) {
+  if (loading) {
+    return (
+      <div className="container mx-auto py-20">
+        <div className="animate-pulse flex flex-col gap-4">
+          <div className="w-full h-64 bg-gray-200 rounded-xl"></div>
+          <div className="w-full h-6 bg-gray-200 rounded"></div>
+          <div className="w-1/2 h-6 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !course?._id) {
     return (
       <div className="text-center py-20 text-red-500 font-bold">
         اطلاعات دوره پیدا نشد.

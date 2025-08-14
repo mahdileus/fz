@@ -19,7 +19,7 @@ function serializeDoc(doc) {
 const Course = async ({ params }) => {
   await connectToDB();
 
-  const { id: CourseID } = await params; // ✅ حل مشکل await
+  const { id: CourseID } = await params; // ❌ دیگه await نداره
   const user = await authUser();
 
   const [course, comments, userCourses] = await Promise.all([
@@ -34,9 +34,10 @@ const Course = async ({ params }) => {
 
   if (!course) return notFound();
 
-  const registeredCourseIds = userCourses.map((item) =>
-    item.course._id.toString()
-  );
+  const registeredCourseIds = userCourses
+    .filter(item => item.course) // جلوگیری از نال
+    .map(item => item.course._id.toString());
+
   const isRegistered = user
     ? registeredCourseIds.includes(CourseID)
     : false;
