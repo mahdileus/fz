@@ -5,11 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 
-export default function CourseCard({ course, isRegistered }) {
+export default function CourseCard({ course, isRegistered = false }) {
   const discount = course.discountPercent || 0; // درصد تخفیف یا صفر
   const price = course.price || 0;
-  // محاسبه قیمت نهایی با تخفیف
-  const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
+  const discountedPrice =
+    discount > 0 ? price - (price * discount) / 100 : price;
 
   return (
     <div className="bg-white shadow-md rounded-2xl overflow-hidden w-full max-w-sm h-[410px]">
@@ -42,14 +42,13 @@ export default function CourseCard({ course, isRegistered }) {
           {course.shortDescription}
         </p>
 
-        {/* خط جداکننده */}
         <hr className="border-t border-gray-200 my-2" />
 
         {/* قیمت یا دکمه */}
         <div className="flex justify-between items-center">
-          {isRegistered ? (
+          {Boolean(isRegistered) ? (
             <Link
-              href={`/course/${course._id}`} // یا هر لینک مناسب برای مشاهده دوره
+              href={`/course/${course._id}`}
               className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-4 py-2 rounded-lg transition"
             >
               مشاهده دوره
@@ -78,7 +77,7 @@ export default function CourseCard({ course, isRegistered }) {
             </div>
           )}
 
-          {/* امتیاز سمت راست */}
+          {/* امتیاز */}
           <div className="flex items-center gap-1 text-sm text-yellow-500">
             <FaStar size={14} />
             <span className="text-[#3F72AF] font-medium">
