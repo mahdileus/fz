@@ -97,7 +97,9 @@ export default function Footer() {
 
       {/* دکمه اسکرول به بالا */}
       <div className="flex justify-center mt-8">
-        <button className="p-2 bg-[#112D4E] text-white rounded-full hover:bg-[#3F72AF]">
+        <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="p-2 bg-[#112D4E] text-white rounded-full hover:bg-[#3F72AF] cursor-pointer">
           <IoIosArrowUp size={20} />
         </button>
       </div>

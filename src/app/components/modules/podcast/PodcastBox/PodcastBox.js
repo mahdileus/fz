@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function PodcastBox({ podcast }) {
-  const { title, tags, duration, thumbnail, _id } = podcast
+  const { title, tags, duration, thumbnail, _id, slug } = podcast
   return (
     <>
       {/* باکس اصلی */}
@@ -42,7 +42,7 @@ export default function PodcastBox({ podcast }) {
         </div>
 
         {/* عنوان */}
-        <Link href={`/podcast/${_id}`}>
+        <Link href={`/podcast/${slug}`}>
           <h3 className="text-primary text-lg font-bold hover:text-secondery transition">
             {title}
           </h3>
@@ -51,7 +51,7 @@ export default function PodcastBox({ podcast }) {
         {/* خط جداکننده */}
         <hr className="border-t border-light-blue" />
         {/* دکمه مشاهده */}
-        <Link href={`/podcast/${_id}`} className="flex items-center gap-1 text-sm text-primary transition mt-2">
+        <Link href={`/podcast/${slug}`} className="flex items-center gap-1 text-sm text-primary transition mt-2">
           مشاهده پادکست
           <IoIosArrowRoundBack className="text-secondery w-7 h-7" />
         </Link>

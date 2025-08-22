@@ -26,6 +26,7 @@ export async function PUT(req, { params }) {
 
   const updatedData = {
     title: formData.get("title"),
+    slug: formData.get("slug"),
     price: formData.get("price"),
     category: formData.get("category"),
     duration: formData.get("duration"),

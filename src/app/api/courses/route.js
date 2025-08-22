@@ -2,22 +2,24 @@ import connectToDB from "@/configs/db";
 import CourseModel from "@/models/Course";
 import { authAdmin } from "@/utils/auth-server";
 import { writeFile } from "fs/promises";
-import {  redirect } from "next/navigation";
+import { redirect } from "next/navigation";
+import slugify from "slugify";
 import path from "path";
 
 export async function POST(req) {
   try {
     const isAdmin = await authAdmin();
 
-      if (!isAdmin) {
-        redirect("/404")
-      }
+    if (!isAdmin) {
+      redirect("/404")
+    }
     await connectToDB();
 
     const formData = await req.formData();
 
     // دریافت فیلدهای اصلی دوره
     const title = formData.get("title");
+    const slug = slugify(formData.get("slug"), { lower: true, strict: true });
     const price = +formData.get("price");
     const shortDescription = formData.get("shortDescription");
     const longDescription = formData.get("longDescription");
@@ -83,6 +85,7 @@ export async function POST(req) {
     // ساخت دوره در دیتابیس
     const newCourse = await CourseModel.create({
       title,
+      slug,
       price,
       category,
       duration,
@@ -105,11 +108,11 @@ export async function POST(req) {
 
 
 export async function GET() {
-      const isAdmin = await authAdmin();
-  
-      if (!isAdmin) {
-        redirect("/404")
-      }
+  const isAdmin = await authAdmin();
+
+  if (!isAdmin) {
+    redirect("/404")
+  }
   const courses = await CourseModel.find({}, "-__v").populate("comments");
   return Response.json(courses);
 }

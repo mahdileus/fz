@@ -16,7 +16,7 @@ export default function CourseCard({ usercourse }) {
     <div className="bg-white shadow-md rounded-2xl overflow-hidden w-full max-w-sm">
       {/* تصویر دوره + دکمه لایک */}
       <div className="relative w-full h-48">
-        <Link href={`/course/${course._id}`}>
+        <Link href={`/course/${course.slug}`}>
           <Image
             src={course.thumbnail || "/default-course.jpg"} // تصویر پیش‌فرض در صورت نبود thumbnail
             alt={course.title || "Course"}
@@ -32,7 +32,7 @@ export default function CourseCard({ usercourse }) {
       {/* محتوا */}
       <div className="p-4 flex flex-col gap-3 text-right">
         {/* عنوان لینک‌دار */}
-        <Link href={`/course/${course._id}`}>
+        <Link href={`/course/${course.slug}`}>
           <h3 className="text-primary text-lg font-bold hover:text-secondery transition">
             {course.title}
           </h3>
@@ -49,7 +49,7 @@ export default function CourseCard({ usercourse }) {
 
         {/* دکمه مشاهده */}
         <div className="flex justify-between items-end">
-          <Link href={`/course/${course._id}`}>مشاهده دوره</Link>
+          <Link href={`/course/${course.slug}`}>مشاهده دوره</Link>
         </div>
       </div>
     </div>

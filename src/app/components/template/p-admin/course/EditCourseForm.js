@@ -13,6 +13,7 @@ export default function EditCourseForm({ course, courseId }) {
 
 const [courseInfo, setCourseInfo] = useState({
   title: course.title || "",
+  slug: course.slug || "",
   price: course.price || "",
   category: course.category || "",
   duration: course.duration || "",
@@ -95,6 +96,7 @@ const [lessons, setLessons] = useState(
       {/* اطلاعات پایه دوره */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input className="input" type="text" placeholder="عنوان دوره" value={courseInfo.title} onChange={(e) => setCourseInfo({ ...courseInfo, title: e.target.value })} />
+        <input className="input" type="text" placeholder="نامک دوره" value={courseInfo.slug} onChange={(e) => setCourseInfo({ ...courseInfo, slug: e.target.value })} />
         <input className="input" type="number" placeholder="قیمت" value={courseInfo.price} onChange={(e) => setCourseInfo({ ...courseInfo, price: e.target.value })} />
         <input className="input" type="number" placeholder="درصد تخفیف" value={courseInfo.discountPercent} onChange={(e) => setCourseInfo({ ...courseInfo, discountPercent: e.target.value })} />
         <input className="input" type="text" placeholder="دسته‌بندی" value={courseInfo.category} onChange={(e) => setCourseInfo({ ...courseInfo, category: e.target.value })} />

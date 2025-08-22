@@ -12,6 +12,7 @@ export default function DashboardPodcast() {
     const router = useRouter();
     const [form, setForm] = useState({
         title: "",
+        slug:"",
         category: "",
         duration: "",
         tags: "",
@@ -61,6 +62,7 @@ export default function DashboardPodcast() {
             }).then(() => {
                 setForm({
                     title: "",
+                    slug:"",
                     category: "",
                     duration: "",
                     tags: "",
@@ -92,6 +94,13 @@ export default function DashboardPodcast() {
                     className="input min-h-[56px] w-full"
                     placeholder="عنوان"
                     value={form.title}
+                    onChange={handleChange}
+                />
+                <input
+                    name="slug"
+                    className="input min-h-[56px] w-full"
+                    placeholder="نامک"
+                    value={form.slug}
                     onChange={handleChange}
                 />
                 <input

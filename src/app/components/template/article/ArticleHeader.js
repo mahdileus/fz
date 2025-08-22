@@ -5,13 +5,10 @@ import LikeIcon from "@/utils/Like";
 import Image from "next/image";
 import { FaTags } from "react-icons/fa";
 import { CiCalendar, CiUser, CiFolderOn, } from "react-icons/ci";
+import SidebarArticles from "./Sidebar";
 
 
-export default function ArticleHeader({ article }) {
-  console.log("article", article);
-
-
-
+export default function ArticleHeader({ article, articles }) {
 
   return (
     <div className="container grid grid-cols-1 lg:grid-cols-4 gap-8 my-10">
@@ -67,38 +64,14 @@ export default function ArticleHeader({ article }) {
           </div>
 
           <div className="flex items-center gap-4 text-xl text-primary">
-            <LikeIcon />
+            <LikeIcon itemID={article._id} itemType="article" />
           </div>
         </div>
       </div>
 
       {/* Sidebar Left */}
       <div className="lg:col-span-1">
-        <div className="bg-white p-4 rounded-xl shadow space-y-4">
-          {/* اطلاعات مقاله مرتبط */}
-          <div className="flex items-start gap-3">
-            <img
-              src="/path/to/article-thumbnail.jpg"
-              alt="article"
-              className="w-20 h-20 object-cover rounded-md"
-            />
-            <div className="flex flex-col justify-start text-right">
-              <h4 className="font-semibold text-sm text-primary">عنوان مقاله</h4>
-              <p className="text-xs text-gray-500 mt-1">
-                این یک توضیح کوتاه درباره مقاله است که حداکثر در دو خط نمایش داده می‌شود.
-              </p>
-            </div>
-          </div>
-          {/* دسته‌بندی و تاریخ */}
-          <div className="flex justify-between text-xs text-gray-600">
-            <span className="bg-light-blue text-primary px-2 py-0.5 rounded-full">
-              دسته‌بندی: توسعه فردی
-            </span>
-            <span>1403/04/20</span>
-          </div>
-          <hr className="text-light-blue" />
-
-        </div>
+        <SidebarArticles articles={articles}/>
       </div>
 
     </div>

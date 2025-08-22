@@ -5,8 +5,6 @@ import swal from "sweetalert";
 import CourseItem from "./CourseItem";
 import { CartContext } from "@/app/context/CartContext";
 
-
-
 export default function Cart() {
   const {
     cartItems,
@@ -18,6 +16,8 @@ export default function Cart() {
     totalPrice,
     discountedPrice,
   } = useContext(CartContext);
+
+  
 
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
@@ -51,7 +51,7 @@ export default function Cart() {
     }
 
     try {
-      const res = await fetch("/api/cart/apply-discount", {
+      const res = await fetch("/api/cart/discount", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -88,8 +88,11 @@ export default function Cart() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user._id,
-          items: cartItems,
-          discountCode,
+          items: cartItems.map((item) => ({
+            _id: item._id,
+            price: item.price, // فقط قیمت تخفیف‌خورده
+          })),
+          discountCode: discountCode || null,
         }),
       });
 
@@ -98,7 +101,7 @@ export default function Cart() {
       if (res.ok && data.url) {
         window.location.href = data.url;
       } else {
-        swal(data.message || "خطا در شروع پرداخت", "", "error");
+        swal(data.error || "خطا در شروع پرداخت", "", "error");
       }
     } catch {
       swal("خطا در ارتباط با سرور", "", "error");
@@ -114,9 +117,6 @@ export default function Cart() {
   }
 
   return (
-    <>
-
-        
     <div className="container mx-auto p-10 rounded-lg shadow-lg mt-30 text-primary min-h-[70vh]">
       <h2 className="text-xl font-extrabold mb-8 text-right">سبد خرید شما</h2>
 
@@ -125,8 +125,8 @@ export default function Cart() {
       ) : (
         <>
           <ul className="space-y-6">
-            {cartItems.map((course) => (
-              <CourseItem key={course._id} course={course} onRemove={removeFromCart} />
+            {cartItems.map((course, index) => (
+              <CourseItem key={index} course={course} onRemove={removeFromCart} />
             ))}
           </ul>
 
@@ -136,7 +136,7 @@ export default function Cart() {
               value={discountCode}
               onChange={(e) => setDiscountCode(e.target.value)}
               placeholder="کد تخفیف خود را وارد کنید"
-              className="flex-grow p-3 rounded border border-light-blue focus:outline-none focus:ring-2 focus:ring-secondery text-primary "
+              className="flex-grow p-3 rounded border border-light-blue focus:outline-none focus:ring-2 focus:ring-secondery text-primary"
             />
             <button
               onClick={applyDiscount}
@@ -150,7 +150,7 @@ export default function Cart() {
             <p className="text-lg">
               جمع کل: <span className="font-bold">{totalPrice.toLocaleString()} تومان</span>
             </p>
-            <p className="text-xl  text-secondery">
+            <p className="text-xl text-secondery">
               پس از تخفیف: <span className="font-bold">{discountedPrice.toLocaleString()} تومان</span>
             </p>
           </div>
@@ -164,6 +164,5 @@ export default function Cart() {
         </>
       )}
     </div>
-    </>
   );
 }

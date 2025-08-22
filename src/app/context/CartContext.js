@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const CartContext = createContext();
 
@@ -29,21 +29,32 @@ export function CartProvider({ children }) {
   }, [cartItems, discountCode, discountPercent]);
 
   // اضافه کردن دوره به سبد
-  const addToCart = (course) => {
-    if (!cartItems.find((item) => item._id === course._id)) {
-      setCartItems([...cartItems, course]);
-    }
-  };
+const addToCart = (course) => {
+  if (!cartItems.find((item) => item._id === course._id)) {
+    const cartItem = {
+      _id: course._id,
+      title: course.title,
+      thumbnail: course.thumbnail,
+      shortDescription: course.shortDescription,
+      price: course.price || 0,  // 👈 حتماً ست کن
+      discountedPrice: course.discountedPrice || null,
+    };
+    setCartItems([...cartItems, cartItem]);
+  }
+};
 
+ 
+
+  
   // حذف دوره از سبد
   const removeFromCart = (courseId) => {
     setCartItems(cartItems.filter((item) => item._id !== courseId));
   };
 
-  // محاسبه مجموع قیمت
-  const totalPrice = cartItems.reduce((sum, item) => sum + (item.discountedPrice || item.price), 0);
+  // محاسبه مجموع قیمت (فقط از item.price استفاده می‌کنیم)
+const totalPrice = cartItems.reduce((sum, item) => sum + (item.price || 0), 0);
 
-  // محاسبه قیمت بعد از تخفیف
+  // محاسبه قیمت بعد از تخفیف کد تخفیف
   const discountedPrice = Math.round(totalPrice * ((100 - discountPercent) / 100));
 
   return (

@@ -5,16 +5,18 @@ import { useState } from "react";
 import Swal from "sweetalert";
 import dynamic from "next/dynamic";
 
+
 // CKEditor را یکجا و بدون SSR لود کن
 const CKEditorComponent = dynamic(() => import("../../../modules/ckeditor/CKEditorWrapper"), { ssr: false });
 export default function CourseForm() {
   const router = useRouter();
   const [lessons, setLessons] = useState([
-    { title: "", video: null, thumbnail: null },
+    { title: "", video: null,audio: null, thumbnail: null, },
   ]);
 
   const [courseInfo, setCourseInfo] = useState({
     title: "",
+    slug:"",
     price: "",
     category: "",
     duration: "",
@@ -68,6 +70,7 @@ export default function CourseForm() {
       }).then(() => {
         setCourseInfo({
           title: "",
+          slug:"",
           price: "",
           category: "",
           duration: "",
@@ -106,6 +109,16 @@ export default function CourseForm() {
 
           onChange={(e) =>
             setCourseInfo({ ...courseInfo, title: e.target.value })
+          }
+          className="input"
+        />
+        <input
+          type="text"
+          placeholder="نامک دوره"
+          value={courseInfo.slug}
+
+          onChange={(e) =>
+            setCourseInfo({ ...courseInfo, slug: e.target.value })
           }
           className="input"
         />

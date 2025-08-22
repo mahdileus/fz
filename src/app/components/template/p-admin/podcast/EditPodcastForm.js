@@ -13,6 +13,7 @@ export default function EditPodcastForm({ podcast, podcastId }) {
 
 const [podcastInfo, setPodcastInfo] = useState({
   title: podcast.title || "",
+  slug: podcast.slug || "",
   category: podcast.category || "",
   duration: podcast.duration || "",
   longDescription: podcast.longDescription || "",
@@ -63,6 +64,7 @@ const [podcastInfo, setPodcastInfo] = useState({
       {/* اطلاعات پایه دوره */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input className="input" type="text" placeholder="عنوان پادکست" value={podcastInfo.title} onChange={(e) => setPodcastInfo({ ...podcastInfo, title: e.target.value })} />
+        <input className="input" type="text" placeholder="نامک پادکست" value={podcastInfo.slug} onChange={(e) => setPodcastInfo({ ...podcastInfo, slug: e.target.value })} />
         <input className="input" type="text" placeholder="دسته‌بندی" value={podcastInfo.category} onChange={(e) => setPodcastInfo({ ...podcastInfo, category: e.target.value })} />
         <input className="input" type="number" placeholder="مدت زمان (دقیقه)" value={podcastInfo.duration} onChange={(e) => setPodcastInfo({ ...podcastInfo, duration: e.target.value })} />
       </div>

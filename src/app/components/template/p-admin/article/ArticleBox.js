@@ -35,7 +35,7 @@ export default function ArticleBox({ article }) {
     }
   };
     const handleEditClick = () => {
-    router.push(`/p-admin/posts/edit-post/${article._id}`);
+    router.push(`/p-admin/posts/edit-post/${article.slug}`);
   };
 
 
@@ -55,7 +55,7 @@ export default function ArticleBox({ article }) {
         <div className="flex justify-between ">
           <div>
             <Link
-              href={`/articles/${article._id}`}
+              href={`/articles/${article.slug}`}
               className="text-lg font-semibold text-primary hover:underline text-right"
             >
               {article.title}

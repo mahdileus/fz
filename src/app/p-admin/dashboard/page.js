@@ -5,6 +5,7 @@ import UserModel from "@/models/User";
 import CourseModel from "@/models/Course";
 import PodcastModel from "@/models/Podcast";
 import ArticleModel from "@/models/Article";
+import WishlistModel from "@/models/Wishlist";
 import ContentBarChart from "@/app/components/template/p-admin/dashboardChart/ContentBarChart";
 import WishlistPieChart from "@/app/components/template/p-admin/dashboardChart/WishlistPieChart";
 
@@ -23,6 +24,9 @@ const page = async () => {
       }
     }
   });
+  const wishlist = await WishlistModel.find({})
+  
+  
 
   const signupData = Object.entries(signupCounts).map(([date, count]) => ({
     date,
@@ -53,7 +57,7 @@ const page = async () => {
 
         <div className="bg-white rounded-2xl shadow-md p-2.5">
           <h2 className="text-2xl font-bold mb-4 text-center">درآمد سایت</h2>
-          <RevenueChart />
+          <RevenueChart  />
         </div>
       </div>
 
@@ -66,7 +70,7 @@ const page = async () => {
       {/* علاقه‌مندی‌ها */}
       <div className="bg-white rounded-2xl shadow-md p-2.5">
         <h2 className="text-2xl font-bold mb-4 text-center">آمار علاقه‌مندی‌ها</h2>
-        <WishlistPieChart />
+        <WishlistPieChart wishlist={JSON.parse(JSON.stringify(wishlist))} />
       </div>
     </section>
   );

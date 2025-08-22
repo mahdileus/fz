@@ -55,7 +55,7 @@ export default function PodcastBox({ podcast }) {
         <div className="flex justify-between ">
           <div>
             <Link
-              href={`/podcast/${podcast._id}`}
+              href={`/podcast/${podcast.slug}`}
               className="text-lg font-semibold text-primary hover:underline text-right"
             >
               {podcast.title}

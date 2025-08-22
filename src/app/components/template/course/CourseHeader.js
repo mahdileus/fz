@@ -11,14 +11,13 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
 
   const discount = course?.discountPercent || 0;
   const price = course?.price || 0;
-  const discountedPrice =
-    discount > 0 ? price - (price * discount) / 100 : price;
+  const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
 
   const { addToCart, cartItems = [] } = useContext(CartContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (!course || !course._id) {
+    if (!course || !course._id || !course.price) {
       setError(true);
     }
     setLoading(false);
@@ -26,6 +25,16 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
 
   const handleAddToCart = () => {
     if (isRegistered) return;
+
+    if (!course._id || !course.price) {
+      swal({
+        title: "خطا",
+        text: "اطلاعات دوره معتبر نیست",
+        icon: "error",
+        buttons: "فهمیدم",
+      });
+      return;
+    }
 
     const exists = cartItems.find((item) => item._id === course._id);
 
@@ -41,7 +50,8 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
 
     addToCart({
       ...course,
-      price: discountedPrice,
+      price: discountedPrice, // قیمت تخفیف‌خورده
+      originalPrice: price, // قیمت اصلی
     });
 
     swal({
@@ -76,7 +86,6 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
 
   return (
     <section className="container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
-      {/* ویدیو معرفی */}
       <div className="lg:col-span-2 w-full aspect-video rounded-xl overflow-hidden shadow-lg">
         <video
           controls
@@ -88,7 +97,6 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
         </video>
       </div>
 
-      {/* اطلاعات کلی دوره */}
       <div className="flex flex-col justify-between bg-white rounded-xl shadow-lg p-6 space-y-6 border border-[#DBE2EF]">
         <div>
           <h1 className="text-2xl text-center font-bold text-primary leading-9 py-5">

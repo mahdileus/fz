@@ -15,7 +15,7 @@ export default function CourseCard({ course, isRegistered = false }) {
     <div className="bg-white shadow-md rounded-2xl overflow-hidden w-full max-w-sm h-[410px]">
       {/* تصویر دوره + دکمه لایک */}
       <div className="relative w-full h-48">
-        <Link href={`/course/${course._id}`}>
+        <Link href={`/course/${course.slug}`}>
           <Image
             src={course.thumbnail}
             alt={course.title}
@@ -31,7 +31,7 @@ export default function CourseCard({ course, isRegistered = false }) {
       {/* محتوا */}
       <div className="p-4 flex flex-col gap-3 text-right">
         {/* عنوان لینک‌دار */}
-        <Link href={`/course/${course._id}`}>
+        <Link href={`/course/${course.slug}`}>
           <h3 className="text-primary text-lg font-bold hover:text-secondery transition">
             {course.title}
           </h3>
@@ -48,7 +48,7 @@ export default function CourseCard({ course, isRegistered = false }) {
         <div className="flex justify-between items-center">
           {Boolean(isRegistered) ? (
             <Link
-              href={`/course/${course._id}`}
+              href={`/course/${course.slug}`}
               className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-4 py-2 rounded-lg transition"
             >
               مشاهده دوره

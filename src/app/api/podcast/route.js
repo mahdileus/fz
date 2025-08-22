@@ -4,6 +4,8 @@ import { log } from "console";
 import { Domain } from "domain";
 import { writeFile } from "fs/promises";
 import path from "path";
+import slugify from "slugify";
+
 
 export async function POST(req) {
   try {
@@ -13,6 +15,7 @@ export async function POST(req) {
 
     // دریافت فیلدهای ساده
     const title = formData.get("title");
+    const slug = slugify(formData.get("slug"), { lower: true, strict: true });
     const longDescription = formData.get("longDescription");
     const category = formData.get("category");
     const duration = +formData.get("duration");
@@ -21,28 +24,29 @@ export async function POST(req) {
 
     const DOMAIN = process.env.DOMAIN;
     console.log(DOMAIN);
-    
-    
+
+
 
 
     // پردازش فایل تامنیل
     const thumbnail = formData.get("img");
     const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
     const thumbnailFilename = `${Date.now()}-${thumbnail.name}`;
-    const thumbnailPath = path.join(process.cwd(), "public","uploads", thumbnailFilename);
+    const thumbnailPath = path.join(process.cwd(), "public", "uploads", thumbnailFilename);
     await writeFile(thumbnailPath, thumbnailBuffer);
 
     // پردازش فایل پادکست
     const podcast = formData.get("podcast");
     const podcastBuffer = Buffer.from(await podcast.arrayBuffer());
     const podcastFilename = `${Date.now()}-${podcast.name}`;
-    const podcastPath = path.join(process.cwd(), "public","uploads", podcastFilename);
+    const podcastPath = path.join(process.cwd(), "public", "uploads", podcastFilename);
     await writeFile(podcastPath, podcastBuffer);
 
 
     // ایجاد course در دیتابیس
     const podcastes = await PodcastModel.create({
       title,
+      slug,
       category,
       duration,
       longDescription,

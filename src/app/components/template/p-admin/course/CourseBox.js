@@ -55,7 +55,7 @@ export default function CourseBox({ course }) {
         <div className="flex justify-between ">
           <div>
             <Link
-              href={`/course/${course._id}`}
+              href={`/course/${course.slug}`}
               className="text-lg font-semibold text-primary hover:underline text-right"
             >
               {course.title}

@@ -6,6 +6,8 @@ import { showSwal } from "@/utils/helpers";
 import { validateEmail, validatePassword, validatePhone } from "@/utils/auth-client";
 import Swal from "sweetalert";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 
 const Register = ({ showloginForm }) => {
   const router = useRouter()
@@ -52,10 +54,10 @@ const Register = ({ showloginForm }) => {
 
     if (res.status === 201) {
       Swal({
-        title:"ثبت نام با موفقیت انجام شد",
-        icon:"success",
-        buttons:"ورود به پنل کاربری"
-      }).then(()=>{
+        title: "ثبت نام با موفقیت انجام شد",
+        icon: "success",
+        buttons: "ورود به پنل کاربری"
+      }).then(() => {
         router.replace("/p-user")
       })
     } else if (res.status === 422) {
@@ -169,7 +171,9 @@ const Register = ({ showloginForm }) => {
               </p>
             </form>
 
-            <p className="text-sm text-center py-1 block text-secondery hover:underline cursor-pointer">لغو</p>
+            <Link href={"/"} className="text-sm text-center py-1 block text-secondery hover:underline cursor-pointer">
+              لغو
+            </Link>
           </div>
         </div>
       )}

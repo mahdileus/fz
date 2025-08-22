@@ -53,7 +53,7 @@ export default function CourseChapters({ course = {}, isRegistered = false }) {
                   lessons.map((lesson) => (
                     <li key={lesson._id || lesson.title}>
                       <Link
-                        href={`/course/${course?._id}/lesson/${lesson?._id}`}
+                        href={`/course/${course?.slug}/lesson/${lesson?._id}`}
                         className={`flex items-center gap-2 ${
                           isRegistered
                             ? "text-primary hover:underline cursor-pointer"

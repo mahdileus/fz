@@ -30,9 +30,9 @@ export default function Navbar({ isLogin }) {
           <div className="flex justify-between w-[90%] bg-gray-0/0 bg-clip-padding shadow-md backdrop-filter backdrop-blur-sm rounded-2xl px-8 py-10">
             {/* نام برند */}
             <div>
-              <h2 className="font-kalameh text-xl lg:text-2xl font-bold text-primary">
+              <Link href="/"  className="font-kalameh text-xl lg:text-2xl font-bold text-primary">
                 فیروزه جواهریان
-              </h2>
+              </Link>
             </div>
 
             {/* شماره تماس + ورود */}

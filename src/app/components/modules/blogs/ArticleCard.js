@@ -6,7 +6,7 @@ import LikeButton from "@/utils/Like";
 
 
 export default function ArticleCard({ post }) {
-  const { title, createdAt, thumbnail, _id, shortDescription, author, category } = post
+  const { title, createdAt, thumbnail, _id, shortDescription, author, category, slug } = post
 
   const createdAts = new Date(createdAt); // یا هر مسیری که props داره
   const shamsiDate = createdAts.toLocaleDateString("fa-IR");
@@ -14,7 +14,7 @@ export default function ArticleCard({ post }) {
     <div className="bg-white rounded-2xl overflow-hidden shadow-md w-full max-w-sm">
       {/* تصویر مقاله + دکمه لایک */}
       <div className="relative w-full h-48">
-        <Link href={`/articles/${_id}`}>
+        <Link href={`/articles/${slug}`}>
           <Image
             src={thumbnail}
             alt="Article Thumbnail"
@@ -30,7 +30,7 @@ export default function ArticleCard({ post }) {
       {/* محتوا */}
       <div className="p-4 flex flex-col gap-3 text-right">
         {/* عنوان لینک‌دار */}
-        <Link href={`/articles/${_id}`}>
+        <Link href={`/articles/${slug}`}>
           <h3 className="text-[#112D4E] text-lg font-bold leading-snug hover:text-[#3F72AF] transition">
             {title}
           </h3>
@@ -58,7 +58,7 @@ export default function ArticleCard({ post }) {
         {/* دکمه مطالعه - پایین و وسط */}
         <div className="flex justify-center">
           <Link
-            href={`/articles/${_id}`}
+            href={`/articles/${slug}`}
             className="text-sm text-[#3F72AF] hover:text-[#2c5e95] transition"
           >
             مطالعه مقاله

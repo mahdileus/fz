@@ -1,5 +1,6 @@
 "use client";
-import { useState, useRef } from "react";
+
+import { useState, useRef, useEffect } from "react";
 import { showSwal } from "@/utils/helpers";
 import swal from "sweetalert";
 import { useRouter } from "next/navigation";
@@ -8,6 +9,81 @@ const Sms = ({ hideOtpForm, phone, mode = "register" }) => {
   const inputsRef = useRef([]);
   const router = useRouter();
   const [codeArray, setCodeArray] = useState(["", "", "", "", ""]);
+  const [resendTimer, setResendTimer] = useState(120); // زمان اولیه ۱۲۰ ثانیه
+  const [resendCount, setResendCount] = useState(0); // تعداد دفعات ارسال مجدد
+  const [isResendDisabled, setIsResendDisabled] = useState(true); // غیرفعال بودن ارسال مجدد
+
+  // تابع برای شروع یا ریست تایمر
+  const startTimer = (duration) => {
+    setResendTimer(duration);
+    setIsResendDisabled(true);
+  };
+
+  // مدیریت تایمر
+  useEffect(() => {
+    if (resendTimer <= 0) {
+      setIsResendDisabled(false);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setResendTimer((prev) => {
+        if (prev <= 1) {
+          setIsResendDisabled(false);
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer); // پاکسازی تایمر
+  }, [resendTimer]);
+
+  // فرمت کردن زمان به دقیقه:ثانیه
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
+  // ارسال مجدد کد
+  const handleResendCode = async () => {
+    if (!phone || !/^09\d{9}$/.test(phone)) {
+      return showSwal("شماره موبایل وارد شده معتبر نیست", "error", "تلاش مجدد");
+    }
+
+    try {
+      const res = await fetch("/api/auth/sms/resend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, mode }),
+      });
+
+      const data = await res.json();
+
+      if (res.status === 201) {
+        swal({
+          title: "کد جدید ارسال شد",
+          icon: "success",
+          buttons: "تأیید",
+        });
+        const newResendCount = resendCount + 1;
+        setResendCount(newResendCount);
+        startTimer(120 + newResendCount * 60);
+        setCodeArray(["", "", "", "", ""]);
+        inputsRef.current[0]?.focus();
+      } else if (res.status === 404) {
+        showSwal("کاربری با این شماره پیدا نشد", "error", "تلاش مجدد");
+      } else if (res.status === 429) {
+        showSwal("تعداد درخواست‌های شما بیش از حد مجاز است", "error", "تلاش مجدد");
+      } else {
+        showSwal(data.message || "خطا در ارسال کد", "error", "تلاش مجدد");
+      }
+    } catch {
+      showSwal("خطا در ارتباط با سرور", "error", "تلاش مجدد");
+    }
+  };
 
   const verifyCode = async () => {
     const code = codeArray.join("");
@@ -54,24 +130,23 @@ const Sms = ({ hideOtpForm, phone, mode = "register" }) => {
     }
   };
 
-const handleInputChange = (index, e) => {
-  const val = e.target.value;
+  const handleInputChange = (index, e) => {
+    const val = e.target.value;
 
-  if (/^\d$/.test(val)) {
-    const newCode = [...codeArray];
-    newCode[index] = val;
-    setCodeArray(newCode);
+    if (/^\d$/.test(val)) {
+      const newCode = [...codeArray];
+      newCode[index] = val;
+      setCodeArray(newCode);
 
-    if (index < inputsRef.current.length - 1) {
-      inputsRef.current[index + 1]?.focus();
+      if (index < inputsRef.current.length - 1) {
+        inputsRef.current[index + 1]?.focus();
+      }
+    } else {
+      const newCode = [...codeArray];
+      newCode[index] = "";
+      setCodeArray(newCode);
     }
-  } else {
-    const newCode = [...codeArray];
-    newCode[index] = "";
-    setCodeArray(newCode);
-  }
-};
-
+  };
 
   const handleKeyDown = (index, e) => {
     if (e.key === "Backspace" && !codeArray[index] && index > 0) {
@@ -109,12 +184,19 @@ const handleInputChange = (index, e) => {
           <button
             onClick={verifyCode}
             type="button"
-            className="w-full border border-primary text-primary py-2 rounded-lg hover:bg-[#3F72AF]/10 transition duration-200"
+            className="w-full border border-primary text-primary py-2 rounded-lg hover:bg-[#3F72AF]/10 transition duration-200 cursor-pointer"
           >
             ثبت کد تایید
           </button>
 
-          <p className="text-md text-center text-primary cursor-pointer">ارسال مجدد کد یکبار مصرف</p>
+          <p
+            onClick={isResendDisabled ? null : handleResendCode}
+            className={`text-md text-center ${isResendDisabled ? "text-gray-400 cursor-not-allowed" : "text-primary cursor-pointer hover:underline"}`}
+          >
+            {isResendDisabled
+              ? `ارسال مجدد کد بعد از ${formatTime(resendTimer)}`
+              : "ارسال مجدد کد یکبار مصرف"}
+          </p>
           <p onClick={hideOtpForm} className="text-sm text-center text-secondery hover:underline cursor-pointer">
             لغو
           </p>
