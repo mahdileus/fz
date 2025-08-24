@@ -89,7 +89,7 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
       <div className="lg:col-span-2 w-full aspect-video rounded-xl overflow-hidden shadow-lg">
         <video
           controls
-          className="w-full h-full object-cover rounded-xl"
+          className="w-full h-full object-contain bg-black rounded-xl"
           poster={course.thumbnail}
         >
           <source src={course.introVideo} />
