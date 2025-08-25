@@ -33,7 +33,7 @@ const [lessons, setLessons] = useState(
         video: null,
         thumbnail: null,
       }))
-    : [{ title: "", video: null, thumbnail: null }]
+    : [{ title: "", video: null, thumbnail: null, audio:null }]
 );
 
 
@@ -44,7 +44,7 @@ const [lessons, setLessons] = useState(
   };
 
   const addLesson = () => {
-    setLessons([...lessons, { title: "", video: null, thumbnail: null }]);
+    setLessons([...lessons, { title: "", video: null, thumbnail: null, audio:null }]);
   };
 
   const handleSubmit = async (e) => {
@@ -62,6 +62,7 @@ const [lessons, setLessons] = useState(
       formData.append(`lessonTitle-${i}`, lesson.title);
       formData.append(`lessonVideo-${i}`, lesson.video);
       formData.append(`lessonThumbnail-${i}`, lesson.thumbnail);
+      formData.append(`lessonAudio-${i}`, lesson.audio);
     });
 
     const res = await fetch(`/api/courses/${courseId}`, {
@@ -138,6 +139,8 @@ const [lessons, setLessons] = useState(
             <input className="input" type="file" accept="video/*" onChange={(e) => handleLessonChange(index, "video", e.target.files[0])} />
             <label className="block text-sm mb-1">تصویر جدید (در صورت تغییر):</label>
             <input className="input" type="file" accept="image/*" onChange={(e) => handleLessonChange(index, "thumbnail", e.target.files[0])} />
+            <label className="block text-sm mb-1">وویس جدید (در صورت تغییر):</label>
+            <input className="input" type="file" accept="audio/*" onChange={(e) => handleLessonChange(index, "audio", e.target.files[0])} />
           </div>
         ))}
 
