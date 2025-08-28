@@ -40,8 +40,9 @@ const Course = async ({ params }) => {
         .map(item => item.course._id.toString());
 
     const isRegistered = user
-        ? registeredCourseIds.includes(course._id.toString())
+        ? user.role === "ADMIN" || registeredCourseIds.includes(course._id.toString())
         : false;
+
 
     return (
         <>

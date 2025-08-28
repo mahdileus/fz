@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert";
 import dynamic from "next/dynamic";
+import axios from "axios";
 
 const CKEditorComponent = dynamic(() => import("../../../modules/ckeditor/CKEditorWrapper"), { ssr: false });
 
 
 export default function EditCourseForm({ course, courseId }) {
   const router = useRouter();
-
+     const [uploadProgress, setUploadProgress] = useState(0); // ✅ درصد آپلود
 const [courseInfo, setCourseInfo] = useState({
   title: course.title || "",
   slug: course.slug || "",
@@ -65,12 +66,22 @@ const [lessons, setLessons] = useState(
       formData.append(`lessonAudio-${i}`, lesson.audio);
     });
 
-    const res = await fetch(`/api/courses/${courseId}`, {
-      method: "PUT",
-      body: formData,
+try {
+    const res = await axios.put(`/api/courses/${courseId}`, formData, {
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        console.log("آپلود:", percentCompleted, "%");
+        // اینجا می‌تونی state ست کنی برای نمایش Progress Bar
+        setUploadProgress(percentCompleted);
+      },
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
 
-    if (res.ok) {
+    if (res.status === 200 || res.status === 201) {
       Swal({
         title: "دوره با موفقیت ویرایش شد",
         icon: "success",
@@ -78,13 +89,14 @@ const [lessons, setLessons] = useState(
       }).then(() => {
         router.replace("/p-admin/courses");
       });
-    } else {
-      Swal({
-        title: "خطا در ویرایش دوره",
-        icon: "error",
-        buttons: "فهمیدم",
-      });
     }
+  } catch (error) {
+    Swal({
+      title: "خطا در ویرایش دوره",
+      icon: "error",
+      buttons: "فهمیدم",
+    });
+  }
   };
 
   return (
@@ -93,6 +105,18 @@ const [lessons, setLessons] = useState(
       className="max-w-4xl mx-auto p-6 space-y-6 bg-white rounded-2xl shadow-md"
     >
       <h2 className="text-2xl font-bold text-primary mb-4">ویرایش دوره</h2>
+                  {/* ✅ Progress Bar */}
+      {uploadProgress > 0 && (
+        <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
+          <div
+            className="bg-blue-500 h-4 rounded-full transition-all"
+            style={{ width: `${uploadProgress}%` }}
+          ></div>
+          <p className="text-sm text-gray-600 mt-1 text-center">
+            {uploadProgress}%
+          </p>
+        </div>
+      )}
 
       {/* اطلاعات پایه دوره */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
