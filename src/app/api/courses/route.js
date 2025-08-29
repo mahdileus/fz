@@ -30,19 +30,27 @@ export async function POST(req) {
     const tags = JSON.parse(formData.get("tags") || "[]");
 
     // ذخیره تامنیل دوره
+    let thumbnailName = null;
     const thumbnail = formData.get("thumbnail");
-    const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
-    const thumbnailName = `${Date.now()}-${thumbnail.name}`;
-    const thumbnailPath = path.join(process.cwd(), "public/uploads", thumbnailName);
-    await writeFile(thumbnailPath, thumbnailBuffer);
+    if (thumbnail && thumbnail.arrayBuffer) {
+      const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
+      thumbnailName = `${Date.now()}-${thumbnail.name}`;
+      const thumbnailPath = path.join(process.cwd(), "public/uploads", thumbnailName);
+      await writeFile(thumbnailPath, thumbnailBuffer);
+    }
 
     // ذخیره ویدیوی معرفی
     const introVideo = formData.get("introVideo");
-    const introBuffer = Buffer.from(await introVideo.arrayBuffer());
-    const introName = `${Date.now()}-${introVideo.name}`;
-    const introPath = path.join(process.cwd(), "public/uploads", introName);
-    await writeFile(introPath, introBuffer);
+    let introName = null;
+    if (introVideo && introVideo.arrayBuffer) {
+      const introBuffer = Buffer.from(await introVideo.arrayBuffer());
+      introName = `${Date.now()}-${introVideo.name}`;
+      const introPath = path.join(process.cwd(), "public/uploads", introName);
+      await writeFile(introPath, introBuffer);
+    }
+
     const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
+
 
     // جلسات را بخوان
     const lessonCount = +formData.get("lessonCount") || 0;
@@ -50,35 +58,46 @@ export async function POST(req) {
 
     for (let i = 0; i < lessonCount; i++) {
       const lessonTitle = formData.get(`lessonTitle-${i}`);
+      const lessonDescription = formData.get(`lessonDescription-${i}`);
+
       const lessonVideo = formData.get(`lessonVideo-${i}`);
       const lessonThumbnail = formData.get(`lessonThumbnail-${i}`);
-      const lessonDescription = formData.get(`lessonDescription-${i}`);
       const lessonAudio = formData.get(`lessonAudio-${i}`);
 
+      let lessonVideoName = null;
+      let lessonThumbName = null;
+      let lessonAudioName = null;
+
       // ذخیره ویدیو جلسه
-      const lessonVideoBuffer = Buffer.from(await lessonVideo.arrayBuffer());
-      const lessonVideoName = `${Date.now()}-${lessonVideo.name}`;
-      const lessonVideoPath = path.join(process.cwd(), "public", "uploads", lessonVideoName);
-      await writeFile(lessonVideoPath, lessonVideoBuffer);
+      if (lessonVideo && lessonVideo.arrayBuffer) {
+        const lessonVideoBuffer = Buffer.from(await lessonVideo.arrayBuffer());
+        lessonVideoName = `${Date.now()}-${lessonVideo.name}`;
+        const lessonVideoPath = path.join(process.cwd(), "public", "uploads", lessonVideoName);
+        await writeFile(lessonVideoPath, lessonVideoBuffer);
+      }
 
       // ذخیره تامنیل جلسه
-      const lessonThumbBuffer = Buffer.from(await lessonThumbnail.arrayBuffer());
-      const lessonThumbName = `${Date.now()}-${lessonThumbnail.name}`;
-      const lessonThumbPath = path.join(process.cwd(), "public", "uploads", lessonThumbName);
-      await writeFile(lessonThumbPath, lessonThumbBuffer);
-      //audio
-      const lessonAudioBuffer = Buffer.from(await lessonAudio.arrayBuffer());
-      const lessonAudioName = `${Date.now()}-${lessonAudio.name}`;
-      const lessonAudioPath = path.join(process.cwd(), "public", "uploads", lessonAudioName);
-      await writeFile(lessonAudioPath, lessonAudioBuffer);
+      if (lessonThumbnail && lessonThumbnail.arrayBuffer) {
+        const lessonThumbBuffer = Buffer.from(await lessonThumbnail.arrayBuffer());
+        lessonThumbName = `${Date.now()}-${lessonThumbnail.name}`;
+        const lessonThumbPath = path.join(process.cwd(), "public", "uploads", lessonThumbName);
+        await writeFile(lessonThumbPath, lessonThumbBuffer);
+      }
+
+      // ذخیره فایل صوتی
+      if (lessonAudio && lessonAudio.arrayBuffer) {
+        const lessonAudioBuffer = Buffer.from(await lessonAudio.arrayBuffer());
+        lessonAudioName = `${Date.now()}-${lessonAudio.name}`;
+        const lessonAudioPath = path.join(process.cwd(), "public", "uploads", lessonAudioName);
+        await writeFile(lessonAudioPath, lessonAudioBuffer);
+      }
 
       lessons.push({
         title: lessonTitle,
         description: lessonDescription,
-        video: `${DOMAIN}/uploads/${lessonVideoName}`,
-        thumbnail: `${DOMAIN}/uploads/${lessonThumbName}`,
-        audio: `${DOMAIN}/uploads/${lessonAudioName}`,
-
+        video: lessonVideoName ? `${DOMAIN}/uploads/${lessonVideoName}` : null,
+        thumbnail: lessonThumbName ? `${DOMAIN}/uploads/${lessonThumbName}` : null,
+        audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
       });
     }
 
@@ -94,8 +113,8 @@ export async function POST(req) {
       longDescription,
       score,
       tags,
-      thumbnail: `/uploads/${thumbnailName}`,
-      introVideo: `/uploads/${introName}`,
+      thumbnail: thumbnailName ? `/uploads/${thumbnailName}` : null,
+      introVideo: introName ? `/uploads/${introName}` : null,
       lessons,
     });
 
