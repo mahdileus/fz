@@ -2,22 +2,21 @@ import connectToDB from "@/configs/db";
 import CourseModel from "@/models/Course";
 import { authAdmin } from "@/utils/auth-server";
 import { writeFile } from "fs/promises";
+import { spawn } from "child_process";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
 import path from "path";
+import fs from "fs";
 
 export async function POST(req) {
   try {
     const isAdmin = await authAdmin();
+    if (!isAdmin) redirect("/404");
 
-    if (!isAdmin) {
-      redirect("/404")
-    }
     await connectToDB();
 
     const formData = await req.formData();
 
-    // دریافت فیلدهای اصلی دوره
     const title = formData.get("title");
     const slug = slugify(formData.get("slug"), { lower: true, strict: true });
     const price = +formData.get("price");
@@ -51,8 +50,6 @@ export async function POST(req) {
 
     const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
 
-
-    // جلسات را بخوان
     const lessonCount = +formData.get("lessonCount") || 0;
     const lessons = [];
 
@@ -67,20 +64,44 @@ export async function POST(req) {
       let lessonVideoName = null;
       let lessonThumbName = null;
       let lessonAudioName = null;
+      let lessonHLSPath = null;
 
       // ذخیره ویدیو جلسه
       if (lessonVideo && lessonVideo.arrayBuffer) {
         const lessonVideoBuffer = Buffer.from(await lessonVideo.arrayBuffer());
         lessonVideoName = `${Date.now()}-${lessonVideo.name}`;
-        const lessonVideoPath = path.join(process.cwd(), "public", "uploads", lessonVideoName);
+        const lessonVideoPath = path.join(process.cwd(), "public/uploads", lessonVideoName);
         await writeFile(lessonVideoPath, lessonVideoBuffer);
+
+        // تبدیل به HLS
+        const hlsFolder = path.join(process.cwd(), "public/uploads/hls", `${slug}-${i}`);
+        if (!fs.existsSync(hlsFolder)) fs.mkdirSync(hlsFolder, { recursive: true });
+
+        await new Promise((resolve, reject) => {
+          const ffmpeg = spawn("ffmpeg", [
+            "-i", lessonVideoPath,
+            "-profile:v", "baseline",
+            "-level", "3.0",
+            "-start_number", "0",
+            "-hls_time", "10",
+            "-hls_list_size", "0",
+            "-f", "hls",
+            path.join(hlsFolder, "playlist.m3u8")
+          ]);
+
+          ffmpeg.stdout.on("data", d => console.log(d.toString()));
+          ffmpeg.stderr.on("data", d => console.log(d.toString()));
+          ffmpeg.on("close", code => code === 0 ? resolve(true) : reject(new Error("FFmpeg failed")));
+        });
+
+        lessonHLSPath = `${DOMAIN}/uploads/hls/${slug}-${i}/playlist.m3u8`;
       }
 
       // ذخیره تامنیل جلسه
       if (lessonThumbnail && lessonThumbnail.arrayBuffer) {
         const lessonThumbBuffer = Buffer.from(await lessonThumbnail.arrayBuffer());
         lessonThumbName = `${Date.now()}-${lessonThumbnail.name}`;
-        const lessonThumbPath = path.join(process.cwd(), "public", "uploads", lessonThumbName);
+        const lessonThumbPath = path.join(process.cwd(), "public/uploads", lessonThumbName);
         await writeFile(lessonThumbPath, lessonThumbBuffer);
       }
 
@@ -88,20 +109,19 @@ export async function POST(req) {
       if (lessonAudio && lessonAudio.arrayBuffer) {
         const lessonAudioBuffer = Buffer.from(await lessonAudio.arrayBuffer());
         lessonAudioName = `${Date.now()}-${lessonAudio.name}`;
-        const lessonAudioPath = path.join(process.cwd(), "public", "uploads", lessonAudioName);
+        const lessonAudioPath = path.join(process.cwd(), "public/uploads", lessonAudioName);
         await writeFile(lessonAudioPath, lessonAudioBuffer);
       }
 
       lessons.push({
         title: lessonTitle,
         description: lessonDescription,
-        video: lessonVideoName ? `${DOMAIN}/uploads/courses/${courseSlug}/${lessonSlug}/playlist.m3u8` : null,
+        video: lessonHLSPath,
         thumbnail: lessonThumbName ? `${DOMAIN}/uploads/${lessonThumbName}` : null,
         audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
       });
     }
 
-    // ساخت دوره در دیتابیس
     const newCourse = await CourseModel.create({
       title,
       slug,
@@ -117,9 +137,6 @@ export async function POST(req) {
       introVideo: introName ? `/uploads/${introName}` : null,
       lessons,
     });
-    console.log("thumbnail =>", formData.get("thumbnail"));
-    console.log("introVideo =>", formData.get("introVideo"));
-    console.log("lessonVideo-0 =>", formData.get("lessonVideo-0"));
 
     return Response.json({ message: "دوره با موفقیت ایجاد شد", data: newCourse }, { status: 201 });
   } catch (err) {
