@@ -117,6 +117,9 @@ export async function POST(req) {
       introVideo: introName ? `/uploads/${introName}` : null,
       lessons,
     });
+    console.log("thumbnail =>", formData.get("thumbnail"));
+    console.log("introVideo =>", formData.get("introVideo"));
+    console.log("lessonVideo-0 =>", formData.get("lessonVideo-0"));
 
     return Response.json({ message: "دوره با موفقیت ایجاد شد", data: newCourse }, { status: 201 });
   } catch (err) {
