@@ -1,13 +1,16 @@
 import CourseModel from "@/models/Course";
 import connectToDB from "@/configs/db";
+import dynamic from "next/dynamic";
 import { authUser } from "@/utils/auth-server";
-import SecurePlayer from "@/app/components/modules/courses/SecurePlayer";
 import Link from "next/link";
 import PodcastPlayer from "@/app/components/modules/podcast/PodcastPlayer/PodcastPlayer";
 import Navbar from "@/app/components/modules/navbar/Navbar";
 import Footer from "@/app/components/modules/footer/Footer";
 import { notFound } from "next/navigation";
 import DisableInspect from "@/utils/DisableInspect";
+const SecurePlayer = dynamic(() => import("@/app/components/modules/courses/SecurePlayer"), {
+  ssr: false,
+});
 
 export default async function LessonPage({ params }) {
   await connectToDB();

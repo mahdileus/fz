@@ -95,7 +95,7 @@ export async function POST(req) {
       lessons.push({
         title: lessonTitle,
         description: lessonDescription,
-        video: lessonVideoName ? `${DOMAIN}/uploads/${lessonVideoName}` : null,
+        video: lessonVideoName ? `${DOMAIN}/uploads/courses/${courseSlug}/${lessonSlug}/playlist.m3u8` : null,
         thumbnail: lessonThumbName ? `${DOMAIN}/uploads/${lessonThumbName}` : null,
         audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
       });
