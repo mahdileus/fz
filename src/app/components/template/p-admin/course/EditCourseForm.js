@@ -72,7 +72,7 @@ try {
         const percentCompleted = Math.round(
           (progressEvent.loaded * 100) / progressEvent.total
         );
-        console.log("آپلود:", percentCompleted, "%");
+
         // اینجا می‌تونی state ست کنی برای نمایش Progress Bar
         setUploadProgress(percentCompleted);
       },
