@@ -121,7 +121,7 @@ export async function POST(req) {
         audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
       });
     }
-
+    console.log("Lessons array before saving to DB:", lessons);
     const newCourse = await CourseModel.create({
       title,
       slug,
