@@ -66,9 +66,6 @@ export default function CourseForm() {
 
     try {
       const res = await axios.post("/api/courses", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
         onUploadProgress: (progressEvent) => {
           const percent = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
