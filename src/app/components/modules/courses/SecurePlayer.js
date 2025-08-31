@@ -1,103 +1,70 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import shaka from "shaka-player";
 
-const SecurePlayer = ({ src, watermark }) => {
+const SecurePlayer = ({ src, watermark, img }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const playerRef = useRef(null); // برای ذخیره نمونه Shaka Player
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    shaka.polyfill.installAll();
-    if (!shaka.Player.isBrowserSupported()) {
-      console.error("Shaka Player is not supported in this browser.");
-      return;
-    }
-
-    const video = videoRef.current;
+    const videoEl = videoRef.current;
     const canvas = canvasRef.current;
-    if (!video || !canvas) return;
-
     const ctx = canvas.getContext("2d");
-    playerRef.current = new shaka.Player(video);
-
-    // مدیریت خطا
-    playerRef.current.addEventListener("error", (event) => {
-      console.error("⚠️ Shaka Error:", event.detail);
-    });
-
-    // بارگذاری ویدیو
-    playerRef.current.load(src).catch((err) => {
-      console.error("Shaka load error:", err);
-      alert("خطا در بارگذاری ویدیو!");
-    });
-
     let animationFrame;
     let watermarkPos = { x: 50, y: 50 };
 
-    // تابع رسم واترمارک
+    const updateCanvasSize = () => {
+      if (videoEl) {
+        canvas.width = videoEl.clientWidth;
+        canvas.height = videoEl.clientHeight;
+      }
+    };
+
     const drawWatermark = () => {
-      if (video.videoWidth && video.videoHeight) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-
+      if (ctx && canvas.width && canvas.height) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         if (watermark) {
           ctx.font = "20px Arial";
-          ctx.fillStyle = "rgba(255,255,255,0.6)";
+          ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
           ctx.fillText(watermark, watermarkPos.x, watermarkPos.y);
         }
       }
-
       animationFrame = requestAnimationFrame(drawWatermark);
     };
 
-    drawWatermark();
-
-    // جابجایی تصادفی واترمارک هر 3 ثانیه
-    const interval = setInterval(() => {
+    const moveWatermark = () => {
       watermarkPos = {
         x: Math.random() * (canvas.width - 100) + 20,
         y: Math.random() * (canvas.height - 30) + 20,
       };
-    }, 3000);
-
-    // مدیریت حالت تمام‌صفحه
-    const handleFullscreenChange = () => {
-      if (document.fullscreenElement) {
-        canvas.style.position = "absolute";
-        canvas.style.top = "0";
-        canvas.style.left = "0";
-        canvas.style.zIndex = "9999";
-        document.fullscreenElement.appendChild(canvas);
-      } else {
-        video.parentNode.appendChild(canvas);
-        canvas.style.position = "absolute";
-        canvas.style.top = "0";
-        canvas.style.left = "0";
-      }
+      drawWatermark();
     };
 
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    document.addEventListener("webkitfullscreenchange", handleFullscreenChange); // برای Safari
+    if (videoEl) {
+      // تنظیمات امنیت
+      videoEl.addEventListener("contextmenu", (e) => e.preventDefault());
+      videoEl.setAttribute("controlsList", "nodownload noremoteplayback");
+      videoEl.setAttribute("disablePictureInPicture", "true");
 
-    return () => {
-      cancelAnimationFrame(animationFrame);
-      clearInterval(interval);
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-      if (playerRef.current) {
-        playerRef.current.destroy().catch((err) => console.error("Shaka destroy error:", err));
-      }
-    };
-  }, [src, watermark]);
+      // تنظیم اندازه و رندر اولیه
+      updateCanvasSize();
+      drawWatermark();
+      const interval = setInterval(moveWatermark, 3000);
 
-  // به‌روزرسانی سرعت پخش
+      // به‌روزرسانی اندازه موقع تغییر اندازه پنجره
+      const handleResize = () => updateCanvasSize();
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        cancelAnimationFrame(animationFrame);
+        clearInterval(interval);
+        window.removeEventListener("resize", handleResize);
+        videoEl.removeEventListener("contextmenu", (e) => e.preventDefault());
+      };
+    }
+  }, [src, watermark, img]);
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = playbackRate;
@@ -105,21 +72,19 @@ const SecurePlayer = ({ src, watermark }) => {
   }, [playbackRate]);
 
   return (
-    <div className="relative w-full max-w-full">
+    <div className="relative mx-auto w-full max-w-4xl aspect-video">
       <video
         ref={videoRef}
-        className="w-full h-auto aspect-video rounded-lg overflow-hidden"
+        src={src}
+        poster={img}
+        className="w-full h-full object-contain bg-black rounded-lg"
+        playsInline
         controls
-        onContextMenu={(e) => e.preventDefault()}
-        controlsList="nodownload noremoteplayback"
-        disablePictureInPicture
       />
       <canvas
         ref={canvasRef}
-        className="absolute top-0 left-0 w-full h-full pointer-events-none"
+        className="absolute top-0 left-0 w-full h-full pointer-events-none z-10"
       />
-
-      {/* کنترل سرعت */}
       <div className="absolute top-2 left-2 z-20 bg-black/50 px-2 py-1 rounded text-white">
         <label className="text-xs mr-2">سرعت:</label>
         <select

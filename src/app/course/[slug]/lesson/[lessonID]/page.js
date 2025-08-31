@@ -34,8 +34,8 @@ export default async function LessonPage({ params }) {
 
   return (
     <section>
+      <DisableInspect/>
       <Navbar isLogin={!!user} />
-    <DisableInspect/>
       <div className="mt-24 min-h-screen px-6 md:px-28 pb-10">
         {/* عنوان جلسه */}
         <h1 className="text-lg font-bold mb-10 bg-white shadow-lg p-3 rounded-2xl text-primary">
@@ -50,6 +50,7 @@ export default async function LessonPage({ params }) {
             <div className="mx-auto w-full max-w-full aspect-[16/9] bg-black rounded-xl shadow-xl overflow-hidden relative border border-primary">
               <SecurePlayer src={lesson.video} className="w-full h-full object-cover"
               watermark={watermark}
+              img={lesson.thumbnail}
               />
             </div>
           </div>
