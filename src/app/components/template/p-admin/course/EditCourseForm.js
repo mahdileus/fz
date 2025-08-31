@@ -31,8 +31,8 @@ export default function EditCourseForm({ course, courseId }) {
       ? course.lessons.map((l) => ({
           title: l.title,
           video: l.video || null, // حفظ مسیر یا نام فایل قبلی
-          thumbnail: l.thumbnail || null, // حفظ مسیر یا نام فایل قبلی
-          audio: l.audio || null, // حفظ مسیر یا نام فایل قبلی
+          thumbnail: l.thumbnail || null,
+          audio: l.audio || null,
         }))
       : [{ title: "", video: null, thumbnail: null, audio: null }]
   );
@@ -51,30 +51,34 @@ export default function EditCourseForm({ course, courseId }) {
     e.preventDefault();
     const formData = new FormData();
 
+    // اضافه کردن اطلاعات دوره
     Object.entries(courseInfo).forEach(([key, value]) => {
       formData.append(key, value);
     });
-
     formData.set("tags", JSON.stringify(courseInfo.tags.split(",")));
     formData.append("lessonCount", lessons.length);
 
+    // پردازش جلسات
     lessons.forEach((lesson, i) => {
       formData.append(`lessonTitle-${i}`, lesson.title);
-      // فقط اگه فایل جدید انتخاب شده، آپلود کن؛ وگرنه داده قبلی رو نگه دار
+
+      // فقط فایل‌های جدید رو آپلود کن
       if (lesson.video instanceof File) {
         formData.append(`lessonVideo-${i}`, lesson.video);
       } else if (lesson.video) {
-        formData.append(`lessonVideo-${i}`, lesson.video); // داده قبلی رو ارسال کن
+        formData.append(`lessonVideoOld-${i}`, lesson.video); // داده قبلی رو به‌عنوان اطلاعات ثابت
       }
+
       if (lesson.thumbnail instanceof File) {
         formData.append(`lessonThumbnail-${i}`, lesson.thumbnail);
       } else if (lesson.thumbnail) {
-        formData.append(`lessonThumbnail-${i}`, lesson.thumbnail);
+        formData.append(`lessonThumbnailOld-${i}`, lesson.thumbnail);
       }
+
       if (lesson.audio instanceof File) {
         formData.append(`lessonAudio-${i}`, lesson.audio);
       } else if (lesson.audio) {
-        formData.append(`lessonAudio-${i}`, lesson.audio);
+        formData.append(`lessonAudioOld-${i}`, lesson.audio);
       }
     });
 
@@ -106,6 +110,7 @@ export default function EditCourseForm({ course, courseId }) {
         icon: "error",
         buttons: "فهمیدم",
       });
+      console.error("Error:", error); // برای دیباگ
     }
   };
 
@@ -251,6 +256,9 @@ export default function EditCourseForm({ course, courseId }) {
               accept="video/*"
               onChange={(e) => handleLessonChange(index, "video", e.target.files[0])}
             />
+            {lesson.video && !lesson.video instanceof File && (
+              <p className="text-sm text-gray-500">ویدیو فعلی: {lesson.video}</p>
+            )}
             <label className="block text-sm mb-1">تصویر جدید (در صورت تغییر):</label>
             <input
               className="input"
@@ -258,6 +266,9 @@ export default function EditCourseForm({ course, courseId }) {
               accept="image/*"
               onChange={(e) => handleLessonChange(index, "thumbnail", e.target.files[0])}
             />
+            {lesson.thumbnail && !lesson.thumbnail instanceof File && (
+              <p className="text-sm text-gray-500">تصویر فعلی: {lesson.thumbnail}</p>
+            )}
             <label className="block text-sm mb-1">وویس جدید (در صورت تغییر):</label>
             <input
               className="input"
@@ -265,12 +276,6 @@ export default function EditCourseForm({ course, courseId }) {
               accept="audio/*"
               onChange={(e) => handleLessonChange(index, "audio", e.target.files[0])}
             />
-            {lesson.video && !lesson.video instanceof File && (
-              <p className="text-sm text-gray-500">ویدیو فعلی: {lesson.video}</p>
-            )}
-            {lesson.thumbnail && !lesson.thumbnail instanceof File && (
-              <p className="text-sm text-gray-500">تصویر فعلی: {lesson.thumbnail}</p>
-            )}
             {lesson.audio && !lesson.audio instanceof File && (
               <p className="text-sm text-gray-500">وویس فعلی: {lesson.audio}</p>
             )}
@@ -289,7 +294,7 @@ export default function EditCourseForm({ course, courseId }) {
       <div className="pt-6">
         <button
           type="submit"
-          className="bg-primary hover:bg-primary/90 cursor-pointer text-white px-6 py-3 rounded-xl shadow"
+          className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl shadow"
         >
           ذخیره تغییرات
         </button>

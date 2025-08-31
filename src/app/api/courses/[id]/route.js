@@ -13,7 +13,7 @@ export async function PUT(req, { params }) {
   const isAdmin = await authAdmin();
 
   if (!isAdmin) {
-    redirect("/404")
+    redirect("/404");
   }
 
   const { id } = await params;
@@ -38,10 +38,6 @@ export async function PUT(req, { params }) {
   };
 
   // ذخیره فایل‌ها در صورت ارسال فایل جدید
-  const introVideo = formData.get("introVideo");
-  const thumbnail = formData.get("thumbnail");
-  const audio = formData.get("audio")
-
   const uploadsPath = path.join(process.cwd(), "public", "uploads");
 
   const saveFile = async (file) => {
@@ -51,9 +47,12 @@ export async function PUT(req, { params }) {
     await writeFile(filePath, buffer);
 
     const relativePath = path.relative(path.join(process.cwd(), "public"), filePath);
-    return `/${relativePath.replace(/\\/g, "/")}`;  // برای ویندوز: \ → /
+    return `/${relativePath.replace(/\\/g, "/")}`; // برای ویندوز: \ → /
   };
 
+  // مدیریت introVideo و thumbnail
+  const introVideo = formData.get("introVideo");
+  const thumbnail = formData.get("thumbnail");
 
   if (introVideo && introVideo.size > 0) {
     updatedData.introVideo = await saveFile(introVideo);
@@ -61,9 +60,6 @@ export async function PUT(req, { params }) {
 
   if (thumbnail && thumbnail.size > 0) {
     updatedData.thumbnail = await saveFile(thumbnail);
-  }
-  if (audio && audio.size > 0) {
-    updatedData.audio = await saveFile(audio);
   }
 
   // دریافت و ذخیره جلسات
@@ -73,21 +69,34 @@ export async function PUT(req, { params }) {
   for (let i = 0; i < lessonCount; i++) {
     const title = formData.get(`lessonTitle-${i}`);
     const video = formData.get(`lessonVideo-${i}`);
+    const videoOld = formData.get(`lessonVideoOld-${i}`); // داده قبلی
     const thumbnail = formData.get(`lessonThumbnail-${i}`);
+    const thumbnailOld = formData.get(`lessonThumbnailOld-${i}`);
     const description = formData.get(`lessonDescription-${i}`);
     const audio = formData.get(`lessonAudio-${i}`);
+    const audioOld = formData.get(`lessonAudioOld-${i}`);
 
     const lesson = { title, description };
 
+    // مدیریت ویدیو
     if (video && video.size > 0) {
       lesson.video = await saveFile(video);
+    } else if (videoOld) {
+      lesson.video = videoOld; // استفاده از داده قبلی
     }
 
+    // مدیریت تصویر
     if (thumbnail && thumbnail.size > 0) {
       lesson.thumbnail = await saveFile(thumbnail);
+    } else if (thumbnailOld) {
+      lesson.thumbnail = thumbnailOld;
     }
+
+    // مدیریت صوت
     if (audio && audio.size > 0) {
       lesson.audio = await saveFile(audio);
+    } else if (audioOld) {
+      lesson.audio = audioOld;
     }
 
     lessons.push(lesson);
@@ -95,17 +104,18 @@ export async function PUT(req, { params }) {
 
   updatedData.lessons = lessons;
 
-  await CourseModel.findByIdAndUpdate(id, updatedData);
+  // به‌روزرسانی دوره
+  await CourseModel.findByIdAndUpdate(id, updatedData, { new: true });
 
   return NextResponse.json({ message: "دوره با موفقیت بروزرسانی شد" }, { status: 200 });
 }
-export async function DELETE(req, { params }) {
 
+export async function DELETE(req, { params }) {
   await connectToDB();
   const isAdmin = await authAdmin();
 
   if (!isAdmin) {
-    redirect("/404")
+    redirect("/404");
   }
 
   const { id } = await params;
