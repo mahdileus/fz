@@ -1,6 +1,7 @@
 "use client";
 
 import LikeButton from "@/utils/Like";
+import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 
@@ -15,11 +16,13 @@ export default function CourseCard({ course, isRegistered = false }) {
       {/* تصویر دوره + دکمه لایک */}
       <div className="relative w-full h-48">
         <Link href={`/course/${course.slug}`}>
-          <img
-            src={course.thumbnail}
+          <Image
+            src={course.thumbnail.startsWith("http")
+              ? course.thumbnail
+              : `https://firouzehjavaherian.com${course.thumbnail}`}
             alt={course.title}
             fill
-            className="object-cover rounded-t-2xl"
+            className="object-cover"
           />
         </Link>
         <div className="absolute top-2 left-2 z-10">
