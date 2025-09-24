@@ -5,7 +5,7 @@ require("./Comment");
 const lessonSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   video: {
     type: String,
