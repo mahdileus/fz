@@ -49,44 +49,56 @@ export async function POST(req) {
     const introPath = path.join(process.cwd(), "public/uploads", introName);
     await writeFile(introPath, introBuffer);
 
-    // جلسات
-    for (let i = 0; i < lessonCount; i++) {
-      const lessonVideo = formData.get(`lessonVideo-${i}`);
-      const lessonThumbnail = formData.get(`lessonThumbnail-${i}`);
-      const lessonAudio = formData.get(`lessonAudio-${i}`);
+// تعداد جلسات
+let lessonCount = 0;
+try {
+  lessonCount = parseInt(formData.get("lessonCount") || "0", 10);
+} catch (e) {
+  lessonCount = 0;
+}
 
-      if (!lessonVideo || typeof lessonVideo.arrayBuffer !== "function") {
-        throw new Error(`Lesson video ${i} نامعتبر است یا ارسال نشده`);
-      }
-      const lessonVideoBuffer = Buffer.from(await lessonVideo.arrayBuffer());
-      const lessonVideoName = `${Date.now()}-${lessonVideo.name}`;
-      const lessonVideoPath = path.join(process.cwd(), "public/uploads", lessonVideoName);
-      await writeFile(lessonVideoPath, lessonVideoBuffer);
+const lessons = [];
 
-      if (!lessonThumbnail || typeof lessonThumbnail.arrayBuffer !== "function") {
-        throw new Error(`Lesson thumbnail ${i} نامعتبر است یا ارسال نشده`);
-      }
-      const lessonThumbBuffer = Buffer.from(await lessonThumbnail.arrayBuffer());
-      const lessonThumbName = `${Date.now()}-${lessonThumbnail.name}`;
-      const lessonThumbPath = path.join(process.cwd(), "public/uploads", lessonThumbName);
-      await writeFile(lessonThumbPath, lessonThumbBuffer);
+// اگر تعداد > 0 بود برو سراغ حلقه
+if (lessonCount > 0) {
+  for (let i = 0; i < lessonCount; i++) {
+    const lessonVideo = formData.get(`lessonVideo-${i}`);
+    const lessonThumbnail = formData.get(`lessonThumbnail-${i}`);
+    const lessonAudio = formData.get(`lessonAudio-${i}`);
 
-      let lessonAudioName = null;
-      if (lessonAudio && typeof lessonAudio.arrayBuffer === "function") {
-        const lessonAudioBuffer = Buffer.from(await lessonAudio.arrayBuffer());
-        lessonAudioName = `${Date.now()}-${lessonAudio.name}`;
-        const lessonAudioPath = path.join(process.cwd(), "public/uploads", lessonAudioName);
-        await writeFile(lessonAudioPath, lessonAudioBuffer);
-      }
-
-      lessons.push({
-        title: formData.get(`lessonTitle-${i}`),
-        description: formData.get(`lessonDescription-${i}`),
-        video: `${DOMAIN}/uploads/${lessonVideoName}`,
-        thumbnail: `${DOMAIN}/uploads/${lessonThumbName}`,
-        audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
-      });
+    if (!lessonVideo || typeof lessonVideo.arrayBuffer !== "function") {
+      throw new Error(`Lesson video ${i} نامعتبر است یا ارسال نشده`);
     }
+    const lessonVideoBuffer = Buffer.from(await lessonVideo.arrayBuffer());
+    const lessonVideoName = `${Date.now()}-${lessonVideo.name}`;
+    const lessonVideoPath = path.join("/var/www/uploads", lessonVideoName);
+    await writeFile(lessonVideoPath, lessonVideoBuffer);
+
+    if (!lessonThumbnail || typeof lessonThumbnail.arrayBuffer !== "function") {
+      throw new Error(`Lesson thumbnail ${i} نامعتبر است یا ارسال نشده`);
+    }
+    const lessonThumbBuffer = Buffer.from(await lessonThumbnail.arrayBuffer());
+    const lessonThumbName = `${Date.now()}-${lessonThumbnail.name}`;
+    const lessonThumbPath = path.join("/var/www/uploads", lessonThumbName);
+    await writeFile(lessonThumbPath, lessonThumbBuffer);
+
+    let lessonAudioName = null;
+    if (lessonAudio && typeof lessonAudio.arrayBuffer === "function") {
+      const lessonAudioBuffer = Buffer.from(await lessonAudio.arrayBuffer());
+      lessonAudioName = `${Date.now()}-${lessonAudio.name}`;
+      const lessonAudioPath = path.join("/var/www/uploads", lessonAudioName);
+      await writeFile(lessonAudioPath, lessonAudioBuffer);
+    }
+
+    lessons.push({
+      title: formData.get(`lessonTitle-${i}`),
+      description: formData.get(`lessonDescription-${i}`),
+      video: `${DOMAIN}/uploads/${lessonVideoName}`,
+      thumbnail: `${DOMAIN}/uploads/${lessonThumbName}`,
+      audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
+    });
+  }
+}
 
     // ساخت دوره در دیتابیس
     const newCourse = await CourseModel.create({
