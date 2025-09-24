@@ -36,7 +36,7 @@ export async function POST(req) {
     }
     const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
     const thumbnailName = `${Date.now()}-${thumbnail.name}`;
-    const thumbnailPath = path.join(process.cwd(), "public/uploads", thumbnailName);
+    const thumbnailPath = path.join(process.cwd(), "/var/www/uploads", thumbnailName);
     await writeFile(thumbnailPath, thumbnailBuffer);
 
     // ذخیره ویدیوی معرفی
@@ -46,7 +46,7 @@ export async function POST(req) {
     }
     const introBuffer = Buffer.from(await introVideo.arrayBuffer());
     const introName = `${Date.now()}-${introVideo.name}`;
-    const introPath = path.join(process.cwd(), "public/uploads", introName);
+    const introPath = path.join(process.cwd(), "/var/www/uploads", introName);
     await writeFile(introPath, introBuffer);
     const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
 
