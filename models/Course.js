@@ -74,11 +74,11 @@ const courseSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    required: true,
+    required: false,
   },
   introVideo: {
     type: String,
-    required: true,
+    required: false,
   },
   comments: {
     type: [
