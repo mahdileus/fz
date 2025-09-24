@@ -31,9 +31,6 @@ export async function POST(req) {
 
     // ذخیره تامنیل دوره
     const thumbnail = formData.get("thumbnail");
-    if (!thumbnail || typeof thumbnail.arrayBuffer !== "function") {
-      throw new Error("Thumbnail نامعتبر است یا ارسال نشده");
-    }
     const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
     const thumbnailName = `${Date.now()}-${thumbnail.name}`;
     const thumbnailPath = path.join(process.cwd(), "public/uploads", thumbnailName);
@@ -41,51 +38,51 @@ export async function POST(req) {
 
     // ذخیره ویدیوی معرفی
     const introVideo = formData.get("introVideo");
-    if (!introVideo || typeof introVideo.arrayBuffer !== "function") {
-      throw new Error("Intro video نامعتبر است یا ارسال نشده");
-    }
     const introBuffer = Buffer.from(await introVideo.arrayBuffer());
     const introName = `${Date.now()}-${introVideo.name}`;
     const introPath = path.join(process.cwd(), "public/uploads", introName);
     await writeFile(introPath, introBuffer);
+    const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
 
-    // جلسات
+    // جلسات را بخوان
+    const lessonCount = +formData.get("lessonCount") || 0;
+    const lessons = [];
+
     for (let i = 0; i < lessonCount; i++) {
+      const lessonTitle = formData.get(`lessonTitle-${i}`);
       const lessonVideo = formData.get(`lessonVideo-${i}`);
       const lessonThumbnail = formData.get(`lessonThumbnail-${i}`);
+      const lessonDescription = formData.get(`lessonDescription-${i}`);
       const lessonAudio = formData.get(`lessonAudio-${i}`);
 
-      if (!lessonVideo || typeof lessonVideo.arrayBuffer !== "function") {
-        throw new Error(`Lesson video ${i} نامعتبر است یا ارسال نشده`);
-      }
+      // ذخیره ویدیو جلسه
       const lessonVideoBuffer = Buffer.from(await lessonVideo.arrayBuffer());
       const lessonVideoName = `${Date.now()}-${lessonVideo.name}`;
-      const lessonVideoPath = path.join(process.cwd(), "public/uploads", lessonVideoName);
+      const lessonVideoPath = path.join(process.cwd(), "public", "uploads", lessonVideoName);
       await writeFile(lessonVideoPath, lessonVideoBuffer);
 
-      if (!lessonThumbnail || typeof lessonThumbnail.arrayBuffer !== "function") {
-        throw new Error(`Lesson thumbnail ${i} نامعتبر است یا ارسال نشده`);
-      }
+      // ذخیره تامنیل جلسه
       const lessonThumbBuffer = Buffer.from(await lessonThumbnail.arrayBuffer());
       const lessonThumbName = `${Date.now()}-${lessonThumbnail.name}`;
-      const lessonThumbPath = path.join(process.cwd(), "public/uploads", lessonThumbName);
+      const lessonThumbPath = path.join(process.cwd(), "public", "uploads", lessonThumbName);
       await writeFile(lessonThumbPath, lessonThumbBuffer);
-
+      // ذخیره audio جلسه (اختیاری)
       let lessonAudioName = null;
-      if (lessonAudio && typeof lessonAudio.arrayBuffer === "function") {
+      if (lessonAudio && lessonAudio instanceof File) {
         const lessonAudioBuffer = Buffer.from(await lessonAudio.arrayBuffer());
         lessonAudioName = `${Date.now()}-${lessonAudio.name}`;
-        const lessonAudioPath = path.join(process.cwd(), "public/uploads", lessonAudioName);
+        const lessonAudioPath = path.join(process.cwd(), "public", "uploads", lessonAudioName);
         await writeFile(lessonAudioPath, lessonAudioBuffer);
       }
 
       lessons.push({
-        title: formData.get(`lessonTitle-${i}`),
-        description: formData.get(`lessonDescription-${i}`),
+        title: lessonTitle,
+        description: lessonDescription,
         video: `${DOMAIN}/uploads/${lessonVideoName}`,
         thumbnail: `${DOMAIN}/uploads/${lessonThumbName}`,
         audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
       });
+
     }
 
     // ساخت دوره در دیتابیس
@@ -122,4 +119,3 @@ export async function GET() {
   const courses = await CourseModel.find({}, "-__v").populate("comments");
   return Response.json(courses);
 }
-
