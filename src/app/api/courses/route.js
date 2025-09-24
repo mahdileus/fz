@@ -29,6 +29,8 @@ export async function POST(req) {
     const score = +formData.get("score") || 5;
     const tags = JSON.parse(formData.get("tags") || "[]");
 
+    const uploadDir = "/var/www/uploads";
+
     // ذخیره تامنیل دوره
     const thumbnail = formData.get("thumbnail");
     if (!thumbnail || typeof thumbnail.arrayBuffer !== "function") {
@@ -36,7 +38,7 @@ export async function POST(req) {
     }
     const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
     const thumbnailName = `${Date.now()}-${thumbnail.name}`;
-    const thumbnailPath = path.join(process.cwd(), "/var/www/uploads", thumbnailName);
+    const thumbnailPath = path.join(uploadDir, thumbnailName);
     await writeFile(thumbnailPath, thumbnailBuffer);
 
     // ذخیره ویدیوی معرفی
@@ -46,8 +48,9 @@ export async function POST(req) {
     }
     const introBuffer = Buffer.from(await introVideo.arrayBuffer());
     const introName = `${Date.now()}-${introVideo.name}`;
-    const introPath = path.join(process.cwd(), "/var/www/uploads", introName);
+    const introPath = path.join(uploadDir, introName);
     await writeFile(introPath, introBuffer);
+
     const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
 
     // تعداد جلسات
