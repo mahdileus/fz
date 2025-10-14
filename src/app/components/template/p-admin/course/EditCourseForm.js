@@ -29,12 +29,15 @@ export default function EditCourseForm({ course, courseId }) {
   const [lessons, setLessons] = useState(
     Array.isArray(course.lessons)
       ? course.lessons.map((l) => ({
-          title: l.title,
-          video: l.video || null, // حفظ مسیر یا نام فایل قبلی
-          thumbnail: l.thumbnail || null,
-          audio: l.audio || null,
-        }))
-      : [{ title: "", video: null, thumbnail: null, audio: null }]
+        title: l.title,
+        video: l.video || null, // حفظ مسیر یا نام فایل قبلی
+        thumbnail: l.thumbnail || null,
+        audio: l.audio || null,
+        description: l.description || null,
+        practice: l.practice || null,
+        practiceAudio: l.practiceAudio || null,
+      }))
+      : [{ title: "", video: null, thumbnail: null, audio: null, description: "", practice: null, practiceAudio: null }]
   );
 
   const handleLessonChange = (index, field, value) => {
@@ -44,7 +47,7 @@ export default function EditCourseForm({ course, courseId }) {
   };
 
   const addLesson = () => {
-    setLessons([...lessons, { title: "", video: null, thumbnail: null, audio: null }]);
+    setLessons([...lessons, { title: "", video: null, thumbnail: null, audio: null, description: "", practice: null, practiceAudio: null }]);
   };
 
   const handleSubmit = async (e) => {
@@ -79,6 +82,16 @@ export default function EditCourseForm({ course, courseId }) {
         formData.append(`lessonAudio-${i}`, lesson.audio);
       } else if (lesson.audio) {
         formData.append(`lessonAudioOld-${i}`, lesson.audio);
+      }
+      if (lesson.practice instanceof File) {
+        formData.append(`lessonPractice-${i}`, lesson.practice);
+      } else if (lesson.practice) {
+        formData.append(`lessonPracticeOld-${i}`, lesson.practice);
+      }
+      if (lesson.practiceAudio instanceof File) {
+        formData.append(`lessonPracticeAudio-${i}`, lesson.practiceAudio);
+      } else if (lesson.practiceAudio) {
+        formData.append(`lessonPracticeAudioOld-${i}`, lesson.practiceAudio);
       }
     });
 
@@ -278,6 +291,26 @@ export default function EditCourseForm({ course, courseId }) {
             />
             {lesson.audio && !lesson.audio instanceof File && (
               <p className="text-sm text-gray-500">وویس فعلی: {lesson.audio}</p>
+            )}
+            <label className="block text-sm mb-1">تمرین جدید (در صورت تغییر):</label>
+            <input
+              className="input"
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleLessonChange(index, "practice", e.target.files[0])}
+            />
+            {lesson.practice && !lesson.practice instanceof File && (
+              <p className="text-sm text-gray-500">تمرین فعلی: {lesson.practice}</p>
+            )}
+            <label className="block text-sm mb-1">تمرین وویس(در صورت تغییر):</label>
+            <input
+              className="input"
+              type="file"
+              accept="audio/*"
+              onChange={(e) => handleLessonChange(index, "practiceAudio", e.target.files[0])}
+            />
+            {lesson.practiceAudio && !lesson.practiceAudio instanceof File && (
+              <p className="text-sm text-gray-500"> وویس تمرین فعلی : {lesson.practiceAudio}</p>
             )}
           </div>
         ))}

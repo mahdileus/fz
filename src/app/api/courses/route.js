@@ -69,7 +69,10 @@ export async function POST(req) {
         const lessonVideo = formData.get(`lessonVideo-${i}`);
         const lessonThumbnail = formData.get(`lessonThumbnail-${i}`);
         const lessonAudio = formData.get(`lessonAudio-${i}`);
+        const practiceAudio = formData.get(`practiceAudio-${i}`);
+        const practice = formData.get(`practice-${i}`);
 
+        
         if (!lessonVideo || typeof lessonVideo.arrayBuffer !== "function") {
           throw new Error(`Lesson video ${i} نامعتبر است یا ارسال نشده`);
         }
@@ -93,6 +96,20 @@ export async function POST(req) {
           const lessonAudioPath = path.join("/var/www/uploads", lessonAudioName);
           await writeFile(lessonAudioPath, lessonAudioBuffer);
         }
+        let lessonPracticeAudioName = null;
+        if (practiceAudio && typeof practiceAudio.arrayBuffer === "function") {
+          const practiceAudioBuffer = Buffer.from(await practiceAudio.arrayBuffer());
+          lessonPracticeAudioName = `${Date.now()}-${practiceAudio.name}`;
+          const lessonPracticePath = path.join("/var/www/uploads", lessonPracticeAudioName);
+          await writeFile(lessonPracticePath, practiceAudioBuffer);
+        }
+        let lessonPracticeName = null;
+        if (practice && typeof practice.arrayBuffer === "function") {
+          const lessonPracticeBuffer = Buffer.from(await practice.arrayBuffer());
+          lessonPracticeName = `${Date.now()}-${practice.name}`;
+          const lessonPracticePath = path.join("/var/www/uploads", lessonPracticeName);
+          await writeFile(lessonPracticePath, lessonPracticeBuffer);
+        }
 
         lessons.push({
           title: formData.get(`lessonTitle-${i}`),
@@ -100,6 +117,9 @@ export async function POST(req) {
           video: `${DOMAIN}/uploads/${lessonVideoName}`,
           thumbnail: `${DOMAIN}/uploads/${lessonThumbName}`,
           audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
+          practiceAudios: lessonPracticeAudioName ? `${DOMAIN}/uploads/${lessonPracticeAudioName}` : null,
+          practices: lessonPracticeName ? `${DOMAIN}/uploads/${lessonPracticeName}` : null,
+          
         });
       }
     }

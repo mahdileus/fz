@@ -19,9 +19,17 @@ const lessonSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-    audio:{
-    type: String,
-    required: false,
+  audio:{
+  type: String,
+  required: false,
+  },
+  practice:{
+  type: String,
+  required: false,
+  },
+  practiceAudio:{
+  type: String,
+  required: false,
   }
 });
 

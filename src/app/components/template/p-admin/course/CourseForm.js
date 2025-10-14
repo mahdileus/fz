@@ -14,7 +14,7 @@ export default function CourseForm() {
    const [uploadProgress, setUploadProgress] = useState(0); // ✅ درصد آپلود
 
   const [lessons, setLessons] = useState([
-    { title: "", video: null, audio: null, thumbnail: null },
+    { title: "", video: null, audio: null, thumbnail: null, description: "", practice: null, practiceAudio:null },
   ]);
 
   const [courseInfo, setCourseInfo] = useState({
@@ -41,7 +41,7 @@ export default function CourseForm() {
   const addLesson = () => {
     setLessons([
       ...lessons,
-      { title: "", description: "", video: null, thumbnail: null, audio: null },
+      { title: "", description: "", video: null, thumbnail: null, audio: null , practice: null, practiceAudio:null },
     ]);
   };
 
@@ -62,6 +62,8 @@ export default function CourseForm() {
       formData.append(`lessonVideo-${i}`, lesson.video);
       formData.append(`lessonThumbnail-${i}`, lesson.thumbnail);
       formData.append(`lessonAudio-${i}`, lesson.audio);
+      formData.append(`lessonPracticeAudio-${i}`, lesson.practiceAudio);
+      formData.append(`lessonPractice-${i}`, lesson.practice);
     });
 
     try {
@@ -280,6 +282,24 @@ export default function CourseForm() {
               accept="image/*"
               onChange={(e) =>
                 handleLessonChange(index, "thumbnail", e.target.files[0])
+              }
+              className="input"
+            />
+            <label className="block text-sm mb-1">  تمرین :</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                handleLessonChange(index, "practice", e.target.files[0])
+              }
+              className="input"
+            />
+            <label className="block text-sm mb-1">  دستورالعمل تمرین جلسه:</label>
+            <input
+              type="file"
+              accept="audio/*"
+              onChange={(e) =>
+                handleLessonChange(index, "practiceAudio", e.target.files[0])
               }
               className="input"
             />

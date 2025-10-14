@@ -74,6 +74,10 @@ const saveFile = async (file) => {
     const description = formData.get(`lessonDescription-${i}`);
     const audio = formData.get(`lessonAudio-${i}`);
     const audioOld = formData.get(`lessonAudioOld-${i}`);
+    const practiceAudio = formData.get(`practiceAudio-${i}`);
+    const practiceAudioOld = formData.get(`practiceAudioOld-${i}`);
+    const practice = formData.get(`practice-${i}`);
+    const practiceOld = formData.get(`practiceOld-${i}`);
 
     const lesson = { title, description };
 
@@ -96,6 +100,16 @@ const saveFile = async (file) => {
       lesson.audio = await saveFile(audio);
     } else if (audioOld) {
       lesson.audio = audioOld;
+    }
+    if (practiceAudio && practiceAudio.size > 0) {
+      lesson.practiceAudio = await saveFile(practiceAudio);
+    } else if (practiceAudioOld) {
+      lesson.practiceAudio = practiceAudioOld;
+    }
+    if (practice && practice.size > 0) {
+      lesson.practice = await saveFile(practice);
+    } else if (practiceOld) {
+      lesson.practice = practiceOld;
     }
 
     lessons.push(lesson);

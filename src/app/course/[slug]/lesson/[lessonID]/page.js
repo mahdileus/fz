@@ -34,7 +34,7 @@ export default async function LessonPage({ params }) {
 
   return (
     <section>
-      <DisableInspect/>
+      <DisableInspect />
       <Navbar isLogin={!!user} />
       <div className="mt-24 min-h-screen px-6 md:px-28 pb-10">
         {/* عنوان جلسه */}
@@ -44,13 +44,13 @@ export default async function LessonPage({ params }) {
 
         {/* دو ستونه: پلیر بزرگ و لیست جلسات جمع و جور */}
         <div className="flex flex-col md:flex-row gap-6">
-          
+
           {/* پلیر با عرض بیشتر */}
           <div className="w-full md:w-[70%] flex items-start">
             <div className="mx-auto w-full max-w-full aspect-[16/9] bg-black rounded-xl shadow-xl overflow-hidden relative border border-primary">
               <SecurePlayer src={lesson.video} className="w-full h-full object-cover"
-              watermark={watermark}
-              img={lesson.thumbnail}
+                watermark={watermark}
+                img={lesson.thumbnail}
               />
             </div>
           </div>
@@ -62,11 +62,10 @@ export default async function LessonPage({ params }) {
               {course.lessons.map((lessonItem) => (
                 <li
                   key={String(lessonItem._id)}
-                  className={`p-2 rounded-md transition-all text-sm ${
-                    String(lessonItem._id) === String(lessonID)
+                  className={`p-2 rounded-md transition-all text-sm ${String(lessonItem._id) === String(lessonID)
                       ? "bg-primary text-white"
                       : "hover:bg-light-blue"
-                  }`}
+                    }`}
                 >
                   <Link
                     href={`/course/${slug}/lesson/${lessonItem._id}`}
@@ -93,6 +92,21 @@ export default async function LessonPage({ params }) {
               <PodcastPlayer src={lesson.audio} />
             </>
           )}
+
+          <h2 className="text-lg font-bold mb-4 text-center text-primary">تمرین جلسه</h2>
+          <img className="text-gray-700 text-justify">
+            {lesson.practice || null}
+          </img>
+
+          {lesson.practiceAudio && (
+            <>
+              <h2 className="text-lg font-bold mb-4 text-center mt-10 text-primary">فایل صوتی تمرین جلسه</h2>
+              <PodcastPlayer src={lesson.practiceAudio} />
+            </>
+          )}
+
+
+
         </div>
       </div>
 
