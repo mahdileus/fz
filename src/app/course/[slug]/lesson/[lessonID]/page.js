@@ -81,7 +81,7 @@ export default async function LessonPage({ params }) {
 
         {/* توضیحات و فایل صوتی */}
         <div className="mt-12 bg-white border border-gray-100 rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-bold mb-4 text-center text-primary">توضیحات جلسه</h2>
+          <h2 className="text-lg font-bold mb-4 text-center text-primary">توضیحات جلسه  </h2>
           <p className="text-gray-700 text-justify">
             {lesson.description || "توضیحاتی برای این جلسه ارائه نشده است."}
           </p>
