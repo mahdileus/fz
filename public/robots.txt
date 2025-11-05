@@ -15,4 +15,9 @@ Disallow: /tmp
 Disallow: /_next
 Disallow: /node_modules
 
+# Sitemap index
 Sitemap: https://firouzehjavaherian.com/sitemap.xml
+Sitemap: https://firouzehjavaherian.com/sitemap-posts.xml
+Sitemap: https://firouzehjavaherian.com/sitemap-podcasts.xml
+Sitemap: https://firouzehjavaherian.com/sitemap-courses.xml
+Sitemap: https://firouzehjavaherian.com/sitemap-lessons.xml

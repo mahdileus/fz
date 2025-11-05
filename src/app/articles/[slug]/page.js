@@ -5,6 +5,57 @@ import connectToDB from "@/configs/db";
 import { authUser } from "@/utils/auth-server";
 import ArticleHeader from "@/app/components/template/article/ArticleHeader";
 import ArticleModel from "@/models/Article";
+/**
+ * generateMetadata برای صفحه مقاله داینامیک
+ */
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+
+  await connectToDB();
+
+  const article = await ArticleModel.findOne({ slug }).lean();
+
+  if (!article) {
+    return {
+      title: "مقاله یافت نشد",
+      description: "این مقاله وجود ندارد",
+    };
+  }
+
+  const title = `${article.title} – فیروزه جواهریان`;
+  const description = article.shortDescription || "مقاله‌ای در حوزه توسعه فردی و موفقیت";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://firouzehjavaherian.com/posts/${slug}`,
+      type: "article",
+      images: [
+        {
+          url: article.thumbnail || "/images/logo/fj-logo.png",
+          width: 1200,
+          height: 630,
+        },
+      ],
+      article: {
+        publishedTime: article.createdAt?.toISOString() || undefined,
+        authors: ["فیروزه جواهریان"],
+        tags: article.tags || [],
+      },
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [article.thumbnail || "/images/logo/fj-logo.png"],
+    },
+  };
+}
+
+
 
 const Article = async ({ params }) => {
     await connectToDB();

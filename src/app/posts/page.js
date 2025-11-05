@@ -8,6 +8,23 @@ import { CiFileOn } from "react-icons/ci";
 import Posts from "../components/template/Posts/Posts";
 
 
+  export const metadata = {
+  title: "مقالات توسعه فردی",
+  description: "آخرین مقالات و نکات کاربردی در حوزه رشد فردی و موفقیت",
+  openGraph: {
+    title: "مقالات توسعه فردی",
+    description: "آخرین مقالات و نکات کاربردی در حوزه رشد فردی و موفقیت",
+    url: "https://firouzehjavaherian.com/posts",
+    images: [{ url: "/images/logo/fj-logo.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "مقالات توسعه فردی",
+    description: "آخرین مقالات و نکات کاربردی در حوزه رشد فردی و موفقیت",
+    images: ["/images/logo/fj-logo.png"],
+  },
+};
+
 
 const PostsArchive = async () => {
   await connectToDB();
@@ -15,8 +32,6 @@ const PostsArchive = async () => {
   const allTags = Array.from(new Set(posts.flatMap(p => p.tags || [])));
   const allCategories = Array.from(new Set(posts.map(p => p.category)));
   const user = await authUser();
-
-
   return (
     <>
       <Navbar isLogin={user ? true : false} />

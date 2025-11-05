@@ -12,6 +12,54 @@ import { authUser } from "@/utils/auth-server";
 import { notFound } from "next/navigation";
 import Comments from "@/app/components/modules/comments/Comments";
 
+
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+  await connectToDB();
+
+  const course = await CourseModel.findOne({ slug }).lean();
+
+  if (!course) {
+    return {
+      title: "دوره یافت نشد",
+      description: "این دوره وجود ندارد",
+    };
+  }
+
+  const title = `${course.title} – فیروزه جواهریان`;
+  const description = course.shortDescription || "دوره آموزشی توسعه فردی و جذب ثروت";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://firouzehjavaherian.com/courses/${slug}`,
+      type: "article",
+      images: [
+        {
+          url: course.thumbnail || "/images/logo/fj-logo.png",
+          width: 1200,
+          height: 630,
+        },
+      ],
+      article: {
+        publishedTime: course.createdAt?.toISOString() || undefined,
+        authors: ["فیروزه جواهریان"],
+        tags: course.tags || [],
+      },
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [course.thumbnail || "/images/logo/fj-logo.png"],
+    },
+  };
+}
+
+
 function serializeDoc(doc) {
     return JSON.parse(JSON.stringify(doc));
 }

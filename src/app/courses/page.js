@@ -7,6 +7,25 @@ import connectToDB from "@/configs/db";
 import { CiFileOn } from "react-icons/ci";
 import Courses from "../components/template/courses/Courses";
 
+export const metadata = {
+  title: "دوره‌ها",
+  description: "دوره‌های آموزشی و کوچینگ برای رشد فردی و جذب ثروت",
+  openGraph: {
+    title: "دوره‌ها",
+    description: "دوره‌های آموزشی و کوچینگ برای رشد فردی و جذب ثروت",
+    url: "https://firouzehjavaherian.com/courses",
+    images: [{ url: "/images/logo/fj-logo.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "دوره‌ها",
+    description: "دوره‌های آموزشی و کوچینگ برای رشد فردی و جذب ثروت",
+    images: ["/images/logo/fj-logo.png"],
+  },
+};
+
+
+
 const CoursesArchive = async () => {
   await connectToDB();
   const courses = await CourseModel.find({}).sort({ createdAt: -1 }).lean();

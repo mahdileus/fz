@@ -9,12 +9,61 @@ import Footer from "@/app/components/modules/footer/Footer";
 import { notFound } from "next/navigation";
 import DisableInspect from "@/utils/DisableInspect";
 
+
+export async function generateMetadata({ params }) {
+  const { lessonID } = params;
+  await connectToDB();
+
+  const lesson = await CourseModel.findById(lessonID).lean();
+
+  if (!lesson) {
+    return {
+      title: "جلسه یافت نشد",
+      description: "این جلسه وجود ندارد",
+    };
+  }
+
+  const title = `${lesson.title} – فیروزه جواهریان`;
+  const description = lesson.description || "جلسه آموزشی توسعه فردی و موفقیت";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://firouzehjavaherian.com/course/${lesson.courseSlug}/lesson/${lessonID}`,
+      type: "article",
+      images: [
+        {
+          url: lesson.thumbnail || "/images/logo/fj-logo.png",
+          width: 1200,
+          height: 630,
+        },
+      ],
+      article: {
+        publishedTime: lesson.createdAt?.toISOString() || undefined,
+        authors: ["فیروزه جواهریان"],
+        tags: lesson.tags || [],
+      },
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [lesson.thumbnail || "/images/logo/fj-logo.png"],
+    },
+  };
+}
+
+
+
 export default async function LessonPage({ params }) {
   await connectToDB();
 
   const { slug, lessonID } = await params;
   const user = await authUser();
-  const watermark = user.phone
+  const watermark = user.phone || null
 
   const course = await CourseModel.findOne({ slug }).lean();
   if (!course) return notFound();
