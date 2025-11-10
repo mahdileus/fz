@@ -51,8 +51,8 @@ export async function POST(req) {
       duration,
       longDescription,
       tags,
-      thumbnail: `${DOMAIN}/uploads/${thumbnailFilename}`,
-      podcast: `${DOMAIN}/uploads/${podcastFilename}`,
+      thumbnail: `/uploads/${thumbnailFilename}`,
+      podcast: `/uploads/${podcastFilename}`,
     });
 
     return Response.json(
