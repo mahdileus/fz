@@ -36,11 +36,11 @@ export default function ArticleHeader({ article, articles }) {
         <div className="max-w-[1200px] mx-auto">
           <Image
             src={
-              thumbnail?.startsWith("http")
-                ? thumbnail
-                : `https://firouzehjavaherian.com${thumbnail}`
+              article.thumbnail?.startsWith("http")
+                ? article.thumbnail
+                : `https://firouzehjavaherian.com${article.thumbnail}`
             }
-            alt={title || "thumbnail"}
+            alt={article.title || "thumbnail"}
             width={1200}
             height={450}
             className="rounded-xl mb-6 w-full object-cover"

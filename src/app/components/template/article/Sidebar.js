@@ -14,6 +14,8 @@ export default function SidebarArticles({ articles }) {
                                     ? item.thumbnail
                                     : `https://firouzehjavaherian.com${item.thumbnail}`
                             }
+                            width={80}
+                            height={80}
                             alt={item?.title || "thumbnail"}
                             className="w-20 h-20 object-cover rounded-md"
                         />
@@ -25,7 +27,7 @@ export default function SidebarArticles({ articles }) {
                             </h4>
 
                             <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                                <div dangerouslySetInnerHTML={{ __html: item.shortDescription }} />
+                                {item.shortDescription}
                             </p>
                         </div>
                     </div>

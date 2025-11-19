@@ -9,7 +9,7 @@ import ArticleModel from "@/models/Article";
  * generateMetadata برای صفحه مقاله داینامیک
  */
 export async function generateMetadata({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   await connectToDB();
 
