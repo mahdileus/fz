@@ -54,7 +54,7 @@ export default function ArticleCard({ post }) {
         </Link>
 
         <p className="text-sm text-gray-600 leading-relaxed text-justify line-clamp-3">
-          {shortDescription}
+          <div dangerouslySetInnerHTML={{ __html: shortDescription }} />
         </p>
 
         <div className="flex items-center justify-between text-[#3F72AF] text-sm mt-1">

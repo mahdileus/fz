@@ -38,7 +38,7 @@ export default function PodcastBox({ podcast }) {
 
       {/* عنوان */}
       <Link href={`/podcast/${slug}`}>
-        <h3 className="text-primary text-lg font-bold hover:text-secondery transition">
+        <h3 className="text-primary text-lg font-bold hover:text-secondery transition line-clamp-1">
           {title}
         </h3>
       </Link>

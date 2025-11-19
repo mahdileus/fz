@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 // SidebarArticles.js
 export default function SidebarArticles({ articles }) {
@@ -7,20 +8,24 @@ export default function SidebarArticles({ articles }) {
             {articles.map((item) => (
                 <div key={item._id}>
                     <div className="flex items-start gap-3">
-                        <img
-                            src={item.thumbnail || "/default-thumbnail.jpg"}
-                            alt={item.title}
+                        <Image
+                            src={
+                                item?.thumbnail?.startsWith("http")
+                                    ? item.thumbnail
+                                    : `https://firouzehjavaherian.com${item.thumbnail}`
+                            }
+                            alt={item?.title || "thumbnail"}
                             className="w-20 h-20 object-cover rounded-md"
                         />
                         <div className="flex flex-col justify-start text-right">
                             <h4 className="font-semibold text-sm text-primary">
-                                <Link href={`/articles/${item.slug}`}>
+                                <Link href={`/post/${item.slug}`}>
                                     {item.title}
                                 </Link>
                             </h4>
 
                             <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                                {item.shortDescription}
+                                <div dangerouslySetInnerHTML={{ __html: item.shortDescription }} />
                             </p>
                         </div>
                     </div>
