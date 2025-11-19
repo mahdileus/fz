@@ -24,6 +24,9 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://firouzehjavaherian.com/podcasts/${slug}`,
+    },
     openGraph: {
       title,
       description,
@@ -60,7 +63,7 @@ const Podcast = async ({ params }) => {
   return (
     <>
       <Navbar isLogin={user ? true : false} />
-      <PodcastHeader podcast={JSON.parse(JSON.stringify(podcast))}/>
+      <PodcastHeader podcast={JSON.parse(JSON.stringify(podcast))} />
       <Footer />
     </>
   );

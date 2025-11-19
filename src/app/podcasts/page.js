@@ -10,19 +10,23 @@ import { CiMicrophoneOn } from "react-icons/ci";
 export const metadata = {
   title: "پادکست‌ها",
   description: "مجموعه پادکست‌های آموزشی و انگیزشی فیروزه جواهریان",
+  alternates: {
+    canonical: "https://firouzehjavaherian.com/podcasts",
+  },
   openGraph: {
     title: "پادکست‌ها",
     description: "مجموعه پادکست‌های آموزشی و انگیزشی فیروزه جواهریان",
     url: "https://firouzehjavaherian.com/podcasts",
-    images: [{ url: "/images/logo/fj-logo.png", width: 1200, height: 630 }],
+    images: [{ url: "/images/og-podcasts.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "پادکست‌ها",
     description: "مجموعه پادکست‌های آموزشی و انگیزشی فیروزه جواهریان",
-    images: ["/images/logo/fj-logo.png"],
+    images: ["/logo/fj-logo.png"],
   },
 };
+
 
 
 const PodcastsArchive = async () => {

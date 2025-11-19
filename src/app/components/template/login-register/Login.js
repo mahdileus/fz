@@ -132,10 +132,6 @@ const handleLoginWithOtp = async () => {
                   ورود
                 </button>
 
-                <Link href={"/forget-password"} className="text-sm text-center py-1 block text-secondery hover:underline cursor-pointer">
-                  رمز عبور خود را فراموش کرده‌ام
-                </Link>
-
                 <button
                   type="button"
                   className="w-full border border-primary text-primary py-2 rounded-lg hover:bg-[#3F72AF]/10 transition duration-200"

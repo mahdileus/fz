@@ -32,6 +32,7 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
+    alternates: { canonical: `https://firouzehjavaherian.com/courses/${slug}` },
     openGraph: {
       title,
       description,
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }) {
       type: "article",
       images: [
         {
-          url: course.thumbnail || "/images/logo/fj-logo.png",
+          url: course.thumbnail || "/logo/fj-logo.png",
           width: 1200,
           height: 630,
         },
@@ -54,59 +55,59 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title,
       description,
-      images: [course.thumbnail || "/images/logo/fj-logo.png"],
+      images: [course.thumbnail || "/logo/fj-logo.png"],
     },
   };
 }
 
 
 function serializeDoc(doc) {
-    return JSON.parse(JSON.stringify(doc));
+  return JSON.parse(JSON.stringify(doc));
 }
 
 const Course = async ({ params }) => {
-    await connectToDB();
+  await connectToDB();
 
-    const { slug } = await params;
-    const user = await authUser();
+  const { slug } = await params;
+  const user = await authUser();
 
-    const course = await CourseModel.findOne({ slug }).lean();
-    if (!course) return notFound();
+  const course = await CourseModel.findOne({ slug }).lean();
+  if (!course) return notFound();
 
-    const [comments, userCourses] = await Promise.all([
-        CommentModel.find({ CourseID: course._id })
-            .populate("userID", "name email role phone")
-            .lean(),
-        user
-            ? UserCourseModel.find({ user: user.id }).populate("course").lean()
-            : Promise.resolve([]),
-    ]);
-    if (!course) return notFound();
+  const [comments, userCourses] = await Promise.all([
+    CommentModel.find({ CourseID: course._id })
+      .populate("userID", "name email role phone")
+      .lean(),
+    user
+      ? UserCourseModel.find({ user: user.id }).populate("course").lean()
+      : Promise.resolve([]),
+  ]);
+  if (!course) return notFound();
 
-    const registeredCourseIds = userCourses
-        .filter(item => item.course)
-        .map(item => item.course._id.toString());
+  const registeredCourseIds = userCourses
+    .filter(item => item.course)
+    .map(item => item.course._id.toString());
 
-    const isRegistered = user
-        ? user.role === "ADMIN" || registeredCourseIds.includes(course._id.toString())
-        : false;
+  const isRegistered = user
+    ? user.role === "ADMIN" || registeredCourseIds.includes(course._id.toString())
+    : false;
 
 
-    return (
-        <>
-            <Navbar isLogin={!!user} />
-            <CourseHeader course={serializeDoc(course)} isRegistered={isRegistered} />
-            <CourseInfoBoxes category={course.category} />
-            <CourseFullDescription
-                longDescription={course.longDescription}
-                title={course.title}
-            />
-            <CourseChapters course={serializeDoc(course)} isRegistered={isRegistered} />
-            <Comments CourseID={course._id.toString()} comments={serializeDoc(comments)} />
+  return (
+    <>
+      <Navbar isLogin={!!user} />
+      <CourseHeader course={serializeDoc(course)} isRegistered={isRegistered} />
+      <CourseInfoBoxes category={course.category} />
+      <CourseFullDescription
+        longDescription={course.longDescription}
+        title={course.title}
+      />
+      <CourseChapters course={serializeDoc(course)} isRegistered={isRegistered} />
+      <Comments CourseID={course._id.toString()} comments={serializeDoc(comments)} />
 
-            <Footer />
-        </>
-    );
+      <Footer />
+    </>
+  );
 };
 
 export default Course;

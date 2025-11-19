@@ -30,7 +30,7 @@ export const metadata = {
     description: 'آکادمی توسعه فردی فیروزه جواهریان، مرجع آموزش کوچینگ، ذهن ثروتمند و رشد شخصی برای دستیابی به موفقیت و آرامش پایدار.',
     images: [
       {
-        url: 'https://firouzehjavaherian.com/og-image.jpg',
+        url: 'https://firouzehjavaherian.com/logo/fj-logo.png',
         width: 1200,
         height: 630,
         alt: 'فیروزه جواهریان - آکادمی توسعه فردی و کوچینگ ثروت',

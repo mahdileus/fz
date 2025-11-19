@@ -8,22 +8,26 @@ import { CiFileOn } from "react-icons/ci";
 import Posts from "../components/template/Posts/Posts";
 
 
-  export const metadata = {
+export const metadata = {
   title: "مقالات توسعه فردی",
   description: "آخرین مقالات و نکات کاربردی در حوزه رشد فردی و موفقیت",
+  alternates: {
+    canonical: "https://firouzehjavaherian.com/posts",
+  },
   openGraph: {
     title: "مقالات توسعه فردی",
     description: "آخرین مقالات و نکات کاربردی در حوزه رشد فردی و موفقیت",
     url: "https://firouzehjavaherian.com/posts",
-    images: [{ url: "/images/logo/fj-logo.png", width: 1200, height: 630 }],
+    images: [{ url: "/logo/fj-logo.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "مقالات توسعه فردی",
     description: "آخرین مقالات و نکات کاربردی در حوزه رشد فردی و موفقیت",
-    images: ["/images/logo/fj-logo.png"],
+    images: ["/logo/fj-logo.png"],
   },
 };
+
 
 
 const PostsArchive = async () => {

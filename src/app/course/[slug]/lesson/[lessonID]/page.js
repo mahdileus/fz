@@ -11,10 +11,21 @@ import DisableInspect from "@/utils/DisableInspect";
 
 
 export async function generateMetadata({ params }) {
-  const { lessonID } = params;
+  const { courseSlug, lessonID } = params;
   await connectToDB();
 
-  const lesson = await CourseModel.findById(lessonID).lean();
+  // پیدا کردن دوره
+  const course = await CourseModel.findOne({ slug: courseSlug }).lean();
+
+  if (!course) {
+    return {
+      title: "جلسه یافت نشد",
+      description: "این دوره وجود ندارد",
+    };
+  }
+
+  // پیدا کردن جلسه در آرایه lessons
+  const lesson = course.lessons.find((l) => l._id.toString() === lessonID);
 
   if (!lesson) {
     return {
@@ -23,20 +34,23 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const title = `${lesson.title} – فیروزه جواهریان`;
+  const title = `${lesson.title} – ${course.title} – فیروزه جواهریان`;
   const description = lesson.description || "جلسه آموزشی توسعه فردی و موفقیت";
 
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://firouzehjavaherian.com/course/${courseSlug}/lesson/${lessonID}`,
+    },
     openGraph: {
       title,
       description,
-      url: `https://firouzehjavaherian.com/course/${lesson.courseSlug}/lesson/${lessonID}`,
+      url: `https://firouzehjavaherian.com/course/${courseSlug}/lesson/${lessonID}`,
       type: "article",
       images: [
         {
-          url: lesson.thumbnail || "/images/logo/fj-logo.png",
+          url: lesson.thumbnail || "/logo/fj-logo.png",
           width: 1200,
           height: 630,
         },
@@ -51,10 +65,11 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title,
       description,
-      images: [lesson.thumbnail || "/images/logo/fj-logo.png"],
+      images: [lesson.thumbnail || "/logo/fj-logo.png"],
     },
   };
 }
+
 
 
 

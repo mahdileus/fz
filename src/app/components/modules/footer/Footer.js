@@ -24,12 +24,12 @@ export default function Footer() {
 
         {/* ستون دوم - دوره ها */}
         <div className="space-y-2 text-center md:text-right lg:pr-20">
-          <h4 className="font-bold text-xl font-kalameh">دوره ها</h4>
-          <ul className="space-y-3 text-md text-center md:text-right">
-            <li>آموزش موفقیت</li>
-            <li>آموزش فن‌بیان</li>
-            <li>آموزش ذهنیت برتر</li>
-            <li>موفقیت چیست</li>
+          <h4 className="font-bold text-xl font-kalameh"> محبوب ترین دوره ها</h4>
+          <ul className="space-y-2 text-md text-center md:text-right flex flex-col">
+            <Link href={"/course/hawthorne-magic"} className="inline-block"> جادوی هاثورن</Link>
+            <Link href={"/course/coaching"} className="inline-block">دوره کوچینگ</Link>
+            <Link href={"/course/zen-wealth"} className="inline-block">ذن ثروت</Link>
+            <Link href={"/course/dragon-eye"} className="inline-block"> چشم اژدها</Link>
           </ul>
         </div>
 
@@ -73,7 +73,9 @@ export default function Footer() {
       </div>
 
       {/* نوار اشتراک */}
-      <div className="max-w-2xl mx-auto text-center mt-14">
+      {/**
+       * 
+       *       <div className="max-w-2xl mx-auto text-center mt-14">
         <p className="text-sm text-[#112D4E]">از <span className="text-[#3F72AF] font-semibold">تخفیف‌ها و جدیدترین‌ها</span> باخبر شوید</p>
         <div className="mt-4 flex justify-center gap-2 flex-wrap">
           <input
@@ -86,6 +88,8 @@ export default function Footer() {
           </button>
         </div>
       </div>
+       */}
+
 
       {/* لوگوها */}
       <div className="mt-10 flex justify-center gap-6 flex-wrap">

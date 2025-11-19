@@ -28,6 +28,9 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://firouzehjavaherian.com/posts/${slug}`,
+    },
     openGraph: {
       title,
       description,
@@ -35,7 +38,7 @@ export async function generateMetadata({ params }) {
       type: "article",
       images: [
         {
-          url: article.thumbnail || "/images/logo/fj-logo.png",
+          url: article.thumbnail || "/logo/fj-logo.png",
           width: 1200,
           height: 630,
         },
@@ -50,10 +53,11 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title,
       description,
-      images: [article.thumbnail || "/images/logo/fj-logo.png"],
+      images: [article.thumbnail || "/logo/fj-logo.png"],
     },
   };
 }
+
 
 
 
