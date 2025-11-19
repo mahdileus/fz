@@ -35,7 +35,7 @@ export default function ArticleBox({ article }) {
     }
   };
     const handleEditClick = () => {
-    router.push(`/p-admin/posts/edit-post/${article.slug}`);
+    router.push(`/p-admin/posts/edit-post/${article._id}`);
   };
 
 
