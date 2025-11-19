@@ -17,13 +17,16 @@ export default function CourseCard({ course, isRegistered = false }) {
       <div className="relative w-full h-48">
         <Link href={`/course/${course.slug}`}>
           <Image
-            src={course.thumbnail.startsWith("http")
-              ? course.thumbnail
-              : `https://firouzehjavaherian.com${course.thumbnail}`}
-            alt={course.title}
+            src={
+              course?.thumbnail?.startsWith("http")
+                ? course.thumbnail
+                : `https://firouzehjavaherian.com${course.thumbnail}`
+            }
+            alt={course?.title || "thumbnail"}
             fill
             className="object-cover"
           />
+
         </Link>
         <div className="absolute top-2 left-2 z-10">
           <LikeButton itemID={course._id} itemType="course" />

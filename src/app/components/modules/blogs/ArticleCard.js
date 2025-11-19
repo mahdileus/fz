@@ -27,11 +27,16 @@ export default function ArticleCard({ post }) {
       <div className="relative w-full h-48">
         <Link href={`/posts/${slug}`}>
           <Image
-            src={thumbnail}
-            alt={title}
+            src={
+              thumbnail?.startsWith("http")
+                ? thumbnail
+                : `https://firouzehjavaherian.com${thumbnail}`
+            }
+            alt={title || "thumbnail"}
             fill
             className="object-cover rounded-t-2xl"
           />
+
         </Link>
 
         <div className="absolute top-2 left-2 z-10">

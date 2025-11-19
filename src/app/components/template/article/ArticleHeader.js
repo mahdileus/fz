@@ -10,6 +10,7 @@ import SidebarArticles from "./Sidebar";
 
 export default function ArticleHeader({ article, articles }) {
 
+
   return (
     <div className="container grid grid-cols-1 lg:grid-cols-4 gap-8 my-10">
       {/* Content Right Side */}
@@ -34,8 +35,12 @@ export default function ArticleHeader({ article, articles }) {
 
         <div className="max-w-[1200px] mx-auto">
           <Image
-            src={article.thumbnail}
-            alt={article.title}
+            src={
+              thumbnail?.startsWith("http")
+                ? thumbnail
+                : `https://firouzehjavaherian.com${thumbnail}`
+            }
+            alt={title || "thumbnail"}
             width={1200}
             height={450}
             className="rounded-xl mb-6 w-full object-cover"
@@ -71,7 +76,7 @@ export default function ArticleHeader({ article, articles }) {
 
       {/* Sidebar Left */}
       <div className="lg:col-span-1">
-        <SidebarArticles articles={articles}/>
+        <SidebarArticles articles={articles} />
       </div>
 
     </div>
