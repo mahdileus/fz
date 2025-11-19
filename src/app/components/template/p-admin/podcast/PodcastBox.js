@@ -72,7 +72,7 @@ export default function PodcastBox({ podcast }) {
           </div>
         </div>
         <p className="text-sm text-gray-600 mt-1 text-right line-clamp-2">
-          {podcast.longDescription}
+          <div dangerouslySetInnerHTML={{ __html: podcast.longDescription }} />
         </p>
 
         <div className="text-left text-secondery font-bold mt-2">

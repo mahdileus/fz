@@ -55,7 +55,7 @@ export default function ArticleBox({ article }) {
         <div className="flex justify-between ">
           <div>
             <Link
-              href={`/articles/${article.slug}`}
+              href={`/post/${article.slug}`}
               className="text-lg font-semibold text-primary hover:underline text-right"
             >
               {article.title}
@@ -72,7 +72,7 @@ export default function ArticleBox({ article }) {
           </div>
         </div>
         <p className="text-sm text-gray-600 mt-1 text-right line-clamp-2">
-          {article.longDescription}
+          <div dangerouslySetInnerHTML={{ __html: article.shortDescription }} />
         </p>
 
         <div className="text-left text-secondery font-bold mt-2">

@@ -25,7 +25,7 @@ export default function ArticleCard({ post }) {
 
       {/* تصویر مقاله */}
       <div className="relative w-full h-48">
-        <Link href={`/posts/${slug}`}>
+        <Link href={`/post/${slug}`}>
           <Image
             src={
               thumbnail?.startsWith("http")
@@ -47,7 +47,7 @@ export default function ArticleCard({ post }) {
       {/* محتوا */}
       <div className="p-4 flex flex-col gap-3 text-right">
 
-        <Link href={`/posts/${slug}`}>
+        <Link href={`/post/${slug}`}>
           <h3 className="text-[#112D4E] text-lg font-bold leading-snug hover:text-[#3F72AF] transition">
             {title}
           </h3>
@@ -71,7 +71,7 @@ export default function ArticleCard({ post }) {
 
         <div className="flex justify-center">
           <Link
-            href={`/posts/${slug}`}
+            href={`/post/${slug}`}
             className="text-sm text-[#3F72AF] hover:text-[#2c5e95] transition"
           >
             مطالعه مقاله
