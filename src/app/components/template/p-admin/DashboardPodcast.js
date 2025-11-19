@@ -18,7 +18,7 @@ export default function DashboardPodcast() {
         tags: "",
         longDescription:"",
         podcast: null,
-        img: null,
+        thumbnail: null,
     });
 
     const handleChange = (e) => {
@@ -27,7 +27,7 @@ export default function DashboardPodcast() {
     };
 
     const handleImageChange = (e) => {
-        setForm((prev) => ({ ...prev, img: e.target.files[0] }));
+        setForm((prev) => ({ ...prev, thumbnail: e.target.files[0] }));
     };
         const handlePodcastChange = (e) => {
         setForm((prev) => ({ ...prev, podcast: e.target.files[0] }));
@@ -68,7 +68,7 @@ export default function DashboardPodcast() {
                     tags: "",
                     longDescription:"",
                     podcast: null,
-                    img: null,
+                    thumbnail: null,
                 });
                 router.refresh();
             });

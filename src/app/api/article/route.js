@@ -17,8 +17,6 @@ export async function POST(req) {
     const longDescription = formData.get("longDescription");
     const timeToRead = +formData.get("timeToRead");
     const tags = JSON.parse(formData.get("tags"));
-    const img = formData.get("img");
-
 
     const uploadDir = "/var/www/uploads";
 

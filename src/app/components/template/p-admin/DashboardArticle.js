@@ -19,7 +19,7 @@ export default function ArticleForm() {
     timeToRead: "",
     tags: "",
     longDescription: "",
-    img: null,
+    thumbnail: null,
   });
 
   const handleChange = (e) => {
@@ -28,7 +28,7 @@ export default function ArticleForm() {
   };
 
   const handleImageChange = (e) => {
-    setForm((prev) => ({ ...prev, img: e.target.files[0] }));
+    setForm((prev) => ({ ...prev, thumbnail: e.target.files[0] }));
   };
 
   const handleSubmit = async (e) => {
@@ -67,7 +67,7 @@ export default function ArticleForm() {
           timeToRead: "",
           tags: "",
           longDescription: "",
-          img: null,
+          thumbnail: null,
         });
         router.refresh();
       });
