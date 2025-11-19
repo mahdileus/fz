@@ -1,63 +1,72 @@
-"use client"
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { CiCalendar } from "react-icons/ci";
 import LikeButton from "@/utils/Like";
 
-
 export default function ArticleCard({ post }) {
+  if (!post) return null;
 
-  const createdAts = new Date(post.createdAt); // یا هر مسیری که props داره
-  const shamsiDate = createdAts.toLocaleDateString("fa-IR");
+  const {
+    _id,
+    slug,
+    title,
+    thumbnail = "/images/default-thumbnail.jpg",
+    shortDescription = "",
+    author = "نامشخص",
+    createdAt
+  } = post;
+
+  const date = createdAt ? new Date(createdAt) : new Date();
+  const shamsiDate = date.toLocaleDateString("fa-IR");
+
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-md w-full max-w-sm">
-      {/* تصویر مقاله + دکمه لایک */}
+
+      {/* تصویر مقاله */}
       <div className="relative w-full h-48">
-        <Link href={`/articles/${slug}`}>
+        <Link href={`/posts/${slug}`}>
           <Image
-            src={post.thumbnail}
-            alt={post.title}
+            src={thumbnail}
+            alt={title}
             fill
             className="object-cover rounded-t-2xl"
           />
         </Link>
+
         <div className="absolute top-2 left-2 z-10">
-          <LikeButton itemID={post._id} itemType="article" />
-            </div>
+          <LikeButton itemID={_id} itemType="article" />
+        </div>
       </div>
 
       {/* محتوا */}
       <div className="p-4 flex flex-col gap-3 text-right">
-        {/* عنوان لینک‌دار */}
-        <Link href={`/articles/${post.slug}`}>
+
+        <Link href={`/posts/${slug}`}>
           <h3 className="text-[#112D4E] text-lg font-bold leading-snug hover:text-[#3F72AF] transition">
-            {post.title}
+            {title}
           </h3>
         </Link>
 
-        {/* توضیح بلند */}
         <p className="text-sm text-gray-600 leading-relaxed text-justify line-clamp-3">
-          {
-            post.shortDescription
-          }
+          {shortDescription}
         </p>
 
-        {/* تاریخ + نویسنده */}
         <div className="flex items-center justify-between text-[#3F72AF] text-sm mt-1">
           <div className="flex items-center gap-1">
             <CiCalendar size={16} />
             <span>{shamsiDate}</span>
           </div>
-          <span className="text-xs text-[#112D4E] font-medium">نویسنده: {post.author}</span>
+          <span className="text-xs text-[#112D4E] font-medium">
+            نویسنده: {author}
+          </span>
         </div>
 
-        {/* خط جداکننده */}
         <hr className="border-t border-gray-200 my-3" />
 
-        {/* دکمه مطالعه - پایین و وسط */}
         <div className="flex justify-center">
           <Link
-            href={`/articles/${post.slug}`}
+            href={`/posts/${slug}`}
             className="text-sm text-[#3F72AF] hover:text-[#2c5e95] transition"
           >
             مطالعه مقاله

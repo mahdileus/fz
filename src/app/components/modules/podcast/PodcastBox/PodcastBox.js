@@ -5,64 +5,66 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function PodcastBox({ podcast }) {
+
+  if (!podcast) return null; // جلو کرش
+
+  const { _id, slug, title, duration, tags, thumbnail } = podcast;
+
   return (
-    <>
-      {/* باکس اصلی */}
-      <div className="relative bg-white rounded-2xl shadow-md p-6 flex flex-col gap-4 max-w-md">
+    <div className="relative bg-white rounded-2xl shadow-md p-6 flex flex-col gap-4 max-w-md">
 
-        {/* محتوای داخل باکس */}
-        <div className="flex justify-between items-center">
-          {/* تگ‌ها */}
-          <div className="flex flex-wrap gap-2">
-            {podcast.tags?.map((tag, index) => (
-              <span
-                key={index}
-                className="text-xs bg-light-blue text-primary px-3 py-1 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-
-          </div>
-
-          {/* زمان و لایک */}
-          <div className="flex gap-4">
-            <div className="flex items-center gap-1">
-              <CiTimer className="w-5 h-5 text-secondery" />
-              <span className="text-primary text-sm">{podcast.duration} دقیقه</span>
-            </div>
-            <div className="flex items-center gap-1 ">
-              <LikeButton itemID={podcast._id} itemType="podcast" />
-            </div>
-          </div>
+      {/* بالا → تگ‌ها + تایم + لایک */}
+      <div className="flex justify-between items-center">
+        <div className="flex flex-wrap gap-2">
+          {tags?.map((tag, index) => (
+            <span
+              key={index}
+              className="text-xs bg-light-blue text-primary px-3 py-1 rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
 
-        {/* عنوان */}
-        <Link href={`/podcast/${podcast.slug}`}>
-          <h3 className="text-primary text-lg font-bold hover:text-secondery transition">
-            {podcast.title}
-          </h3>
-        </Link>
+        <div className="flex gap-4">
+          <div className="flex items-center gap-1">
+            <CiTimer className="w-5 h-5 text-secondery" />
+            <span className="text-primary text-sm">{duration ?? 0} دقیقه</span>
+          </div>
 
-        {/* خط جداکننده */}
-        <hr className="border-t border-light-blue" />
-        {/* دکمه مشاهده */}
-        <Link href={`/podcast/${podcast.slug}`} className="flex items-center gap-1 text-sm text-primary transition mt-2">
-          مشاهده پادکست
-          <IoIosArrowRoundBack className="text-secondery w-7 h-7" />
-        </Link>
-
-        {/* عکس تامنیل - گوشه پایین چپ با بیرون‌زدگی از باکس */}
-        <div className="absolute -bottom-6 -left-6 z-10 w-[108px] h-[108px] rounded-xl overflow-hidden">
-          <Image
-            src={podcast.thumbnail}
-            alt={podcast.title}
-            fill
-            style={{ objectFit: "cover" }}
-          />
-
+          <LikeButton itemID={_id} itemType="podcast" />
         </div>
       </div>
-    </>
+
+      {/* عنوان */}
+      <Link href={`/podcast/${slug}`}>
+        <h3 className="text-primary text-lg font-bold hover:text-secondery transition">
+          {title}
+        </h3>
+      </Link>
+
+      <hr className="border-t border-light-blue" />
+
+      {/* دکمه مشاهده */}
+      <Link
+        href={`/podcast/${slug}`}
+        className="flex items-center gap-1 text-sm text-primary transition mt-2"
+      >
+        مشاهده پادکست
+        <IoIosArrowRoundBack className="text-secondery w-7 h-7" />
+      </Link>
+
+      {/* تامنیل */}
+      {thumbnail && (
+        <div className="absolute -bottom-6 -left-6 z-10 w-[108px] h-[108px] rounded-xl overflow-hidden">
+          <Image
+            src={thumbnail}
+            alt={title}
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
+    </div>
   );
 }
