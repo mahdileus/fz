@@ -54,13 +54,13 @@ export default async function Home() {
       <AboutUs />
 
       <SectionHeader title="جدیدترین پادکست ها" href="/podcasts" type="podcast" />
-      <LatestPodcast podcasts={JSON.parse(JSON.stringify(podcasts))} />
+      <LatestPodcast podcasts={JSON.parse(JSON.stringify(safePodcasts))} />
 
       <SectionHeader title="جدیدترین نظرات" type="comment" />
       <CommentBox />
 
       <SectionHeader title="جدیدترین مقالات" href="/posts" type="article" />
-      <LatestArticle posts={JSON.parse(JSON.stringify(posts))} />
+      <LatestArticle posts={JSON.parse(JSON.stringify(safePosts))} />
 
       <Footer />
     </div>
