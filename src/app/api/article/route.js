@@ -20,12 +20,17 @@ export async function POST(req) {
     const img = formData.get("img");
 
 
-    const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
+    const uploadDir = "/var/www/uploads";
 
-    const buffer = Buffer.from(await img.arrayBuffer());
-    const filename = `${Date.now()}-${img.name}`;
-    const filePath = path.join(process.cwd(), "public","uploads", filename);
-    await writeFile(filePath, buffer);
+    // ذخیره تامنیل پست
+    const thumbnail = formData.get("thumbnail");
+    if (!thumbnail || typeof thumbnail.arrayBuffer !== "function") {
+      throw new Error("Thumbnail نامعتبر است یا ارسال نشده");
+    }
+    const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
+    const thumbnailName = `${Date.now()}-${thumbnail.name}`;
+    const thumbnailPath = path.join(uploadDir, thumbnailName);
+    await writeFile(thumbnailPath, thumbnailBuffer);
 
 
 
@@ -38,7 +43,7 @@ export async function POST(req) {
       longDescription,
       timeToRead,
       tags,
-      thumbnail: `${DOMAIN}/uploads/${filename}`,
+      thumbnail: `/uploads/${thumbnailName}`,
     });
 
     return Response.json({ message: "مقاله با موفقیت ایجاد شد", article }, { status: 201 });

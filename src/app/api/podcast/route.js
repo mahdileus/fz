@@ -1,7 +1,5 @@
 import connectToDB from "@/configs/db";
 import PodcastModel from "@/models/Podcast";
-import { log } from "console";
-import { Domain } from "domain";
 import { writeFile } from "fs/promises";
 import path from "path";
 import slugify from "slugify";
@@ -20,26 +18,24 @@ export async function POST(req) {
     const category = formData.get("category");
     const duration = +formData.get("duration");
     const tags = JSON.parse(formData.get("tags"));
+        const uploadDir = "/var/www/uploads";
+    
+        // ذخیره تامنیل پادکست
+        const thumbnail = formData.get("thumbnail");
+        if (!thumbnail || typeof thumbnail.arrayBuffer !== "function") {
+          throw new Error("Thumbnail نامعتبر است یا ارسال نشده");
+        }
+        const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
+        const thumbnailName = `${Date.now()}-${thumbnail.name}`;
+        const thumbnailPath = path.join(uploadDir, thumbnailName);
+        await writeFile(thumbnailPath, thumbnailBuffer);
 
-
-    const DOMAIN = process.env.DOMAIN;
-    console.log(DOMAIN);
-
-
-
-
-    // پردازش فایل تامنیل
-    const thumbnail = formData.get("img");
-    const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
-    const thumbnailFilename = `${Date.now()}-${thumbnail.name}`;
-    const thumbnailPath = path.join("/var/www/uploads", thumbnailFilename);
-    await writeFile(thumbnailPath, thumbnailBuffer);
 
     // پردازش فایل پادکست
     const podcast = formData.get("podcast");
     const podcastBuffer = Buffer.from(await podcast.arrayBuffer());
     const podcastFilename = `${Date.now()}-${podcast.name}`;
-    const podcastPath = path.join("/var/www/uploads", podcastFilename);
+    const podcastPath = path.join(uploadDir, podcastFilename);
     await writeFile(podcastPath, podcastBuffer);
 
 
@@ -51,7 +47,7 @@ export async function POST(req) {
       duration,
       longDescription,
       tags,
-      thumbnail: `/uploads/${thumbnailFilename}`,
+      thumbnail: `/uploads/${thumbnailName}`,
       podcast: `/uploads/${podcastFilename}`,
     });
 
