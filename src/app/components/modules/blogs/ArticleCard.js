@@ -21,63 +21,53 @@ export default function ArticleCard({ post }) {
   const shamsiDate = date.toLocaleDateString("fa-IR");
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-md w-full max-w-sm">
+<div className="bg-white rounded-2xl overflow-hidden shadow-md w-full max-w-sm h-[420px] flex flex-col">
+  <div className="relative w-full h-48">
+    <Link href={`/post/${slug}`}>
+      <Image
+        src={thumbnail?.startsWith("http") ? thumbnail : `https://firouzehjavaherian.com${thumbnail}`}
+        alt={title || "thumbnail"}
+        fill
+        className="object-cover rounded-t-2xl"
+      />
+    </Link>
+    <div className="absolute top-2 left-2 z-10">
+      <LikeButton itemID={_id} itemType="article" />
+    </div>
+  </div>
 
-      {/* تصویر مقاله */}
-      <div className="relative w-full h-48">
-        <Link href={`/post/${slug}`}>
-          <Image
-            src={
-              thumbnail?.startsWith("http")
-                ? thumbnail
-                : `https://firouzehjavaherian.com${thumbnail}`
-            }
-            alt={title || "thumbnail"}
-            fill
-            className="object-cover rounded-t-2xl"
-          />
+  <div className="p-4 flex flex-col justify-between flex-1 text-right">
+    <div>
+      <Link href={`/post/${slug}`}>
+        <h3 className="text-[#112D4E] text-lg font-bold leading-snug hover:text-[#3F72AF] transition line-clamp-2">
+          {title}
+        </h3>
+      </Link>
 
-        </Link>
+      <p className="text-sm text-gray-600 leading-relaxed text-justify line-clamp-3 mt-2" dangerouslySetInnerHTML={{ __html: shortDescription }} />
+    </div>
 
-        <div className="absolute top-2 left-2 z-10">
-          <LikeButton itemID={_id} itemType="article" />
+    <div>
+      <div className="flex items-center justify-between text-[#3F72AF] text-sm mt-3">
+        <div className="flex items-center gap-1">
+          <CiCalendar size={16} />
+          <span>{shamsiDate}</span>
         </div>
+        <span className="text-xs text-[#112D4E] font-medium">
+          نویسنده: {author}
+        </span>
       </div>
 
-      {/* محتوا */}
-      <div className="p-4 flex flex-col gap-3 text-right">
+      <hr className="border-t border-gray-200 my-3" />
 
-        <Link href={`/post/${slug}`}>
-          <h3 className="text-[#112D4E] text-lg font-bold leading-snug hover:text-[#3F72AF] transition">
-            {title}
-          </h3>
+      <div className="flex justify-center">
+        <Link href={`/post/${slug}`} className="text-sm text-[#3F72AF] hover:text-[#2c5e95] transition">
+          مطالعه مقاله
         </Link>
-
-        <p className="text-sm text-gray-600 leading-relaxed text-justify line-clamp-3">
-          <div dangerouslySetInnerHTML={{ __html: shortDescription }} />
-        </p>
-
-        <div className="flex items-center justify-between text-[#3F72AF] text-sm mt-1">
-          <div className="flex items-center gap-1">
-            <CiCalendar size={16} />
-            <span>{shamsiDate}</span>
-          </div>
-          <span className="text-xs text-[#112D4E] font-medium">
-            نویسنده: {author}
-          </span>
-        </div>
-
-        <hr className="border-t border-gray-200 my-3" />
-
-        <div className="flex justify-center">
-          <Link
-            href={`/post/${slug}`}
-            className="text-sm text-[#3F72AF] hover:text-[#2c5e95] transition"
-          >
-            مطالعه مقاله
-          </Link>
-        </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 }
