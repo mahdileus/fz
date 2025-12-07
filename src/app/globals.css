@@ -176,6 +176,42 @@ font-style: normal;
 font-size: 16px;
 text-align: justify;
 }
+/* لینک‌ها */
+.ck-content a,
+.rich-text a {
+  color: #1a73e8; /* رنگ دلخواه لینک */
+  text-decoration: underline; /* زیرخط */
+  transition: color 0.2s ease;
+}
+
+.ck-content a:hover,
+.rich-text a:hover {
+  color: #0c4a9d; /* رنگ هنگام هاور */
+}
+
+/* جدول‌ها */
+.ck-content table,
+.rich-text table {
+  width: 100%; /* پهنای کامل */
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.ck-content th,
+.ck-content td,
+.rich-text th,
+.rich-text td {
+  border: 1px solid #ddd; /* خط دور سلول‌ها */
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.ck-content th,
+.rich-text th {
+  background-color: #f5f5f5; /* پس‌زمینه هدر جدول */
+  font-weight: bold;
+}
+
 
 
 
