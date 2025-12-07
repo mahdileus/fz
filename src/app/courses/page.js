@@ -1,3 +1,6 @@
+// pages/courses/page.js
+export const dynamic = 'force-dynamic';
+
 import { authUser } from "@/utils/auth-server";
 import Footer from "../components/modules/footer/Footer";
 import Navbar from "../components/modules/navbar/Navbar";
