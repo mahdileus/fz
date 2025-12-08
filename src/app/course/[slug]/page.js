@@ -14,7 +14,7 @@ import Comments from "@/app/components/modules/comments/Comments";
 
 
 export async function generateMetadata({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
   await connectToDB();
 
   const course = await CourseModel.findOne({ slug }).lean();
