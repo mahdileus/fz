@@ -12,6 +12,8 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
   const discount = course?.discountPercent || 0;
   const price = course?.price || 0;
   const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
+  const isFree = course.price === 0 || course.isFree;
+
 
   const { addToCart, cartItems = [] } = useContext(CartContext);
   const router = useRouter();
@@ -24,6 +26,7 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
   }, [course]);
 
   const handleAddToCart = () => {
+    if (isRegistered || isFree) return;
     if (isRegistered) return;
 
     if (!course._id || !course.price) {
@@ -108,42 +111,28 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
         </div>
 
         <div className="text-center space-y-3">
-          {!isRegistered ? (
-            <>
-              <div className="flex flex-col items-center gap-1 text-sm text-primary">
-                {discount > 0 ? (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-white bg-secondery px-2 py-0.5 rounded-full">
-                        {discount}٪
-                      </span>
-                      <span className="line-through text-gray-400 text-base">
-                        {price.toLocaleString()} تومان
-                      </span>
-                    </div>
-                    <span className="font-bold text-2xl">
-                      {discountedPrice.toLocaleString()} تومان
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-base font-bold">
-                    {price.toLocaleString()} تومان
-                  </span>
-                )}
-              </div>
-
-              <button
-                onClick={handleAddToCart}
-                className="w-full bg-primary text-white py-3 rounded-xl text-lg hover:bg-secondery transition"
-              >
-                ثبت‌نام و شروع دوره
-              </button>
-            </>
+          {!isRegistered && !isFree ? (
+            // دوره پولی، دکمه افزودن به سبد
+            <button
+              onClick={handleAddToCart}
+              className="w-full bg-primary text-white py-3 rounded-xl text-lg hover:bg-secondery transition"
+            >
+              ثبت‌نام و شروع دوره
+            </button>
+          ) : isFree && !isRegistered ? (
+            // دوره رایگان، دکمه شروع مستقیم
+            <button
+              onClick={() => router.push(`/course/${course.slug}/lesson/0`)}
+              className="w-full bg-primary text-white py-3 rounded-xl text-lg hover:bg-secondery transition"
+            >
+              شروع دوره رایگان
+            </button>
           ) : (
             <div className="text-primary font-semibold text-lg">
               شما در این دوره ثبت‌نام کرده‌اید
             </div>
           )}
+
         </div>
       </div>
     </section>

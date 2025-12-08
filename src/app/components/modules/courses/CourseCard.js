@@ -51,7 +51,7 @@ export default function CourseCard({ course, isRegistered = false }) {
 
         {/* قیمت یا دکمه */}
         <div className="flex justify-between items-center">
-          {Boolean(isRegistered) ? (
+          {isRegistered || course.isFree ? (
             <Link
               href={`/course/${course.slug}`}
               className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-4 py-2 rounded-lg transition"
@@ -81,6 +81,7 @@ export default function CourseCard({ course, isRegistered = false }) {
               )}
             </div>
           )}
+
 
           {/* امتیاز */}
           <div className="flex items-center gap-1 text-sm text-yellow-500">

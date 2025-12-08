@@ -53,8 +53,12 @@ const CoursesArchive = async () => {
   }
 
   // برای ارسال به کامپوننت‌ها هم امن کن
-  const safeCourses = (courses || []).filter(course => course && course._id);
-
+const safeCourses = (courses || [])
+  .filter(course => course && course._id)
+  .map(course => ({
+    ...course,
+    isFree: course.price === 0, // اضافه کردن فیلد رایگان
+  }));
 
   return (
     <>

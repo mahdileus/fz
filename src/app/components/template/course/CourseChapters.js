@@ -12,8 +12,10 @@ export default function CourseChapters({ course = {}, isRegistered = false }) {
     setOpen((prev) => !prev);
   };
 
+  const isFree = course.price === 0 || course.isFree; // اضافه شده
+
   const handleLessonClick = (e) => {
-    if (!isRegistered) {
+    if (!isRegistered && !isFree) {
       e.preventDefault();
       swal({
         title: "شما هنوز در این دوره ثبت‌نام نکرده‌اید!",
@@ -41,9 +43,7 @@ export default function CourseChapters({ course = {}, isRegistered = false }) {
             >
               <span>مشاهده جلسات</span>
               <FaChevronDown
-                className={`transition-transform duration-300 ${
-                  open ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
               />
             </button>
 
@@ -55,7 +55,7 @@ export default function CourseChapters({ course = {}, isRegistered = false }) {
                       <Link
                         href={`/course/${course?.slug}/lesson/${lesson?._id}`}
                         className={`flex items-center gap-2 ${
-                          isRegistered
+                          isRegistered || isFree
                             ? "text-primary hover:underline cursor-pointer"
                             : "text-gray-400 cursor-not-allowed"
                         }`}

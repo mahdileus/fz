@@ -15,21 +15,21 @@ const lessonSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  description:{
+  description: {
     type: String,
     required: false,
   },
-  audio:{
-  type: String,
-  required: false,
+  audio: {
+    type: String,
+    required: false,
   },
-  practice:{
-  type: String,
-  required: false,
+  practice: {
+    type: String,
+    required: false,
   },
-  practiceAudio:{
-  type: String,
-  required: false,
+  practiceAudio: {
+    type: String,
+    required: false,
   }
 });
 
@@ -39,7 +39,7 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-    slug: {
+  slug: {
     type: String,
     required: true,
     unique: true,
@@ -83,6 +83,10 @@ const courseSchema = new mongoose.Schema({
   thumbnail: {
     type: String,
     required: false,
+  },
+  isFree: {
+    type: Boolean,
+    default: false,
   },
   introVideo: {
     type: String,

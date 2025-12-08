@@ -33,21 +33,22 @@ export async function PUT(req, { params }) {
     shortDescription: formData.get("shortDescription"),
     longDescription: formData.get("longDescription"),
     discountPercent: formData.get("discountPercent"),
+    isFree : formData.get("isFree") === "true",
     score: 5,
     tags: JSON.parse(formData.get("tags") || "[]"),
   };
 
-const uploadsPath = "/var/www/uploads";
+  const uploadsPath = "/var/www/uploads";
 
-const saveFile = async (file) => {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const fileName = `${Date.now()}-${file.name}`;
-  const filePath = path.join(uploadsPath, fileName);
-  await writeFile(filePath, buffer);
+  const saveFile = async (file) => {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const fileName = `${Date.now()}-${file.name}`;
+    const filePath = path.join(uploadsPath, fileName);
+    await writeFile(filePath, buffer);
 
-  // مسیر public-facing برای فرانت‌اند
-  return `/uploads/${fileName}`;
-};
+    // مسیر public-facing برای فرانت‌اند
+    return `/uploads/${fileName}`;
+  };
 
   // مدیریت introVideo و thumbnail
   const introVideo = formData.get("introVideo");

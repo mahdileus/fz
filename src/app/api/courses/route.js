@@ -27,6 +27,7 @@ export async function POST(req) {
     const category = formData.get("category");
     const duration = +formData.get("duration");
     const score = +formData.get("score") || 5;
+    const isFree = formData.get("isFree") === "true";
     const tags = JSON.parse(formData.get("tags") || "[]");
 
     const uploadDir = "/var/www/uploads";
@@ -72,7 +73,7 @@ export async function POST(req) {
         const practiceAudio = formData.get(`practiceAudio-${i}`);
         const practice = formData.get(`practice-${i}`);
 
-        
+
         if (!lessonVideo || typeof lessonVideo.arrayBuffer !== "function") {
           throw new Error(`Lesson video ${i} نامعتبر است یا ارسال نشده`);
         }
@@ -119,7 +120,7 @@ export async function POST(req) {
           audio: lessonAudioName ? `${DOMAIN}/uploads/${lessonAudioName}` : null,
           practiceAudios: lessonPracticeAudioName ? `${DOMAIN}/uploads/${lessonPracticeAudioName}` : null,
           practices: lessonPracticeName ? `${DOMAIN}/uploads/${lessonPracticeName}` : null,
-          
+
         });
       }
     }
@@ -137,6 +138,7 @@ export async function POST(req) {
       longDescription,
       score,
       tags,
+      isFree,
       thumbnail: `/uploads/${thumbnailName}`,
       introVideo: `/uploads/${introName}`,
       lessons,

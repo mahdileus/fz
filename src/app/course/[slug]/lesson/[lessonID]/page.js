@@ -78,7 +78,7 @@ export default async function LessonPage({ params }) {
 
   const { slug, lessonID } = await params;
   const user = await authUser();
-  const watermark = user.phone || null
+  const watermark = user?.phone || null;
 
   const course = await CourseModel.findOne({ slug }).lean();
   if (!course) return notFound();
@@ -127,8 +127,8 @@ export default async function LessonPage({ params }) {
                 <li
                   key={String(lessonItem._id)}
                   className={`p-2 rounded-md transition-all text-sm ${String(lessonItem._id) === String(lessonID)
-                      ? "bg-primary text-white"
-                      : "hover:bg-light-blue"
+                    ? "bg-primary text-white"
+                    : "hover:bg-light-blue"
                     }`}
                 >
                   <Link

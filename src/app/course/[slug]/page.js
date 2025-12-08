@@ -84,13 +84,15 @@ const Course = async ({ params }) => {
   ]);
   if (!course) return notFound();
 
-  const registeredCourseIds = userCourses
-    .filter(item => item.course)
-    .map(item => item.course._id.toString());
+const registeredCourseIds = userCourses
+  .filter(item => item.course || item.course?.isFree)
+  .map(item => item.course._id.toString());
 
-  const isRegistered = user
-    ? user.role === "ADMIN" || registeredCourseIds.includes(course._id.toString())
-    : false;
+
+const isRegistered = user
+  ? user.role === "ADMIN" || registeredCourseIds.includes(course._id.toString())
+  : course.isFree; // ← اگر دوره رایگان است، حتی بدون کاربر ثبت‌شده اجازه بده
+
 
 
   return (
