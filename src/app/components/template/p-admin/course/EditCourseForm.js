@@ -21,8 +21,10 @@ export default function EditCourseForm({ course, courseId }) {
     longDescription: course.longDescription || "",
     tags: course.tags?.join(",") || "",
     score: course.score || 5,
+    isFree: course.isFree || "",
     discountPercent: course.discountPercent || "",
     thumbnail: course.thumbnail || null,
+
     introVideo: course.introVideo || null,
   });
 
@@ -60,6 +62,8 @@ export default function EditCourseForm({ course, courseId }) {
     });
     formData.set("tags", JSON.stringify(courseInfo.tags.split(",")));
     formData.append("lessonCount", lessons.length);
+    formData.append("isFree", courseInfo.isFree);
+
 
     // پردازش جلسات
     lessons.forEach((lesson, i) => {
@@ -177,6 +181,21 @@ export default function EditCourseForm({ course, courseId }) {
             setCourseInfo({ ...courseInfo, discountPercent: e.target.value })
           }
         />
+        <div className="flex items-center gap-2 mt-2">
+          <input
+            type="checkbox"
+            id="isFree"
+            checked={courseInfo.isFree}
+            onChange={(e) =>
+              setCourseInfo({ ...courseInfo, isFree: e.target.checked })
+            }
+            className="w-4 h-4"
+          />
+          <label htmlFor="isFree" className="text-sm text-gray-700">
+            رایگان
+          </label>
+        </div>
+
         <input
           className="input"
           type="text"

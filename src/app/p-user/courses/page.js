@@ -21,7 +21,7 @@ export default async function Page() {
   }
 
   // گرفتن لیست دوره‌ها
-  const usercourses = await UserCourseModel.find({ user: user.id })
+  const usercourses = await UserCourseModel.find({ user: user._id })
     .sort({ purchasedAt: -1 })
     .populate("course")
     .lean();

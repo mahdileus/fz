@@ -11,10 +11,10 @@ import axios from "axios";
 const CKEditorComponent = dynamic(() => import("../../../modules/ckeditor/CKEditorWrapper"), { ssr: false });
 export default function CourseForm() {
   const router = useRouter();
-   const [uploadProgress, setUploadProgress] = useState(0); // ✅ درصد آپلود
+  const [uploadProgress, setUploadProgress] = useState(0); // ✅ درصد آپلود
 
   const [lessons, setLessons] = useState([
-    { title: "", video: null, audio: null, thumbnail: null, description: "", practice: null, practiceAudio:null },
+    { title: "", video: null, audio: null, thumbnail: null, description: "", practice: null, practiceAudio: null },
   ]);
 
   const [courseInfo, setCourseInfo] = useState({
@@ -27,6 +27,7 @@ export default function CourseForm() {
     longDescription: "",
     tags: "",
     score: 5,
+    isFree: "",
     discountPercent: "",
     thumbnail: null,
     introVideo: null,
@@ -41,7 +42,7 @@ export default function CourseForm() {
   const addLesson = () => {
     setLessons([
       ...lessons,
-      { title: "", description: "", video: null, thumbnail: null, audio: null , practice: null, practiceAudio:null },
+      { title: "", description: "", video: null, thumbnail: null, audio: null, practice: null, practiceAudio: null },
     ]);
   };
 
@@ -52,6 +53,7 @@ export default function CourseForm() {
     Object.entries(courseInfo).forEach(([key, value]) => {
       formData.append(key, value);
     });
+    formData.append("isFree", courseInfo.isFree);
 
     formData.set("tags", JSON.stringify(courseInfo.tags.split(",")));
     formData.append("lessonCount", lessons.length);
@@ -100,7 +102,7 @@ export default function CourseForm() {
       className="max-w-4xl mx-auto p-6 space-y-6 bg-white rounded-2xl shadow-md"
     >
       <h2 className="text-2xl font-bold text-primary mb-4">افزودن دوره جدید</h2>
-            {/* ✅ Progress Bar */}
+      {/* ✅ Progress Bar */}
       {uploadProgress > 0 && (
         <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
           <div
@@ -167,7 +169,7 @@ export default function CourseForm() {
         />
         <input
           type="number"
-                  value={courseInfo.duration}
+          value={courseInfo.duration}
 
           placeholder="مدت زمان (ساعت)"
           onChange={(e) =>
@@ -176,6 +178,21 @@ export default function CourseForm() {
           className="input"
         />
       </div>
+      <div className="flex items-center gap-2 mt-4">
+        <input
+          type="checkbox"
+          checked={courseInfo.isFree === true}
+          onChange={(e) =>
+            setCourseInfo({ ...courseInfo, isFree: e.target.checked })
+          }
+          id="isFree"
+          className="w-4 h-4"
+        />
+        <label htmlFor="isFree" className="text-sm text-gray-700">
+          دوره رایگان است
+        </label>
+      </div>
+
 
       <input
         type="text"
@@ -188,11 +205,11 @@ export default function CourseForm() {
       />
 
       <label className="font-medium text-primary">محتوای دوره</label>
-  <div className="overflow-x-auto">
-      <CKEditorComponent
-        value={courseInfo.longDescription}
-        onChange={(data) => setCourseInfo((prev) => ({ ...prev, longDescription: data }))}
-      />
+      <div className="overflow-x-auto">
+        <CKEditorComponent
+          value={courseInfo.longDescription}
+          onChange={(data) => setCourseInfo((prev) => ({ ...prev, longDescription: data }))}
+        />
 
       </div>
 
