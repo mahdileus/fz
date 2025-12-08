@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import connectToDB from "@/configs/db";
 import { authUser } from "@/utils/auth-server";
 import TicketModel from "@/models/Ticket";

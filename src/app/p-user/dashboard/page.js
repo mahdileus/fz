@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import SectionHeader from "@/app/components/modules/index/SectionHeader";
 import DashboardStats from "@/app/components/template/p-user/dashboard/DashboardStats";
 import LatestComments from "@/app/components/template/p-user/dashboard/Latest-Comments";

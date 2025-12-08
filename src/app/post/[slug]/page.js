@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import CommentBox from "@/app/components/modules/comments/CommentBox";
 import Footer from "../../components/modules/footer/Footer";
 import Navbar from "../../components/modules/navbar/Navbar";

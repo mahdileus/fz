@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import SectionHeader from "@/app/components/modules/index/SectionHeader";
 import CourseCard from "@/app/components/template/p-user/courses/CoursesBox";
 import connectToDB from "@/configs/db";

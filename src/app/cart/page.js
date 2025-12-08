@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import connectToDB from "@/configs/db";
 import Footer from "../components/modules/footer/Footer";
 import Navbar from "../components/modules/navbar/Navbar";

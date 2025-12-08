@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Footer from "../../components/modules/footer/Footer";
 import Navbar from "../../components/modules/navbar/Navbar";
 import PodcastModel from "@/models/Podcast";
