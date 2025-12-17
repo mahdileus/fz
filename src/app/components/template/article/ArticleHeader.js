@@ -12,7 +12,7 @@ export default function ArticleHeader({ article, articles }) {
 
 
   return (
-    <div className="container grid grid-cols-1 lg:grid-cols-4 gap-8 my-10">
+    <div className="container grid font-dana grid-cols-1 lg:grid-cols-4 gap-8 my-10">
       {/* Content Right Side */}
       <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow">
         {/* Title */}
