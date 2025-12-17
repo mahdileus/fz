@@ -12,6 +12,8 @@ export default function SidebarArticles({ articles }) {
           {/* تصویر */}
           <div className="flex-shrink-0 w-full sm:w-20 aspect-square">
             <Image
+            width={80}
+            height={80}
               src={
                 item?.thumbnail?.startsWith("http")
                   ? item.thumbnail
@@ -19,7 +21,7 @@ export default function SidebarArticles({ articles }) {
               }
               alt={item?.title || "thumbnail"}
               className="w-full h-full object-cover rounded-md"
-              fill
+              
             />
           </div>
 

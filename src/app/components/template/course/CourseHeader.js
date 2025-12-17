@@ -13,6 +13,9 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
   const price = course?.price || 0;
   const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
   const isFree = course.price === 0 || course.isFree;
+  const formatPrice = (price) =>
+    price.toLocaleString("fa-IR") + " تومان";
+
 
 
   const { addToCart, cartItems = [] } = useContext(CartContext);
@@ -111,28 +114,38 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
         </div>
 
         <div className="text-center space-y-3">
-          {!isRegistered && !isFree ? (
-            // دوره پولی، دکمه افزودن به سبد
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-primary text-white py-3 rounded-xl text-lg hover:bg-secondery transition"
-            >
-              ثبت‌نام و شروع دوره
-            </button>
-          ) : isFree && !isRegistered ? (
-            // دوره رایگان، دکمه شروع مستقیم
-            <button
-              onClick={() => router.push(`/course/${course.slug}/lesson/0`)}
-              className="w-full bg-primary text-white py-3 rounded-xl text-lg hover:bg-secondery transition"
-            >
-              شروع دوره رایگان
-            </button>
-          ) : (
-            <div className="text-primary font-semibold text-lg">
-              شما در این دوره ثبت‌نام کرده‌اید
+          {/* PRICE BOX */}
+          {!isRegistered && (
+            <div className="flex flex-col items-center gap-2 mb-4">
+
+              {isFree ? (
+                <div className="text-2xl font-extrabold text-green-600">
+                  🎁 رایگان
+                </div>
+              ) : discount > 0 ? (
+                <>
+                  {/* price before discount */}
+                  <div className="flex items-center gap-2 text-gray-400 text-sm">
+                    <span className="line-through">
+                      {formatPrice(price)}
+                    </span>
+                    <span className="bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full font-bold">
+                      {discount}٪ تخفیف
+                    </span>
+                  </div>
+
+                  {/* final price */}
+                  <div className="text-3xl font-extrabold text-primary">
+                    {formatPrice(discountedPrice)}
+                  </div>
+                </>
+              ) : (
+                <div className="text-3xl font-extrabold text-primary">
+                  {formatPrice(price)}
+                </div>
+              )}
             </div>
           )}
-
         </div>
       </div>
     </section>
