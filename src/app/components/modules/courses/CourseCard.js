@@ -37,7 +37,7 @@ export default function CourseCard({ course, isRegistered = false }) {
       <div className="p-4 flex flex-col gap-3 text-right">
         {/* عنوان لینک‌دار */}
         <Link href={`/course/${course.slug}`}>
-          <h3 className="text-primary text-lg font-bold hover:text-secondery transition">
+          <h3 className="text-primary text-lg font-bold line-clamp-2 hover:text-secondery transition">
             {course.title}
           </h3>
         </Link>
