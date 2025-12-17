@@ -12,7 +12,7 @@ export default function CourseCard({ course, isRegistered = false }) {
     discount > 0 ? price - (price * discount) / 100 : price;
 
   return (
-    <div className="bg-white shadow-md rounded-2xl overflow-hidden w-full max-w-sm h-[430px]">
+    <div className="bg-white shadow-md rounded-2xl overflow-hidden w-full max-w-sm h-[410px]">
       {/* تصویر دوره + دکمه لایک */}
       <div className="relative w-full h-48">
         <Link href={`/course/${course.slug}`}>
