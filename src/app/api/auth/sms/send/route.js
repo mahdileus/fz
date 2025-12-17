@@ -37,7 +37,7 @@ export async function POST(req) {
                 pass: process.env.IPPANEL_PASS,
                 fromNum: "3000505",
                 toNum: phone,
-                patternCode: "zcrh775wl9h9gx6",
+                patternCode: "uoofkyutz5lvv4r",
                 inputData: [{ "verification-code": code }],
             },
             json: true,
