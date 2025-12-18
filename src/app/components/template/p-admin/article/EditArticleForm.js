@@ -7,31 +7,69 @@ import dynamic from "next/dynamic";
 
 const CKEditorComponent = dynamic(() => import("../../../modules/ckeditor/CKEditorWrapper"), { ssr: false });
 
-
 export default function EditArticleForm({ article, articleId }) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);  // برای disable دکمه هنگام submit
+  const [articleInfo, setArticleInfo] = useState({
+    title: article.title || "",
+    slug: article.slug || "",
+    author: article.author || "",
+    category: article.category || "",
+    timeToRead: article.timeToRead || "",
+    longDescription: article.longDescription || "",
+    shortDescription: article.shortDescription || "",
+    tags: article.tags?.join(",") || "",
+    thumbnail: null,  // برای فایل جدید
+    // فیلدهای سئو جدید اضافه شد و از article لود می‌شن
+    metaTitle: article.metaTitle || "",
+    metaDescription: article.metaDescription || "",
+    metaKeywords: article.metaKeywords?.join(",") || "",
+    canonicalUrl: article.canonicalUrl || "",
+    seoSchema: JSON.stringify(article.seoSchema || {}, null, 2),  // به string تبدیل برای textarea
+    viewCount: article.viewCount || "0",
+    isPublished: article.isPublished || false,
+  });
 
-const [articleInfo, setArticleInfo] = useState({
-  title: article.title || "",
-  slug: article.slug || "",
-  author: article.author || "",
-  category: article.category || "",
-  timeToRead: article.timeToRead || "",
-  longDescription: article.longDescription || "",
-  shortDescription: article.longDescription || "",
-  tags: article.tags?.join(",") || "",
-  thumbnail: article.thumbnail || null,
-});
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setArticleInfo((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const handleImageChange = (e) => {
+    setArticleInfo((prev) => ({ ...prev, thumbnail: e.target.files[0] }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // validation ساده برای فیلدهای الزامی
+    if (!articleInfo.title || !articleInfo.slug || !articleInfo.longDescription) {
+      return Swal({
+        title: "خطا",
+        text: "فیلدهای عنوان, نامک و محتوای مقاله الزامی است!",
+        icon: "error",
+        buttons: "فهمیدم",
+      });
+    }
+
+    setIsLoading(true);
     const formData = new FormData();
 
     Object.entries(articleInfo).forEach(([key, value]) => {
-      formData.append(key, value);
+      if (key === "tags" || key === "metaKeywords") {
+        const cleaned = value
+          .split(",")
+          .map(item => item.trim())
+          .filter(item => item !== "");
+        formData.append(key, JSON.stringify(cleaned));
+      } else if (key === "seoSchema") {
+        formData.append(key, value ? value : JSON.stringify({}));  // اگر خالی بود, empty JSON
+      } else if (key === "isPublished") {
+        formData.append(key, value ? "true" : "false");
+      } else {
+        formData.append(key, value);
+      }
     });
-
-    formData.set("tags", JSON.stringify(articleInfo.tags.split(",")));
 
     const res = await fetch(`/api/article/${articleId}`, {
       method: "PUT",
@@ -48,11 +86,12 @@ const [articleInfo, setArticleInfo] = useState({
       });
     } else {
       Swal({
-        title: "خطا در ویرایش مفاله",
+        title: "خطا در ویرایش مقاله",
         icon: "error",
         buttons: "فهمیدم",
       });
     }
+    setIsLoading(false);
   };
 
   return (
@@ -62,16 +101,17 @@ const [articleInfo, setArticleInfo] = useState({
     >
       <h2 className="text-2xl font-bold text-primary mb-4">ویرایش مقاله</h2>
 
-      {/* اطلاعات پایه دوره */}
+      {/* اطلاعات پایه مقاله */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input className="input" type="text" placeholder="عنوان مقاله" value={articleInfo.title} onChange={(e) => setArticleInfo({ ...articleInfo, title: e.target.value })} />
-        <input className="input" type="text" placeholder="نامک مقاله" value={articleInfo.slug} onChange={(e) => setArticleInfo({ ...articleInfo, slug: e.target.value })} />
-        <input className="input" type="text" placeholder=" نویسنده" value={articleInfo.author} onChange={(e) => setArticleInfo({ ...articleInfo, author: e.target.value })} />
-        <input className="input" type="text" placeholder="دسته‌بندی" value={articleInfo.category} onChange={(e) => setArticleInfo({ ...articleInfo, category: e.target.value })} />
-        <input className="input" type="number" placeholder="مدت زمان مطالعه (دقیقه)" value={articleInfo.timeToRead} onChange={(e) => setArticleInfo({ ...articleInfo, timeToRead: e.target.value })} />
-        <input className="input" type="number" placeholder=" توضیح کوتاه" value={articleInfo.shortDescription} onChange={(e) => setArticleInfo({ ...articleInfo, shortDescription: e.target.value })} />
+        <input className="input" type="text" placeholder="عنوان مقاله" value={articleInfo.title} onChange={handleChange} />
+        <input className="input" type="text" placeholder="نامک مقاله" value={articleInfo.slug} onChange={handleChange} />
+        <input className="input" type="text" placeholder="نویسنده" value={articleInfo.author} onChange={handleChange} />
+        <input className="input" type="text" placeholder="دسته‌بندی" value={articleInfo.category} onChange={handleChange} />
+        <input className="input" type="number" placeholder="مدت زمان مطالعه (دقیقه)" value={articleInfo.timeToRead} onChange={handleChange} />
+        <input className="input" type="text" placeholder="توضیح کوتاه" value={articleInfo.shortDescription} onChange={handleChange} />
       </div>
-      <label className="font-medium text-primary">محتوای مقاله</label>
+
+      <label className="block text-sm mb-1">محتوای مقاله</label>
       <div className="overflow-x-auto">
         <CKEditorComponent
           value={articleInfo.longDescription}
@@ -79,17 +119,37 @@ const [articleInfo, setArticleInfo] = useState({
         />
       </div>
 
-      <input className="input" type="text" placeholder="تگ‌ها (با , جدا کنید)" value={articleInfo.tags} onChange={(e) => setArticleInfo({ ...articleInfo, tags: e.target.value })} />
+      <input className="input" type="text" placeholder="تگ‌ها (با , جدا کنید)" value={articleInfo.tags} onChange={handleChange} />
 
       {/* آپلود فایل‌ها */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm mb-1">تصویر جدید (اختیاری):</label>
-          <input type="file" accept="image/*" onChange={(e) => setArticleInfo({ ...articleInfo, thumbnail: e.target.files[0] })} className="input" />
+          <input type="file" accept="image/*" onChange={handleImageChange} className="input" />
         </div>
       </div>
+
+      {/* فیلدهای سئو جدید اضافه شد و از article لود می‌شه */}
+      <input className="input" type="text" placeholder="عنوان متا (برای سئو - اختیاری)" name="metaTitle" value={articleInfo.metaTitle} onChange={handleChange} />
+      <textarea className="input min-h-[100px]" placeholder="توضیح متا (۱۵۰ کاراکتر برای سئو - اختیاری)" name="metaDescription" value={articleInfo.metaDescription} onChange={handleChange} />
+      <input className="input" type="text" placeholder="کلمات کلیدی متا با , جدا شده (برای سئو - اختیاری)" name="metaKeywords" value={articleInfo.metaKeywords} onChange={handleChange} />
+      <input className="input" type="text" placeholder="URL کانونی (برای جلوگیری از duplicate - اختیاری)" name="canonicalUrl" value={articleInfo.canonicalUrl} onChange={handleChange} />
+      <textarea className="input min-h-[100px]" placeholder="JSON-LD schema برای سئو (اختیاری)" name="seoSchema" value={articleInfo.seoSchema} onChange={handleChange} />
+      <input className="input" type="number" placeholder="تعداد بازدید (اختیاری, default 0)" name="viewCount" value={articleInfo.viewCount} onChange={handleChange} />
+      <label className="flex items-center gap-2">
+        <input
+          name="isPublished"
+          type="checkbox"
+          checked={articleInfo.isPublished}
+          onChange={handleChange}
+        />
+        <span className="font-medium text-primary">انتشار مقاله (اگر تیک بزنی, منتشر می‌شه)</span>
+      </label>
+
       <div className="pt-6">
-        <button type="submit" className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl shadow">ذخیره تغییرات</button>
+        <button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl shadow disabled:opacity-50">
+          {isLoading ? "در حال ذخیره..." : "ذخیره تغییرات"}
+        </button>
       </div>
     </form>
   );

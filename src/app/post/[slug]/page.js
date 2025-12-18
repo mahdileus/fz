@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+export const revalidate = 3600;  // اضافه: هر ساعت revalidate (برای پرفورمنس بهتر)
 
 import CommentBox from "@/app/components/modules/comments/CommentBox";
 import Footer from "../../components/modules/footer/Footer";
@@ -7,9 +8,9 @@ import connectToDB from "@/configs/db";
 import { authUser } from "@/utils/auth-server";
 import ArticleHeader from "@/app/components/template/article/ArticleHeader";
 import ArticleModel from "@/models/Article";
-/**
- * generateMetadata برای صفحه مقاله داینامیک
- */
+import Script from 'next/script';  // اضافه برای JSON-LD
+import { notFound } from 'next/navigation';  // اضافه برای 404
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
 
@@ -60,34 +61,56 @@ export async function generateMetadata({ params }) {
   };
 }
 
-
-
-
 const Article = async ({ params }) => {
-    await connectToDB();
+  await connectToDB();
 
-    const { slug } = await params;
+  const { slug } = await params;
 
-    const article = await ArticleModel.findOne({ slug })
-        .populate("comments")
-        .lean();
-    const latestArticles = await ArticleModel.find({})
-        .sort({ createdAt: -1 }) // جدیدترین‌ها
-        .limit(4)
-        .lean();
+  const article = await ArticleModel.findOne({ slug })
+    .populate("comments")
+    .lean();
+  if (!article) {
+    notFound();  // اضافه: 404 برگردون اگر مقاله نبود
+  }
 
-    const user = await authUser();
+  const latestArticles = await ArticleModel.find({})
+    .sort({ createdAt: -1 }) // جدیدترین‌ها
+    .limit(4)
+    .lean();
 
-    return (
-        <>
-            <Navbar isLogin={user ? true : false} />
-            <ArticleHeader article={JSON.parse(JSON.stringify(article))}
-            articles={JSON.parse(JSON.stringify(latestArticles))}
-            />
-            <CommentBox />
-            <Footer />
-        </>
-    );
+  const user = await authUser();
+
+  // اضافه: Structured Data برای Article schema (خفن برای سئو)
+  const schema = {
+    "@type": "Article",
+    "headline": article.title,
+    "description": article.shortDescription,
+    "author": {
+      "@type": "Person",
+      "name": article.author,
+    },
+    "datePublished": article.createdAt?.toISOString(),
+    "image": article.thumbnail,
+    "interactionStatistic": {
+      "@type": "InteractionCounter",
+      "interactionType": "https://schema.org/CommentAction",
+      "userInteractionCount": article.comments.length,
+    },
+  };
+
+  return (
+    <>
+      <Script id="article-schema" type="application/ld+json">
+        {JSON.stringify(schema)}
+      </Script>
+      <Navbar isLogin={user ? true : false} />
+      <ArticleHeader article={JSON.parse(JSON.stringify(article))}
+        articles={JSON.parse(JSON.stringify(latestArticles))}
+      />
+      <CommentBox />
+      <Footer />
+    </>
+  );
 };
 
 export default Article;

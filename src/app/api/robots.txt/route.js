@@ -1,31 +1,36 @@
-# ============================== 
-# robots.txt for https://firouzehjavaherian.com 
-# ==============================  
+import { NextResponse } from "next/server";
 
+export async function GET() {
+  const txt = `# ==============================
+# robots.txt for https://firouzehjavaherian.com
+# ==============================
 User-agent: *
 Allow: /
-
 # Private areas (should not be indexed)
 Disallow: /p-admin
 Disallow: /admin
 Disallow: /api
+Disallow: /login-register
+Disallow: /404
 Disallow: /auth
 Disallow: /private
 Disallow: /tmp
 Disallow: /dashboard
 Disallow: /user
 Disallow: /profile
-
 # Next.js internal folders
 Disallow: /_next
 Disallow: /node_modules
-
 # Protect lesson pages (login required)
 Disallow: /course/*/lesson/
 Disallow: /course/*/lesson/*
-
 # Sitemaps
 Sitemap: https://firouzehjavaherian.com/sitemap.xml
 Sitemap: https://firouzehjavaherian.com/sitemap-posts.xml
 Sitemap: https://firouzehjavaherian.com/sitemap-podcasts.xml
-Sitemap: https://firouzehjavaherian.com/sitemap-courses.xml
+Sitemap: https://firouzehjavaherian.com/sitemap-courses.xml`;
+
+  return new NextResponse(txt, {
+    headers: { "Content-Type": "text/plain" },
+  });
+}
