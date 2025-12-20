@@ -112,35 +112,35 @@ export default function ArticleForm() {
 
         <input
           name="title"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="عنوان"
           value={form.title}
           onChange={handleChange}
         />
         <input
           name="slug"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="نامک"
           value={form.slug}
           onChange={handleChange}
         />
         <input
           name="author"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="نویسنده"
           value={form.author}
           onChange={handleChange}
         />
         <input
           name="category"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="دسته‌بندی"
           value={form.category}
           onChange={handleChange}
         />
         <input
           name="shortDescription"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="توضیح کوتاه"
           value={form.shortDescription}
           onChange={handleChange}
@@ -148,14 +148,14 @@ export default function ArticleForm() {
         <input
           name="timeToRead"
           type="number"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="مدت زمان مطالعه (دقیقه)"
           value={form.timeToRead}
           onChange={handleChange}
         />
         <input
           name="tags"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="تگ‌ها با , جدا شده"
           value={form.tags}
           onChange={handleChange}
@@ -171,35 +171,35 @@ export default function ArticleForm() {
         {/* فیلدهای سئو جدید اضافه شد */}
         <input
           name="metaTitle"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="عنوان متا (برای سئو - اختیاری)"
           value={form.metaTitle}
           onChange={handleChange}
         />
         <textarea
           name="metaDescription"
-          className="input w-full min-h-[100px]"
+          className="input w-full min-h-14"
           placeholder="توضیح متا (۱۵۰ کاراکتر برای سئو - اختیاری)"
           value={form.metaDescription}
           onChange={handleChange}
         />
         <input
           name="metaKeywords"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="کلمات کلیدی متا با , جدا شده (برای سئو - اختیاری)"
           value={form.metaKeywords}
           onChange={handleChange}
         />
         <input
           name="canonicalUrl"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="URL کانونی (برای جلوگیری از duplicate - اختیاری)"
           value={form.canonicalUrl}
           onChange={handleChange}
         />
         <textarea
           name="seoSchema"
-          className="input w-full min-h-[100px]"
+          className="input w-full min-h-25"
           placeholder="JSON-LD schema برای سئو (اختیاری)"
           value={form.seoSchema}
           onChange={handleChange}
@@ -207,7 +207,7 @@ export default function ArticleForm() {
         <input
           name="viewCount"
           type="number"
-          className="input w-full min-h-[56px]"
+          className="input w-full min-h-14"
           placeholder="تعداد بازدید (اختیاری، default 0)"
           value={form.viewCount}
           onChange={handleChange}

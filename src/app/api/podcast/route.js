@@ -18,17 +18,25 @@ export async function POST(req) {
     const category = formData.get("category");
     const duration = +formData.get("duration");
     const tags = JSON.parse(formData.get("tags"));
-        const uploadDir = "/var/www/uploads";
-    
-        // ذخیره تامنیل پادکست
-        const thumbnail = formData.get("thumbnail");
-        if (!thumbnail || typeof thumbnail.arrayBuffer !== "function") {
-          throw new Error("Thumbnail نامعتبر است یا ارسال نشده");
-        }
-        const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
-        const thumbnailName = `${Date.now()}-${thumbnail.name}`;
-        const thumbnailPath = path.join(uploadDir, thumbnailName);
-        await writeFile(thumbnailPath, thumbnailBuffer);
+    const metaTitle = formData.get("metaTitle") || title;  // default to title
+    const metaDescription = formData.get("metaDescription") || shortDescription;  // default to shortDescription
+    const metaKeywords = formData.get("metaKeywords") ? JSON.parse(formData.get("metaKeywords")) : tags;  // default to tags
+    const canonicalUrl = formData.get("canonicalUrl") || `/posts/${slug}`;  // default to /posts/slug
+    const seoSchema = formData.get("seoSchema") ? JSON.parse(formData.get("seoSchema")) : {};  // default to empty object
+    const viewCount = +formData.get("viewCount") || 0;  // default 0
+    const isPublished = formData.get("isPublished") === "true";  // boolean from form
+
+    const uploadDir = "/var/www/uploads";
+
+    // ذخیره تامنیل پادکست
+    const thumbnail = formData.get("thumbnail");
+    if (!thumbnail || typeof thumbnail.arrayBuffer !== "function") {
+      throw new Error("Thumbnail نامعتبر است یا ارسال نشده");
+    }
+    const thumbnailBuffer = Buffer.from(await thumbnail.arrayBuffer());
+    const thumbnailName = `${Date.now()}-${thumbnail.name}`;
+    const thumbnailPath = path.join(uploadDir, thumbnailName);
+    await writeFile(thumbnailPath, thumbnailBuffer);
 
 
     // پردازش فایل پادکست
@@ -49,6 +57,13 @@ export async function POST(req) {
       tags,
       thumbnail: `/uploads/${thumbnailName}`,
       podcast: `/uploads/${podcastFilename}`,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      canonicalUrl,
+      seoSchema,
+      viewCount,
+      isPublished,
     });
 
     return Response.json(
