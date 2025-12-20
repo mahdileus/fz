@@ -1,65 +1,48 @@
 "use client";
 
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useEffect } from "react";
-import { SimpleUploadAdapter } from "@ckeditor/ckeditor5-upload";  // اضافه کن
+import dynamic from "next/dynamic";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import MyUploadAdapterPlugin from "./MyUploadAdapterPlugin"
+
+const CKEditor = dynamic(
+  () => import("@ckeditor/ckeditor5-react").then(m => m.CKEditor),
+  { ssr: false }
+);
 
 export default function CKEditorWrapper({ value, onChange }) {
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      document.documentElement.setAttribute("dir", "rtl");
-    }
+    document.documentElement.setAttribute("dir", "rtl");
   }, []);
 
   return (
-    <div className="bg-white border text-secondery p-3 rounded-md min-h-[200px] text-right">
+    <div className="bg-white border p-3 rounded-md min-h-[200px] text-right">
       <CKEditor
         editor={ClassicEditor}
         data={value || ""}
-        config={
-          {
-            language: "fa",
-            placeholder: "محتوای را اینجا بنویسید...",
-            toolbar: [
-              "heading",
-              "|",
-              "bold",
-              "italic",
-              "underline",
-              "link",
-              "bulletedList",
-              "numberedList",
-              "blockQuote",
-              "imageUpload",
-              "insertTable",
-              "mediaEmbed",
-              "undo",
-              "redo",
-              "alignment"
-            ],
-            image: {
-              toolbar: [
-                "imageTextAlternative",
-                "imageStyle:full",
-                "imageStyle:side"
-              ]
-            },
-            alignment: {
-              options: ["right", "left", "center"]
-            },
-            plugins: [SimpleUploadAdapter],  // اضافه کن
-            simpleUpload: {
-              uploadUrl: '/api/upload',  // URL endpoint سرور (زیر می‌سازیم)
-              headers: {
-                'X-CSRF-TOKEN': 'توکن اگر داری',  // optional برای امنیت
-              }
-            }
-          }
-        }
+        config={{
+          language: "fa",
+          placeholder: "محتوا را اینجا بنویسید...",
+          extraPlugins: [MyUploadAdapterPlugin],
+          toolbar: [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "underline",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "blockQuote",
+            "imageUpload",
+            "insertTable",
+            "mediaEmbed",
+            "undo",
+            "redo",
+          ],
+        }}
         onChange={(event, editor) => {
-          const data = editor.getData();
-          onChange(data);
+          onChange(editor.getData());
         }}
       />
     </div>

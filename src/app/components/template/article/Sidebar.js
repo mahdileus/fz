@@ -4,6 +4,7 @@ import Image from "next/image";
 export default function SidebarArticles({ articles }) {
   return (
     <div className="bg-white p-4 rounded-xl shadow space-y-4">
+      <h3 className="text-base font-bold text-primary mb-6">آخرین مقالات </h3>
       {articles.map((item) => (
         <div
           key={item._id}

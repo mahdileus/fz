@@ -8,6 +8,8 @@ import connectToDB from "@/configs/db";
 import { authUser } from "@/utils/auth-server";
 import ArticleHeader from "@/app/components/template/article/ArticleHeader";
 import ArticleModel from "@/models/Article";
+import CourseModel from "@/models/Course";
+import PodcastModel from "@/models/Podcast";
 import Script from 'next/script';  // اضافه برای JSON-LD
 import { notFound } from 'next/navigation';  // اضافه برای 404
 
@@ -69,13 +71,23 @@ const Article = async ({ params }) => {
   const article = await ArticleModel.findOne({ slug })
     .populate("comments")
     .lean();
+      const latestCourse = await CourseModel.find({})
+    .sort({ createdAt: -1 }) // جدیدترین‌ها
+    .lean();
+      const latestPodcast = await PodcastModel.find({})
+    .sort({ createdAt: -1 }) // جدیدترین‌ها
+    .limit(3)
+    .lean();
+
+
+
   if (!article) {
     notFound();  // اضافه: 404 برگردون اگر مقاله نبود
   }
 
   const latestArticles = await ArticleModel.find({})
     .sort({ createdAt: -1 }) // جدیدترین‌ها
-    .limit(4)
+    .limit(3)
     .lean();
 
   const user = await authUser();
@@ -106,6 +118,8 @@ const Article = async ({ params }) => {
       <Navbar isLogin={user ? true : false} />
       <ArticleHeader article={JSON.parse(JSON.stringify(article))}
         articles={JSON.parse(JSON.stringify(latestArticles))}
+        course={JSON.parse(JSON.stringify(latestCourse))}
+        podcasts={JSON.parse(JSON.stringify(latestPodcast))}
       />
       <CommentBox />
       <Footer />

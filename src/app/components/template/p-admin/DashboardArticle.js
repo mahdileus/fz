@@ -168,15 +168,6 @@ export default function ArticleForm() {
             onChange={(data) => setForm((prev) => ({ ...prev, longDescription: data }))}
           />
         </div>
-
-        <label className="font-medium text-primary">تصویر مقاله</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="w-full"
-        />
-
         {/* فیلدهای سئو جدید اضافه شد */}
         <input
           name="metaTitle"
@@ -230,6 +221,16 @@ export default function ArticleForm() {
           />
           <span className="font-medium text-primary">انتشار مقاله (اگر تیک بزنی، منتشر می‌شه)</span>
         </label>
+
+        <label className="font-medium text-primary">تصویر مقاله</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="w-full"
+        />
+
+
 
         <button className="bg-primary text-white py-3 rounded-xl hover:bg-secondery transition text-base sm:text-lg">
           ارسال مقاله

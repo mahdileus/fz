@@ -71,9 +71,7 @@ export default function ArticleBox({ article }) {
           </span>
           </div>
         </div>
-        <p className="text-sm text-gray-600 mt-1 text-right line-clamp-2">
-          <div dangerouslySetInnerHTML={{ __html: article.shortDescription }} />
-        </p>
+          <div className="text-sm text-gray-600 mt-1 text-right line-clamp-2" dangerouslySetInnerHTML={{ __html: article.shortDescription }} />
 
         <div className="text-left text-secondery font-bold mt-2">
           {article.category}

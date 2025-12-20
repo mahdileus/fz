@@ -1,16 +1,15 @@
-// SingleArticlePage.js
 "use client";
 
 import LikeIcon from "@/utils/Like";
 import Image from "next/image";
 import { FaTags } from "react-icons/fa";
-import { CiCalendar, CiUser, CiFolderOn, } from "react-icons/ci";
+import { CiCalendar, CiUser, CiFolderOn } from "react-icons/ci";
 import SidebarArticles from "./Sidebar";
+import SidebarPodcasts from "./SidebarPodcasts";
+import CourseSlide from "./CourseSlide";
 
 
-export default function ArticleHeader({ article, articles }) {
-
-
+export default function ArticleHeader({ article, articles, podcasts, course }) {  // اضافه: props برای پادکست و دوره
   return (
     <div className="container grid font-dana grid-cols-1 lg:grid-cols-4 gap-8 my-10">
       {/* Content Right Side */}
@@ -18,7 +17,6 @@ export default function ArticleHeader({ article, articles }) {
         {/* Title */}
         <h1 className="text-3xl font-bold text-primary py-6">{article.title}</h1>
         <hr className="text-light-blue pb-4" />
-
         {/* Meta info */}
         <div className="flex justify-between text-sm text-gray-500 mb-4">
           <div className="flex items-center gap-2">
@@ -32,7 +30,6 @@ export default function ArticleHeader({ article, articles }) {
             <span className="text-primary">{article.category}</span>
           </div>
         </div>
-
         <div className="max-w-[1200px] mx-auto">
           <Image
             src={
@@ -46,14 +43,11 @@ export default function ArticleHeader({ article, articles }) {
             className="rounded-xl mb-6 w-full object-cover"
           />
         </div>
-
-
         {/* Content */}
         <div className="rich-text">
           <div dangerouslySetInnerHTML={{ __html: article.longDescription }} />
         </div>
         <hr className="text-light-blue mt-6" />
-
         {/* Footer */}
         <div className=" flex flex-wrap justify-between items-center py-4 gap-4">
           <div className="flex gap-2 items-center flex-wrap">
@@ -67,18 +61,19 @@ export default function ArticleHeader({ article, articles }) {
               </span>
             ))}
           </div>
-
           <div className="flex items-center gap-4 text-xl text-primary">
             <LikeIcon itemID={article._id} itemType="article" />
           </div>
         </div>
       </div>
-
       {/* Sidebar Left */}
       <div className="lg:col-span-1">
         <SidebarArticles articles={articles} />
+        {/* اضافه: لیست پادکست‌ها پایین لیست مقالات */}
+        <SidebarPodcasts podcasts={podcasts} />
+        {/* اضافه: اسلاید دوره تکی پایین لیست پادکست‌ها */}
+        <CourseSlide courses={course} />
       </div>
-
     </div>
   );
 }

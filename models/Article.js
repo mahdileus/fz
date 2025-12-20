@@ -1,4 +1,3 @@
-// ✅ فایل models/Article.js
 const mongoose = require("mongoose");
 require("./Comment");
 
@@ -42,7 +41,7 @@ const articleSchema = new mongoose.Schema({
   },
   score: {
     type: Number,
-    Default: 5,
+    default: 5,
   },
   comments: [
     {
@@ -50,8 +49,36 @@ const articleSchema = new mongoose.Schema({
       ref: "Comment",
     },
   ],
-},{ timestamps: true }
-);
+  // فیلدهای سئو خفن اضافه
+  metaTitle: {
+    type: String,
+    default: function () { return this.title; },  // default به title
+  },
+  metaDescription: {
+    type: String,
+    default: function () { return this.shortDescription; },  // default به shortDescription
+  },
+  metaKeywords: {
+    type: [String],
+    default: function () { return this.tags; },  // default به tags
+  },
+  canonicalUrl: {
+    type: String,
+    default: function () { return `/posts/${this.slug}`; },
+  },
+  seoSchema: {
+    type: Object,  // JSON-LD برای Article schema
+    default: {},
+  },
+  viewCount: {
+    type: Number,
+    default: 0,
+  },
+  isPublished: {
+    type: Boolean,
+    default: false,
+  },
+}, { timestamps: true });
 
 const Article = mongoose.models.Article || mongoose.model("Article", articleSchema);
 
