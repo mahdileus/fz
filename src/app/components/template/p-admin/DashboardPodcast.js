@@ -31,7 +31,7 @@ export default function DashboardPodcast() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+        setForm((prev) => ({ ...prev, [name]: value }));
 
     };
 
@@ -44,7 +44,6 @@ export default function DashboardPodcast() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
         const fd = new FormData();
 
         for (const key in form) {
@@ -55,7 +54,18 @@ export default function DashboardPodcast() {
                     .filter(item => item !== "");
                 fd.append(key, JSON.stringify(cleaned));
             } else if (key === "seoSchema") {
-                fd.append(key, JSON.stringify(form[key] ? JSON.parse(form[key]) : {}));  // JSON validate
+                try {
+                    const parsed =
+                        typeof form[key] === "string" && form[key].trim() !== ""
+                            ? JSON.parse(form[key])
+                            : {};
+                    fd.append(key, JSON.stringify(parsed));
+                } catch (err) {
+                    console.error("Invalid JSON in seoSchema:", err);
+                    fd.append(key, JSON.stringify({}));
+                }
+
+
             } else if (key === "isPublished") {
                 fd.append(key, form[key] ? "true" : "false");  // boolean to string for formData
             } else {

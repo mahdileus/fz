@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import { MdDelete } from 'react-icons/md';
-import { MdModeEdit } from 'react-icons/md'; 
+import { MdModeEdit } from 'react-icons/md';
 
 export default function PodcastBox({ podcast }) {
   const router = useRouter()
@@ -23,17 +23,17 @@ export default function PodcastBox({ podcast }) {
 
       if (res.ok) {
         swal({
-          title:"پادکست با موفقیت حذف شد",
-          icon:"success",
-          buttons:"فهمیدم"
-          
+          title: "پادکست با موفقیت حذف شد",
+          icon: "success",
+          buttons: "فهمیدم"
+
         }).then(() =>
           router.refresh()
         );
       }
     }
   };
-    const handleEditClick = () => {
+  const handleEditClick = () => {
     router.push(`/p-admin/podcasts/edit-podcast/${podcast._id}`);
   };
 
@@ -63,18 +63,15 @@ export default function PodcastBox({ podcast }) {
           </div>
           <div className="flex items-center justify-between gap-4">
             <span className="text-red-400 hover:text-red-500 text-2xl cursor-pointer" onClick={removePodcast} >
-            <MdDelete/>
-          </span>
-          <span className="text-secondery hover:text-secondery/90 text-2xl cursor-pointer" onClick={handleEditClick}>
+              <MdDelete />
+            </span>
+            <span className="text-secondery hover:text-secondery/90 text-2xl cursor-pointer" onClick={handleEditClick}>
 
-            <MdModeEdit />
-          </span>
+              <MdModeEdit />
+            </span>
           </div>
         </div>
-        <p className="text-sm text-gray-600 mt-1 text-right line-clamp-2">
-          <div dangerouslySetInnerHTML={{ __html: podcast.longDescription }} />
-        </p>
-
+        <div className="text-sm text-gray-600 mt-1 text-right line-clamp-2" dangerouslySetInnerHTML={{ __html: podcast.longDescription }} />
         <div className="text-left text-secondery font-bold mt-2">
           {podcast.category}
         </div>
