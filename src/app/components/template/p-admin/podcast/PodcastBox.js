@@ -42,7 +42,7 @@ export default function PodcastBox({ podcast }) {
   return (
     <div className="flex bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition p-4 mb-4">
       {/* تصویر دوره */}
-      <div className="w-32 h-32 flex-shrink-0">
+      <div className="w-32 h-32 shrink-0">
         <img
           src={podcast.thumbnail}
           alt={podcast.title}

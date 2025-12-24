@@ -12,9 +12,12 @@ export default function PodcastSingle({ podcast }) {
 
       {/* باکس اصلی سفید شامل اطلاعات اولیه */}
       <div className="bg-white rounded-2xl shadow-md p-6 md:p-10 flex flex-col md:flex-row gap-8">
-        <div className="md:w-1/2 w-full relative aspect-[16/9]">
+        <div className="md:w-1/2 w-full relative aspect-video">
           <Image
-            src={podcast.thumbnail}
+            src={              article.thumbnail?.startsWith("http")
+                ? article.thumbnail
+                : `https://firouzehjavaherian.com${article.thumbnail}`
+            }
             alt={podcast.title}
             fill
             className="rounded-2xl object-cover shadow"
