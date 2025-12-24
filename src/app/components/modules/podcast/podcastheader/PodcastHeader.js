@@ -14,9 +14,9 @@ export default function PodcastSingle({ podcast }) {
       <div className="bg-white rounded-2xl shadow-md p-6 md:p-10 flex flex-col md:flex-row gap-8">
         <div className="md:w-1/2 w-full relative aspect-video">
           <Image
-            src={              article.thumbnail?.startsWith("http")
-                ? article.thumbnail
-                : `https://firouzehjavaherian.com${article.thumbnail}`
+            src={              podcast.thumbnail?.startsWith("http")
+                ? podcast.thumbnail
+                : `https://firouzehjavaherian.com${podcast.thumbnail}`
             }
             alt={podcast.title}
             fill
