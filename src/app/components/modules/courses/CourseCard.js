@@ -18,7 +18,9 @@ export default function CourseCard({ course, isRegistered = false }) {
         <Link href={`/course/${course.slug}`}>
           <Image
             src={
-              course.thumbnail
+              course.thumbnail?.startsWith("http")
+                ? course.thumbnail
+                : `https://firouzehjavaherian.com${course.thumbnail}`
             }
             alt={course?.title || "thumbnail"}
             fill
