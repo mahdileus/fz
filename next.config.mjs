@@ -3,15 +3,15 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'firouzehjavaherian.com',
-        port: '',
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
         pathname: '/uploads/**',
       },
       {
-        protocol: 'https',
-        hostname: 'www.firouzehjavaherian.com',
-        port: '',
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
         pathname: '/uploads/**',
       },
     ],

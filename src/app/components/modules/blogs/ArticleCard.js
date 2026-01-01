@@ -21,11 +21,11 @@ export default function ArticleCard({ post }) {
   const shamsiDate = date.toLocaleDateString("fa-IR");
 
   return (
-<div className="bg-white rounded-2xl overflow-hidden shadow-md w-full max-w-sm h-[420px] flex flex-col">
+<div className="bg-white rounded-2xl overflow-hidden shadow-md w-full max-w-sm h-105 flex flex-col">
   <div className="relative w-full h-48">
     <Link href={`/post/${slug}`}>
       <Image
-        src={thumbnail?.startsWith("http") ? thumbnail : `https://firouzehjavaherian.com${thumbnail}`}
+        src={thumbnail}
         alt={title || "thumbnail"}
         fill
         className="object-cover rounded-t-2xl"
@@ -39,7 +39,7 @@ export default function ArticleCard({ post }) {
   <div className="p-4 flex flex-col justify-between flex-1 text-right">
     <div>
       <Link href={`/post/${slug}`}>
-        <h3 className="text-[#112D4E] text-lg font-bold leading-snug hover:text-[#3F72AF] transition line-clamp-2">
+        <h3 className="text-primary text-lg font-bold leading-snug hover:text-secondery transition line-clamp-2">
           {title}
         </h3>
       </Link>
@@ -48,12 +48,12 @@ export default function ArticleCard({ post }) {
     </div>
 
     <div>
-      <div className="flex items-center justify-between text-[#3F72AF] text-sm mt-3">
+      <div className="flex items-center justify-between text-secondery text-sm mt-3">
         <div className="flex items-center gap-1">
           <CiCalendar size={16} />
           <span>{shamsiDate}</span>
         </div>
-        <span className="text-xs text-[#112D4E] font-medium">
+        <span className="text-xs text-primary font-medium">
           نویسنده: {author}
         </span>
       </div>
@@ -61,7 +61,7 @@ export default function ArticleCard({ post }) {
       <hr className="border-t border-gray-200 my-3" />
 
       <div className="flex justify-center">
-        <Link href={`/post/${slug}`} className="text-sm text-[#3F72AF] hover:text-[#2c5e95] transition">
+        <Link href={`/post/${slug}`} className="text-sm text-secondery hover:text-[#2c5e95] transition">
           مطالعه مقاله
         </Link>
       </div>

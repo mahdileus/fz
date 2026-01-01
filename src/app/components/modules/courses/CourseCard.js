@@ -12,15 +12,13 @@ export default function CourseCard({ course, isRegistered = false }) {
     discount > 0 ? price - (price * discount) / 100 : price;
 
   return (
-    <div className="bg-white shadow-md rounded-2xl overflow-hidden w-full max-w-sm h-[410px]">
+    <div className="bg-white shadow-md rounded-2xl overflow-hidden w-full max-w-sm h-105 flex flex-col">
       {/* تصویر دوره + دکمه لایک */}
       <div className="relative w-full h-48">
         <Link href={`/course/${course.slug}`}>
           <Image
             src={
-              course?.thumbnail?.startsWith("http")
-                ? course.thumbnail
-                : `https://firouzehjavaherian.com${course.thumbnail}`
+              course.thumbnail
             }
             alt={course?.title || "thumbnail"}
             fill
@@ -34,7 +32,7 @@ export default function CourseCard({ course, isRegistered = false }) {
       </div>
 
       {/* محتوا */}
-      <div className="p-4 flex flex-col gap-3 text-right">
+      <div className="p-4 flex flex-col gap-3 text-right flex-1">
         {/* عنوان لینک‌دار */}
         <Link href={`/course/${course.slug}`}>
           <h3 className="text-primary text-lg font-bold line-clamp-2 hover:text-secondery transition">
@@ -47,26 +45,26 @@ export default function CourseCard({ course, isRegistered = false }) {
           {course.shortDescription}
         </p>
 
-        <hr className="border-t border-gray-200 my-2" />
+        <hr className="border-t border-gray-200 mt-auto" />
 
         {/* قیمت یا دکمه */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-end min-h-12">
           {isRegistered || course.isFree ? (
             <Link
               href={`/course/${course.slug}`}
-              className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-4 py-2 rounded-lg transition"
+              className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition text-sm"
             >
               مشاهده دوره
             </Link>
           ) : (
-            <div className="flex flex-col items-start gap-1 text-sm text-primary">
+            <div className="flex flex-col items-start gap-1 text-primary text-sm">
               {discount > 0 ? (
                 <>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-white bg-secondery px-2 py-0.5 rounded-full">
                       {discount}٪
                     </span>
-                    <span className="line-through text-gray-400 text-sm">
+                    <span className="line-through text-gray-400 text-xs">
                       {price.toLocaleString()} تومان
                     </span>
                   </div>
@@ -82,15 +80,14 @@ export default function CourseCard({ course, isRegistered = false }) {
             </div>
           )}
 
-
-          {/* امتیاز */}
           <div className="flex items-center gap-1 text-sm text-yellow-500">
             <FaStar size={14} />
-            <span className="text-[#3F72AF] font-medium">
+            <span className="text-secondery font-medium">
               {course.score?.toFixed(1) || "۴.۷"}
             </span>
           </div>
         </div>
+
       </div>
     </div>
   );

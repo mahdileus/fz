@@ -56,12 +56,10 @@ export default function PodcastBox({ podcast }) {
 
       {/* تامنیل */}
       {thumbnail && (
-        <div className="absolute -bottom-6 -left-6 z-10 w-[108px] h-[108px] rounded-xl overflow-hidden">
+        <div className="absolute -bottom-6 -left-6 z-10 w-27 h-27 rounded-xl overflow-hidden">
           <Image
             src={
-              thumbnail?.startsWith("http")
-                ? thumbnail
-                : `https://firouzehjavaherian.com${thumbnail}`
+              thumbnail
             }
             alt={title || "thumbnail"}
             fill
