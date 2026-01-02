@@ -1,20 +1,21 @@
-import Link from "next/link";
+import Link from "next/link"; 
 import Image from "next/image";
 
 export default function SidebarArticles({ articles }) {
   return (
     <div className="bg-white p-4 rounded-xl shadow space-y-4">
-      <h3 className="text-base font-bold text-primary mb-6">آخرین مقالات </h3>
+      <h3 className="text-base font-bold text-primary mb-6">آخرین مقالات</h3>
+
       {articles.map((item) => (
         <div
           key={item._id}
           className="flex flex-col sm:flex-row gap-3 items-start"
         >
           {/* تصویر */}
-          <div className="flex-shrink-0 w-full sm:w-20 aspect-square">
+          <div className="shrink-0 w-full sm:w-20 aspect-square">
             <Image
-            width={80}
-            height={80}
+              width={80}
+              height={80}
               src={
                 item?.thumbnail?.startsWith("http")
                   ? item.thumbnail
@@ -22,19 +23,19 @@ export default function SidebarArticles({ articles }) {
               }
               alt={item?.title || "thumbnail"}
               className="w-full h-full object-cover rounded-md"
-              
             />
           </div>
 
           {/* متن */}
-          <div className="flex flex-col justify-between text-right flex-1">
-            <h4 className="font-semibold text-sm text-primary line-clamp-2">
+          <div className="flex flex-col justify-between text-right flex-1 min-w-0">
+            {/* min-w-0 خیلی مهمه برای break و line-clamp داخل flex */}
+            <h4 className="font-semibold text-sm text-primary line-clamp-2 overflow-hidden">
               <Link href={`/post/${item.slug}`}>{item.title}</Link>
             </h4>
 
             {item.longDescription && (
               <p
-                className="text-xs text-gray-500 mt-1 line-clamp-3 break-words"
+                className="text-xs text-gray-500 mt-1 line-clamp-3 overflow-hidden wrap-break-words"
                 dangerouslySetInnerHTML={{ __html: item.longDescription }}
               />
             )}
@@ -43,9 +44,7 @@ export default function SidebarArticles({ articles }) {
               <span className="bg-light-blue text-primary px-2 py-0.5 rounded-full">
                 {item.category}
               </span>
-              <span>
-                {new Date(item.createdAt).toLocaleDateString("fa-IR")}
-              </span>
+              <span>{new Date(item.createdAt).toLocaleDateString("fa-IR")}</span>
             </div>
           </div>
         </div>

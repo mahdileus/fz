@@ -13,7 +13,7 @@ export default function LatestCourses({ courses = [] }) {  // default [] اضا�
 
   return (
         <div className="">
-      <h3 className="text-base font-bold text-primary mt-14">آخرین دوره ها </h3>
+      <h3 className="text-base font-bold text-primary mt-14 -mb-9">آخرین دوره ها </h3>
     <Swiper
       spaceBetween={20}  // فاصله بین اسلایدها
       slidesPerView={1}  // ۱ اسلاید در موبایل

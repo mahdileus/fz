@@ -7,7 +7,9 @@ export default function SidebarPodcasts({ podcasts = [] }) {  // default [] اض
       <ul className="space-y-4">
         {podcasts?.map((podcast) => (  // ?.map اضافه کن تا اگر undefined بود, ارور نده
           <li key={podcast._id} className="flex gap-4 items-center">
-            <Image src={podcast.thumbnail} alt={podcast.title} width={80} height={50} className="rounded" />
+            <Image src={podcast.thumbnail?.startsWith("http")
+              ? podcast.thumbnail
+              : `https://firouzehjavaherian.com${podcast.thumbnail}`} alt={podcast.title} width={80} height={50} className="rounded" />
             <div>
               <a href={`/podcast/${podcast.slug}`} className="text-primary font-medium">{podcast.title}</a>
               <p className="text-sm text-gray-500">{podcast.shortDescription}</p>

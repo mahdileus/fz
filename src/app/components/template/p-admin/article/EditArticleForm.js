@@ -19,7 +19,7 @@ export default function EditArticleForm({ article, articleId }) {
     longDescription: article.longDescription || "",
     shortDescription: article.shortDescription || "",
     tags: article.tags?.join(",") || "",
-    thumbnail: null,  // برای فایل جدید
+    thumbnail: article.thumbnail || null,
     // فیلدهای سئو جدید اضافه شد و از article لود می‌شن
     metaTitle: article.metaTitle || "",
     metaDescription: article.metaDescription || "",
@@ -145,6 +145,10 @@ export default function EditArticleForm({ article, articleId }) {
         />
         <span className="font-medium text-primary">انتشار مقاله (اگر تیک بزنی, منتشر می‌شه)</span>
       </label>
+      <div>
+        <label className="block text-sm mb-1">تصویر جدید (اختیاری):</label>
+        <input type="file" accept="image/*" onChange={(e) => setArticleInfo({ ...articleInfo, thumbnail: e.target.files[0] })} className="input" />
+      </div>
 
       <div className="pt-6">
         <button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl shadow disabled:opacity-50">
