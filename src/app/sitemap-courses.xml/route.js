@@ -9,7 +9,6 @@ export async function GET() {
     await connectToDB();
 
     const courses = await CourseModel.find(
-      { published: true },
       "slug updatedAt"
     )
       .sort({ updatedAt: -1 })
