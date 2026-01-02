@@ -30,7 +30,7 @@ export default function ArticleHeader({ article, articles, podcasts, course }) {
             <span className="text-primary">{article.category}</span>
           </div>
         </div>
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-300 mx-auto">
           <Image
             src={
               article.thumbnail?.startsWith("http")
