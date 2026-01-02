@@ -1,10 +1,5 @@
 import { notFound } from "next/navigation";
-import Footer from "@/components/modules/footer/Footer";
-import Navbar from "@/components/modules/navbar/Navbar";
-import CourseFullDescription from "@/components/template/course/CourseFullDescription";
-import CourseHeader from "@/components/template/course/CourseHeader";
-import CourseInfoBoxes from "@/components/template/course/CourseInfoBoxes";
-import CourseChapters from "@/app/components/template/course/CourseChapters";
+
 import CourseModel from "@/models/Course";
 import UserCourseModel from "@/models/UserCourse";
 import CommentModel from "@/models/Comment";
@@ -12,6 +7,12 @@ import connectToDB from "@/configs/db";
 import { authUser } from "@/utils/auth-server";
 import Comments from "@/app/components/modules/comments/Comments";
 import Script from "next/script";
+import Navbar from "@/app/components/modules/navbar/Navbar";
+import CourseHeader from "@/app/components/template/course/CourseHeader";
+import CourseInfoBoxes from "@/app/components/template/course/CourseInfoBoxes";
+import CourseFullDescription from "@/app/components/template/course/CourseFullDescription";
+import CourseChapters from "@/app/components/template/course/CourseChapters";
+import Footer from "@/app/components/modules/footer/Footer";
 
 export const revalidate = 86400; // ISR روزی یک بار
 
