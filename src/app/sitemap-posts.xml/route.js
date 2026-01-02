@@ -3,34 +3,38 @@ import connectToDB from "@/configs/db";
 import PostModel from "@/models/Article";
 
 export async function GET() {
+  const baseUrl = "https://firouzehjavaherian.com";
+
   try {
     await connectToDB();
-    const posts = await PostModel.find({}, "slug updatedAt").lean();  // lean اضافه شد
 
-    const baseUrl = process.env.BASE_URL || "https://firouzehjavaherian.com";
+    const posts = await PostModel.find(
+      { published: true },
+      "slug updatedAt"
+    )
+      .sort({ updatedAt: -1 })
+      .limit(5000)
+      .lean();
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${posts
-        .map((p) => {
-          const lastmod = p.updatedAt
-            ? new Date(p.updatedAt).toISOString().split("T")[0]
-            : new Date().toISOString().split("T")[0];  // چک null اضافه شد
-
-          return `<url>
+  .map(
+    (p) => `<url>
   <loc>${baseUrl}/posts/${p.slug}</loc>
-  <lastmod>${lastmod}</lastmod>
-  <changefreq>daily</changefreq> 
-  <priority>0.8</priority>
-</url>`;
-        })
-        .join("\n")}
+  <lastmod>${p.updatedAt.toISOString().split("T")[0]}</lastmod>
+</url>`
+  )
+  .join("")}
 </urlset>`;
 
     return new NextResponse(xml, {
-      headers: { "Content-Type": "application/xml" },
+      headers: {
+        "Content-Type": "application/xml",
+        "Cache-Control": "public, max-age=3600",
+      },
     });
   } catch (err) {
-    return new NextResponse(`Error generating sitemap: ${err.message}`, { status: 500 });
+    return new NextResponse("", { status: 200 });
   }
 }

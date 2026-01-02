@@ -1,5 +1,4 @@
-export const dynamic = 'force-dynamic';
-export const revalidate = 3600;  // اضافه: هر ساعت revalidate (برای پرفورمنس بهتر)
+export const revalidate = 86400;
 
 import CommentBox from "@/app/components/modules/comments/CommentBox";
 import Footer from "../../components/modules/footer/Footer";
@@ -71,10 +70,10 @@ const Article = async ({ params }) => {
   const article = await ArticleModel.findOne({ slug })
     .populate("comments")
     .lean();
-      const latestCourse = await CourseModel.find({})
+  const latestCourse = await CourseModel.find({})
     .sort({ createdAt: -1 }) // جدیدترین‌ها
     .lean();
-      const latestPodcast = await PodcastModel.find({})
+  const latestPodcast = await PodcastModel.find({})
     .sort({ createdAt: -1 }) // جدیدترین‌ها
     .limit(3)
     .lean();
@@ -94,21 +93,31 @@ const Article = async ({ params }) => {
 
   // اضافه: Structured Data برای Article schema (خفن برای سئو)
   const schema = {
+    "@context": "https://schema.org",
     "@type": "Article",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://firouzehjavaherian.com/posts/${slug}`
+    },
     "headline": article.title,
     "description": article.shortDescription,
+    "image": [article.thumbnail],
     "author": {
       "@type": "Person",
-      "name": article.author,
+      "name": article.author || "فیروزه جواهریان"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "فیروزه جواهریان",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://firouzehjavaherian.com/logo/fj-logo.png"
+      }
     },
     "datePublished": article.createdAt?.toISOString(),
-    "image": article.thumbnail,
-    "interactionStatistic": {
-      "@type": "InteractionCounter",
-      "interactionType": "https://schema.org/CommentAction",
-      "userInteractionCount": article.comments.length,
-    },
+    "dateModified": article.updatedAt?.toISOString()
   };
+
 
   return (
     <>
