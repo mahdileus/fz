@@ -1,11 +1,13 @@
 import { notFound } from "next/navigation";
-import Footer from "@/components/modules/footer/Footer";
-import Navbar from "@/components/modules/navbar/Navbar";
+
 import PodcastModel from "@/models/Podcast";
 import connectToDB from "@/configs/db";
-import PodcastHeader from "@/app/components/modules/podcast/podcastheader/PodcastHeader";
+
 import { authUser } from "@/utils/auth-server";
 import Script from "next/script";
+import Navbar from "@/app/components/modules/navbar/Navbar";
+import Footer from "@/app/components/modules/footer/Footer";
+import PodcastSingle from "@/app/components/modules/podcast/podcastheader/PodcastHeader";
 
 
 export const revalidate = 86400; // ISR - روزی یک بار
@@ -113,7 +115,7 @@ const Podcast = async ({ params }) => {
       {JSON.stringify(schema)}
     </Script>
       <Navbar isLogin={!!user} />
-      <PodcastHeader podcast={podcast} />
+      <PodcastSingle podcast={podcast} />
       <Footer />
     </>
   );

@@ -1,16 +1,17 @@
 export const revalidate = 86400;
 
-import CommentBox from "@/app/components/modules/comments/CommentBox";
-import Footer from "../../components/modules/footer/Footer";
-import Navbar from "../../components/modules/navbar/Navbar";
+
 import connectToDB from "@/configs/db";
 import { authUser } from "@/utils/auth-server";
-import ArticleHeader from "@/app/components/template/article/ArticleHeader";
 import ArticleModel from "@/models/Article";
 import CourseModel from "@/models/Course";
 import PodcastModel from "@/models/Podcast";
 import Script from 'next/script';  // اضافه برای JSON-LD
 import { notFound } from 'next/navigation';  // اضافه برای 404
+import Navbar from "@/app/components/modules/navbar/Navbar";
+import ArticleHeader from "@/app/components/template/article/ArticleHeader";
+import CommentBox from "@/app/components/modules/comments/CommentBox";
+import Footer from "@/app/components/modules/footer/Footer";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
