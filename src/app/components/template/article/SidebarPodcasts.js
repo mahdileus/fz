@@ -11,7 +11,7 @@ export default function SidebarPodcasts({ podcasts = [] }) {  // default [] اض
               ? podcast.thumbnail
               : `https://firouzehjavaherian.com${podcast.thumbnail}`} alt={podcast.title} width={80} height={80} className="rounded" />
             <div>
-              <a href={`/podcast/${podcast.slug}`} className="text-primary line-clamp-2 font-medium">{podcast.title}</a>
+              <a href={`/podcast/${podcast.slug}`} className="text-primary font-semibold text-sm line-clamp-2 ">{podcast.title}</a>
             </div>
           </li>
         ))}
