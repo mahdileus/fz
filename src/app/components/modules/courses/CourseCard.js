@@ -6,10 +6,15 @@ import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 
 export default function CourseCard({ course, isRegistered = false }) {
-  const discount = course.discountPercent || 0; // درصد تخفیف یا صفر
-  const price = course.price || 0;
-  const discountedPrice =
-    discount > 0 ? price - (price * discount) / 100 : price;
+  const price = Number(course.price) || 0;
+  const discount = Number(course.discountPercent) || 0;
+
+  const isFree = course.isFree || price === 0;
+  const hasDiscount = discount > 0 && price > 0;
+
+  const finalPrice = hasDiscount
+    ? price - (price * discount) / 100
+    : price;
 
   return (
     <div className="bg-white shadow-md rounded-2xl overflow-hidden w-full max-w-sm h-105 flex flex-col">
@@ -21,7 +26,7 @@ export default function CourseCard({ course, isRegistered = false }) {
               course.thumbnail?.startsWith("http")
                 ? course.thumbnail
                 : `https://firouzehjavaherian.com${course.thumbnail}`
-            }
+              }
             alt={course?.title || "thumbnail"}
             fill
             className="object-cover"
@@ -51,37 +56,38 @@ export default function CourseCard({ course, isRegistered = false }) {
 
         {/* قیمت یا دکمه */}
         <div className="flex justify-between items-end min-h-12">
-          {isRegistered || course.isFree ? (
+          {/* سمت راست */}
+          {isRegistered ? (
             <Link
               href={`/course/${course.slug}`}
               className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition text-sm"
             >
               مشاهده دوره
             </Link>
+          ) : isFree ? (
+            <span className="text-base font-bold text-green-700">
+              رایگان!
+            </span>
           ) : (
             <div className="flex flex-col items-start gap-1 text-primary text-sm">
-              {discount > 0 ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-white bg-secondery px-2 py-0.5 rounded-full">
-                      {discount}٪
-                    </span>
-                    <span className="line-through text-gray-400 text-xs">
-                      {price.toLocaleString()} تومان
-                    </span>
-                  </div>
-                  <span className="text-base font-bold">
-                    {discountedPrice.toLocaleString()} تومان
+              {hasDiscount && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-white bg-secondery px-2 py-0.5 rounded-full">
+                    {discount}٪
                   </span>
-                </>
-              ) : (
-                <span className="text-base font-bold">
-                  {price.toLocaleString()} تومان
-                </span>
+                  <span className="line-through text-gray-400 text-xs">
+                    {price.toLocaleString()} تومان
+                  </span>
+                </div>
               )}
+
+              <span className="text-base font-bold">
+                {finalPrice.toLocaleString()} تومان
+              </span>
             </div>
           )}
 
+          {/* امتیاز */}
           <div className="flex items-center gap-1 text-sm text-yellow-500">
             <FaStar size={14} />
             <span className="text-secondery font-medium">
@@ -89,6 +95,7 @@ export default function CourseCard({ course, isRegistered = false }) {
             </span>
           </div>
         </div>
+
 
       </div>
     </div>

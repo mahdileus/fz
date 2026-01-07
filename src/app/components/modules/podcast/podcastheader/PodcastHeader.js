@@ -5,6 +5,7 @@ import { IoIosShareAlt } from "react-icons/io";
 import PodcastPlayer from "../PodcastPlayer/PodcastPlayer";
 import Image from "next/image";
 import LikeButton from "@/utils/Like";
+import Content from "@/app/components/template/article/Content";
 
 export default function PodcastSingle({ podcast }) {
   return (
@@ -75,9 +76,8 @@ export default function PodcastSingle({ podcast }) {
           <h1 className="text-2xl py-4 md:text-3xl font-bold text-primary ">
             {podcast.title}
           </h1>
-        <div className="rich-text">
-          <div dangerouslySetInnerHTML={{ __html: podcast.longDescription }} />
-        </div>
+        <Content html={podcast.longDescription} />
+
         </div>
       </div>
     </section>

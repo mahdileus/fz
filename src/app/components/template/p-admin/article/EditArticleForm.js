@@ -103,12 +103,12 @@ export default function EditArticleForm({ article, articleId }) {
 
       {/* اطلاعات پایه مقاله */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input className="input" type="text" placeholder="عنوان مقاله" value={articleInfo.title} onChange={handleChange} />
-        <input className="input" type="text" placeholder="نامک مقاله" value={articleInfo.slug} onChange={handleChange} />
-        <input className="input" type="text" placeholder="نویسنده" value={articleInfo.author} onChange={handleChange} />
-        <input className="input" type="text" placeholder="دسته‌بندی" value={articleInfo.category} onChange={handleChange} />
-        <input className="input" type="number" placeholder="مدت زمان مطالعه (دقیقه)" value={articleInfo.timeToRead} onChange={handleChange} />
-        <input className="input" type="text" placeholder="توضیح کوتاه" value={articleInfo.shortDescription} onChange={handleChange} />
+        <input className="input" type="text" placeholder="عنوان مقاله" name="title" value={articleInfo.title} onChange={handleChange} />
+        <input className="input" type="text" placeholder="نامک مقاله" name="slug" value={articleInfo.slug} onChange={handleChange} />
+        <input className="input" type="text" placeholder="نویسنده" name="author" value={articleInfo.author} onChange={handleChange} />
+        <input className="input" type="text" placeholder="دسته‌بندی" name="category" value={articleInfo.category} onChange={handleChange} />
+        <input className="input" type="number" placeholder="مدت زمان مطالعه (دقیقه)" name="timeToRead" value={articleInfo.timeToRead} onChange={handleChange} />
+        <input className="input" type="text" placeholder="توضیح کوتاه" name="shortDescription" value={articleInfo.shortDescription} onChange={handleChange} />
       </div>
 
       <label className="block text-sm mb-1">محتوای مقاله</label>
@@ -119,7 +119,7 @@ export default function EditArticleForm({ article, articleId }) {
         />
       </div>
 
-      <input className="input" type="text" placeholder="تگ‌ها (با , جدا کنید)" value={articleInfo.tags} onChange={handleChange} />
+      <input className="input" type="text" placeholder="تگ‌ها (با , جدا کنید)" name="tags" value={articleInfo.tags} onChange={handleChange} />
 
       {/* آپلود فایل‌ها */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -131,10 +131,10 @@ export default function EditArticleForm({ article, articleId }) {
 
       {/* فیلدهای سئو جدید اضافه شد و از article لود می‌شه */}
       <input className="input" type="text" placeholder="عنوان متا (برای سئو - اختیاری)" name="metaTitle" value={articleInfo.metaTitle} onChange={handleChange} />
-      <textarea className="input min-h-[100px]" placeholder="توضیح متا (۱۵۰ کاراکتر برای سئو - اختیاری)" name="metaDescription" value={articleInfo.metaDescription} onChange={handleChange} />
+      <textarea className="input min-h-25" placeholder="توضیح متا (۱۵۰ کاراکتر برای سئو - اختیاری)" name="metaDescription" value={articleInfo.metaDescription} onChange={handleChange} />
       <input className="input" type="text" placeholder="کلمات کلیدی متا با , جدا شده (برای سئو - اختیاری)" name="metaKeywords" value={articleInfo.metaKeywords} onChange={handleChange} />
       <input className="input" type="text" placeholder="URL کانونی (برای جلوگیری از duplicate - اختیاری)" name="canonicalUrl" value={articleInfo.canonicalUrl} onChange={handleChange} />
-      <textarea className="input min-h-[100px]" placeholder="JSON-LD schema برای سئو (اختیاری)" name="seoSchema" value={articleInfo.seoSchema} onChange={handleChange} />
+      <textarea className="input min-h-25" placeholder="JSON-LD schema برای سئو (اختیاری)" name="seoSchema" value={articleInfo.seoSchema} onChange={handleChange} />
       <input className="input" type="number" placeholder="تعداد بازدید (اختیاری, default 0)" name="viewCount" value={articleInfo.viewCount} onChange={handleChange} />
       <label className="flex items-center gap-2">
         <input
@@ -145,10 +145,6 @@ export default function EditArticleForm({ article, articleId }) {
         />
         <span className="font-medium text-primary">انتشار مقاله (اگر تیک بزنی, منتشر می‌شه)</span>
       </label>
-      <div>
-        <label className="block text-sm mb-1">تصویر جدید (اختیاری):</label>
-        <input type="file" accept="image/*" onChange={(e) => setArticleInfo({ ...articleInfo, thumbnail: e.target.files[0] })} className="input" />
-      </div>
 
       <div className="pt-6">
         <button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl shadow disabled:opacity-50">

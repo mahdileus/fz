@@ -62,7 +62,7 @@ export default function PodcastBox({ podcast }) {
               thumbnail?.startsWith("http")
                 ? thumbnail
                 : `https://firouzehjavaherian.com${thumbnail}`
-            }
+              }
             alt={title || "thumbnail"}
             fill
             className="object-cover"

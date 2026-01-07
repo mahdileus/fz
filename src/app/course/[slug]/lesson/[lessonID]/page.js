@@ -11,7 +11,7 @@ import DisableInspect from "@/utils/DisableInspect";
 
 
 export async function generateMetadata({ params }) {
-  const { courseSlug, lessonID } = params;
+  const { courseSlug, lessonID } = await params;
   await connectToDB();
 
   // پیدا کردن دوره

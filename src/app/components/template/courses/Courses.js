@@ -58,16 +58,17 @@ export default function Courses({ courses, registeredCourseIds = [] }) {
             <FilterBar selected={sortFilter} onChange={setSortFilter} />
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-9 px-6">
               {sortCourses(filterCourses()).map((course) => {
-                const hasAccess = course.isFree || registeredCourseIds.includes(course._id.toString());
+                const isRegistered = registeredCourseIds.includes(course._id.toString());
 
                 return (
                   <CourseCard
                     key={course._id}
                     course={course}
-                    isRegistered={hasAccess} // اکنون رایگان‌ها هم دسترسی دارند
+                    isRegistered={isRegistered}
                   />
                 );
               })}
+
 
             </div>
           </div>

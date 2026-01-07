@@ -35,7 +35,7 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
 
   // ---------- Handlers ----------
   const handleAddToCart = () => {
-    if (isRegistered || isFree) return;
+    if (isRegistered) return; // فقط ثبت‌نام‌شده‌ها ممنوع
 
     if (!course?._id) {
       swal({
@@ -48,7 +48,6 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
     }
 
     const exists = cartItems.find((item) => item._id === course._id);
-
     if (exists) {
       swal({
         title: "این دوره قبلاً به سبد خرید اضافه شده است",
@@ -61,12 +60,15 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
 
     addToCart({
       ...course,
-      price: discountedPrice,
+      price: isFree ? 0 : discountedPrice,
       originalPrice: price,
+      isFree,
     });
 
     swal({
-      title: "دوره به سبد خرید اضافه شد",
+      title: isFree
+        ? "دوره رایگان به سبد خرید اضافه شد"
+        : "دوره به سبد خرید اضافه شد",
       icon: "success",
       timer: 1500,
       buttons: false,
@@ -74,6 +76,7 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
       router.push("/cart");
     });
   };
+
 
   // ---------- Loading ----------
   if (loading) {
@@ -113,7 +116,7 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
       </div>
 
       {/* Info Box */}
-      <div className="flex flex-col justify-between bg-white rounded-xl shadow-lg p-6 space-y-6 border border-[#DBE2EF]">
+      <div className="flex flex-col justify-between bg-white rounded-xl shadow-lg p-6 space-y-6 border border-light-blue">
         {/* Title & Desc */}
         <div>
           <h1 className="text-2xl text-center font-bold text-primary py-4">
@@ -127,9 +130,10 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
         {/* Price */}
         {!isRegistered && (
           <div className="text-center space-y-2">
+
             {isFree ? (
-              <div className="text-green-600 font-bold text-xl">
-                رایگان
+              <div className="text-green-700  font-bold text-2xl">
+                رایگان!
               </div>
             ) : discount > 0 ? (
               <>
@@ -145,28 +149,24 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
                 {formatPrice(price)}
               </div>
             )}
+
           </div>
         )}
 
+
         {/* Actions */}
         <div className="space-y-3 text-center">
-          {!isRegistered && !isFree && (
+
+          {!isRegistered && (
             <button
               onClick={handleAddToCart}
-              className="w-full bg-primary text-white py-3 rounded-xl text-lg hover:bg-secondery transition"
+              className={`w-full py-3 rounded-xl text-lg transition
+        ${isFree
+                  ? "bg-primary hover:bg-secondery text-white"
+                  : "bg-primary hover:bg-secondery text-white"
+                }`}
             >
-              ثبت‌نام و شروع دوره
-            </button>
-          )}
-
-          {isFree && !isRegistered && (
-            <button
-              onClick={() =>
-                router.push(`/course/${course.slug}/lesson/0`)
-              }
-              className="w-full bg-green-600 text-white py-3 rounded-xl text-lg hover:bg-green-700 transition"
-            >
-              شروع دوره رایگان
+              {isFree ? "افزودن دوره رایگان" : "ثبت‌نام و شروع دوره"}
             </button>
           )}
 
@@ -175,7 +175,9 @@ export default function CourseHeader({ course = {}, isRegistered = false }) {
               شما در این دوره ثبت‌نام کرده‌اید
             </div>
           )}
+
         </div>
+
       </div>
     </section>
   );

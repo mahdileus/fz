@@ -75,12 +75,18 @@ const Course = async ({ params }) => {
   ]);
 
   const registeredCourseIds = userCourses
-    .filter(item => item.course || item.course?.isFree)
+    .filter(item => item.course)
     .map(item => item.course._id.toString());
 
-  const isRegistered = user
-    ? user.role === "ADMIN" || registeredCourseIds.includes(course._id.toString())
-    : course.isFree; // دوره رایگان بدون ثبت‌نام
+
+  const isRegistered = Boolean(
+    user &&
+    (
+      user.role === "ADMIN" ||
+      registeredCourseIds.includes(course._id.toString())
+    )
+  );
+
 
   // Optional: JSON-LD Course schema
   const schema = {

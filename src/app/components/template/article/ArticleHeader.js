@@ -7,9 +7,16 @@ import { CiCalendar, CiUser, CiFolderOn } from "react-icons/ci";
 import SidebarArticles from "./Sidebar";
 import SidebarPodcasts from "./SidebarPodcasts";
 import CourseSlide from "./CourseSlide";
+import { useEffect, useState } from "react";
+import Content from "./Content";
 
 
 export default function ArticleHeader({ article, articles, podcasts, course }) {  // اضافه: props برای پادکست و دوره
+  const [date, setDate] = useState("");
+  useEffect(() => {
+    setDate(new Date(article.createdAt).toLocaleDateString("fa-IR"));
+  }, [article.createdAt]);
+
   return (
     <div className="container grid font-dana grid-cols-1 lg:grid-cols-4 gap-8 my-10">
       {/* Content Right Side */}
@@ -23,7 +30,7 @@ export default function ArticleHeader({ article, articles, podcasts, course }) {
             <CiUser className="text-secondery w-5 h-5" />
             <span className="text-primary "> نویسنده : {article.author}</span>
             <CiCalendar className="text-secondery w-5 h-5" />
-            <span className="text-primary">{new Date(article.createdAt).toLocaleDateString("fa-IR")}</span>
+            <span className="text-primary">{date}</span>
           </div>
           <div className="flex items-center gap-2">
             <CiFolderOn className="text-secondery w-5 h-5" />
@@ -44,9 +51,8 @@ export default function ArticleHeader({ article, articles, podcasts, course }) {
           />
         </div>
         {/* Content */}
-        <div className="rich-text">
-          <div dangerouslySetInnerHTML={{ __html: article.longDescription }} />
-        </div>
+        <Content html={article.longDescription} />
+
         <hr className="text-light-blue mt-6" />
         {/* Footer */}
         <div className=" flex flex-wrap justify-between items-center py-4 gap-4">

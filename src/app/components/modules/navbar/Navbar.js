@@ -39,7 +39,7 @@ export default function Navbar({ isLogin }) {
             <div className="flex justify-between items-center gap-5">
               <span className="flex justify-between items-center gap-2.5">
             <Link href="tel:09925349731">
-              <p className="text-lg text-primary cursor-pointer hover:text-[#3F72AF]">09925349731
+              <p className="text-lg text-primary cursor-pointer hover:text-secondery">09925349731
                 <PiPhone size={24} className="text-secondery inline ml-2 text-xl" /> 
               </p>
             </Link>

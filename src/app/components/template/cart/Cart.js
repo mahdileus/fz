@@ -17,10 +17,14 @@ export default function Cart() {
     discountedPrice,
   } = useContext(CartContext);
 
-  
+
 
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
+  const isAllFree = cartItems.length > 0 && cartItems.every(
+    (item) => Number(item.price) === 0
+  );
+
 
   useEffect(() => {
     async function fetchUser() {
@@ -78,10 +82,41 @@ export default function Cart() {
     if (!user) {
       return swal("ابتدا وارد شوید", "", "warning");
     }
+
     if (cartItems.length === 0) {
-      return swal("سبد خرید شما خالی است", "", "warning");
+      return swal("سبد خرید خالی است", "", "warning");
     }
 
+    const allFree = cartItems.every(
+      (item) => item.price === 0 || item.isFree
+    );
+
+    // 🔥 پرداخت رایگان
+    if (allFree) {
+      const res = await fetch("/api/order/free", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user._id, // 🔹 اضافه شد
+          items: cartItems.map((c) => c._id),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        swal("🎉 موفقیت", data.message, "success").then(() => {
+          window.location.href = "/p-user/courses";
+        });
+      } else {
+        swal("خطا", data.message, "error");
+      }
+
+      return;
+    }
+
+
+    // 🔵 اگر دوره پولی وجود دارد → پرداخت
     try {
       const res = await fetch("/api/order/create", {
         method: "POST",
@@ -90,7 +125,7 @@ export default function Cart() {
           userId: user._id,
           items: cartItems.map((item) => ({
             _id: item._id,
-            price: item.price, // فقط قیمت تخفیف‌خورده
+            price: item.price,
           })),
           discountCode: discountCode || null,
         }),
@@ -107,6 +142,7 @@ export default function Cart() {
       swal("خطا در ارتباط با سرور", "", "error");
     }
   };
+
 
   if (loadingUser) {
     return (
@@ -136,7 +172,7 @@ export default function Cart() {
               value={discountCode}
               onChange={(e) => setDiscountCode(e.target.value)}
               placeholder="کد تخفیف خود را وارد کنید"
-              className="flex-grow p-3 rounded border border-light-blue focus:outline-none focus:ring-2 focus:ring-secondery text-primary"
+              className="grow p-3 rounded border border-light-blue focus:outline-none focus:ring-2 focus:ring-secondery text-primary"
             />
             <button
               onClick={applyDiscount}
